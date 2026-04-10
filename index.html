@@ -1,0 +1,1741 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>E-Smart — Banking Made Simple</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+<style>
+:root {
+  --navy: #080F1E;
+  --navy-mid: #0D1A30;
+  --navy-light: #152340;
+  --green: #00D48D;
+  --green-dark: #00A870;
+  --green-glow: rgba(0,212,141,0.15);
+  --gold: #F5A623;
+  --white: #ffffff;
+  --off-white: #F0F4F8;
+  --text-muted: #8A9BB8;
+  --text-light: #C5D0E0;
+  --border: rgba(255,255,255,0.08);
+  --card-bg: rgba(255,255,255,0.04);
+  --card-border: rgba(255,255,255,0.1);
+  --radius: 16px;
+  --radius-sm: 10px;
+  --font-head: 'Outfit', sans-serif;
+  --font-body: 'DM Sans', sans-serif;
+}
+
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--font-body);
+  background: var(--navy);
+  color: var(--white);
+  overflow-x: hidden;
+  line-height: 1.6;
+}
+
+/* ── NAVBAR ─────────────────────────────────────────────────── */
+.navbar {
+  position: fixed; top:0; width:100%; z-index:1000;
+  padding: 0 0;
+  background: rgba(8,15,30,0.85);
+  backdrop-filter: blur(24px);
+  border-bottom: 1px solid var(--border);
+  transition: all 0.3s;
+}
+.nav-inner {
+  max-width:1200px; margin:0 auto;
+  display:flex; align-items:center; justify-content:space-between;
+  padding: 18px 24px;
+}
+.nav-logo {
+  display:flex; align-items:center; gap:10px;
+  font-family: var(--font-head); font-size:22px; font-weight:700;
+  color: var(--white); text-decoration:none; letter-spacing:-0.3px;
+}
+.nav-logo .logo-mark {
+  width:36px; height:36px;
+  background: linear-gradient(135deg, var(--green), var(--green-dark));
+  border-radius:10px;
+  display:flex; align-items:center; justify-content:center;
+  font-size:16px; font-weight:800; color: var(--navy);
+}
+.nav-links { display:flex; align-items:center; gap:4px; list-style:none; }
+.nav-links a {
+  font-family: var(--font-body); font-size:14px; font-weight:500;
+  color: var(--text-muted); text-decoration:none;
+  padding: 8px 14px; border-radius:8px;
+  transition: all 0.2s;
+}
+.nav-links a:hover { color: var(--white); background: rgba(255,255,255,0.06); }
+.nav-links a.active { color: var(--green); }
+.nav-dropdown { position:relative; }
+.nav-dropdown:hover .dropdown { opacity:1; visibility:visible; transform:translateY(0); }
+.dropdown {
+  position:absolute; top:calc(100% + 8px); left:0;
+  background: var(--navy-mid);
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius-sm);
+  padding:6px; min-width:200px;
+  opacity:0; visibility:hidden;
+  transform: translateY(-8px);
+  transition: all 0.2s;
+}
+.dropdown a { display:flex; align-items:center; gap:10px; padding:10px 14px; border-radius:8px; color: var(--text-light); font-size:14px; }
+.dropdown a:hover { background: var(--card-bg); color: var(--white); }
+.dropdown a i { width:16px; color: var(--green); font-size:12px; }
+.nav-cta {
+  background: var(--green); color: var(--navy) !important;
+  font-weight:600 !important; padding: 9px 20px !important;
+  border-radius:50px !important;
+}
+.nav-cta:hover { background: var(--green-dark) !important; transform:translateY(-1px); }
+.hamburger { display:none; flex-direction:column; gap:5px; cursor:pointer; padding:6px; }
+.hamburger span { width:22px; height:2px; background: var(--white); border-radius:2px; transition:0.3s; }
+
+/* ── HERO ────────────────────────────────────────────────────── */
+.hero {
+  min-height:100vh;
+  display:flex; align-items:center;
+  padding: 120px 24px 80px;
+  position:relative; overflow:hidden;
+}
+.hero-bg {
+  position:absolute; inset:0; z-index:0;
+  background: radial-gradient(ellipse 80% 60% at 70% 50%, rgba(0,212,141,0.08) 0%, transparent 65%),
+              radial-gradient(ellipse 50% 70% at 20% 80%, rgba(21,35,64,0.9) 0%, transparent 70%),
+              linear-gradient(160deg, var(--navy) 0%, #0A1525 50%, #091220 100%);
+}
+.hero-grid-overlay {
+  position:absolute; inset:0; z-index:0;
+  background-image: linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+                    linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+  background-size: 60px 60px;
+  mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 30%, transparent 100%);
+}
+.hero-container {
+  max-width:1200px; margin:0 auto; width:100%;
+  display:grid; grid-template-columns:1fr 1fr;
+  gap:60px; align-items:center; position:relative; z-index:1;
+}
+.hero-badge {
+  display:inline-flex; align-items:center; gap:8px;
+  background: rgba(0,212,141,0.1);
+  border: 1px solid rgba(0,212,141,0.25);
+  border-radius:50px; padding:6px 14px;
+  font-size:13px; font-weight:500; color: var(--green);
+  margin-bottom:24px;
+}
+.hero-badge span { width:6px; height:6px; background:var(--green); border-radius:50%; animation: pulse-dot 2s infinite; }
+@keyframes pulse-dot { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.5;transform:scale(1.3)} }
+.hero-content h1 {
+  font-family: var(--font-head);
+  font-size: clamp(2.4rem, 5vw, 3.6rem);
+  font-weight: 800; line-height:1.1;
+  letter-spacing:-1.5px;
+  margin-bottom:20px;
+}
+.hero-content h1 .highlight {
+  background: linear-gradient(135deg, var(--green), #7FFFCE);
+  -webkit-background-clip: text; -webkit-text-fill-color:transparent;
+  background-clip: text;
+}
+.hero-content p {
+  font-size:17px; color: var(--text-light); line-height:1.7;
+  max-width:460px; margin-bottom:36px;
+}
+.hero-btns { display:flex; gap:12px; flex-wrap:wrap; margin-bottom:48px; }
+.btn-primary {
+  display:inline-flex; align-items:center; gap:8px;
+  background: var(--green); color: var(--navy);
+  font-family: var(--font-body); font-size:15px; font-weight:600;
+  padding: 14px 28px; border-radius:50px;
+  text-decoration:none; border:none; cursor:pointer;
+  transition: all 0.25s; white-space:nowrap;
+}
+.btn-primary:hover { background: var(--green-dark); transform:translateY(-2px); box-shadow: 0 12px 30px rgba(0,212,141,0.3); }
+.btn-outline {
+  display:inline-flex; align-items:center; gap:8px;
+  background: transparent; color: var(--white);
+  font-family: var(--font-body); font-size:15px; font-weight:500;
+  padding: 14px 28px; border-radius:50px;
+  text-decoration:none; border: 1.5px solid rgba(255,255,255,0.2);
+  transition: all 0.25s; cursor:pointer;
+}
+.btn-outline:hover { background: rgba(255,255,255,0.06); border-color:rgba(255,255,255,0.4); transform:translateY(-2px); }
+.hero-stats { display:flex; gap:32px; }
+.hero-stat {}
+.hero-stat .num {
+  font-family: var(--font-head); font-size:24px; font-weight:700;
+  color: var(--white);
+}
+.hero-stat .lbl { font-size:12px; color: var(--text-muted); margin-top:2px; }
+
+/* ── PHONE MOCKUP ─────────────────────────────────────────────── */
+.hero-visual { display:flex; justify-content:center; align-items:center; }
+.phone-wrap {
+  position:relative;
+  filter: drop-shadow(0 40px 80px rgba(0,0,0,0.6));
+}
+.phone-wrap::before {
+  content:'';
+  position:absolute; bottom:-30px; left:50%; transform:translateX(-50%);
+  width:200px; height:40px;
+  background: radial-gradient(ellipse, rgba(0,212,141,0.25) 0%, transparent 70%);
+  filter: blur(10px);
+}
+.phone-device {
+  width:280px; height:560px;
+  background: linear-gradient(145deg, #1A2035, #0D1525);
+  border-radius:46px;
+  padding:12px;
+  border: 1px solid rgba(255,255,255,0.12);
+  position:relative;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.08),
+              inset 0 -1px 0 rgba(0,0,0,0.3);
+}
+.phone-notch {
+  position:absolute; top:12px; left:50%; transform:translateX(-50%);
+  width:80px; height:26px;
+  background: linear-gradient(145deg, #1A2035, #0D1525);
+  border-radius:0 0 18px 18px;
+  z-index:10;
+  border: 1px solid rgba(255,255,255,0.06);
+  border-top:none;
+  display:flex; align-items:center; justify-content:center; gap:6px;
+}
+.phone-notch .cam { width:8px; height:8px; background:#111828; border-radius:50%; border:1px solid rgba(255,255,255,0.1); }
+.phone-screen {
+  width:100%; height:100%;
+  background: linear-gradient(160deg, #0F1B2D 0%, #0A1220 100%);
+  border-radius:36px;
+  overflow:hidden; position:relative;
+}
+.screen-status {
+  display:flex; justify-content:space-between; align-items:center;
+  padding: 16px 20px 8px;
+  font-size:12px; font-weight:600; color: var(--white);
+}
+.status-icons { display:flex; align-items:center; gap:4px; font-size:10px; }
+.screen-body { padding: 0 18px 18px; }
+.app-topbar {
+  display:flex; justify-content:space-between; align-items:center;
+  padding: 8px 0 16px;
+}
+.app-topbar .greeting { font-size:13px; color: var(--text-muted); }
+.app-topbar .app-name { font-family: var(--font-head); font-size:17px; font-weight:700; }
+.avatar {
+  width:34px; height:34px; border-radius:50%;
+  background: linear-gradient(135deg, var(--green), var(--green-dark));
+  display:flex; align-items:center; justify-content:center;
+  font-size:13px; font-weight:700; color: var(--navy);
+}
+.balance-widget {
+  background: linear-gradient(135deg, #00C47E, #008A58);
+  border-radius:20px; padding:20px;
+  margin-bottom:16px; position:relative; overflow:hidden;
+}
+.balance-widget::before {
+  content:''; position:absolute; top:-20px; right:-20px;
+  width:100px; height:100px; border-radius:50%;
+  background: rgba(255,255,255,0.08);
+}
+.balance-widget .lbl { font-size:11px; opacity:0.8; text-transform:uppercase; letter-spacing:0.8px; margin-bottom:6px; }
+.balance-widget .amount { font-family: var(--font-head); font-size:28px; font-weight:800; letter-spacing:-0.5px; }
+.balance-widget .sub { font-size:11px; opacity:0.75; margin-top:4px; }
+.screen-actions {
+  display:grid; grid-template-columns:repeat(4,1fr); gap:8px;
+  margin-bottom:16px;
+}
+.s-action {
+  display:flex; flex-direction:column; align-items:center; gap:6px;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius:12px; padding:12px 6px;
+  font-size:10px; color: var(--text-light);
+}
+.s-action i { font-size:14px; color: var(--green); }
+.txn-header { display:flex; justify-content:space-between; margin-bottom:10px; }
+.txn-header span { font-size:12px; }
+.txn-header span:first-child { font-weight:600; }
+.txn-header span:last-child { font-size:11px; color:var(--green); }
+.txn-item {
+  display:flex; align-items:center; gap:12px;
+  padding:12px 0; border-bottom:1px solid rgba(255,255,255,0.05);
+}
+.txn-icon {
+  width:36px; height:36px; border-radius:10px;
+  display:flex; align-items:center; justify-content:center;
+  font-size:14px; flex-shrink:0;
+}
+.txn-icon.in { background:rgba(0,212,141,0.1); color:var(--green); }
+.txn-icon.out { background:rgba(245,166,35,0.1); color:var(--gold); }
+.txn-info { flex:1; }
+.txn-name { font-size:13px; font-weight:500; color:var(--white); }
+.txn-time { font-size:11px; color:var(--text-muted); }
+.txn-amt { font-size:13px; font-weight:600; }
+.txn-amt.in { color:var(--green); }
+.txn-amt.out { color:var(--white); }
+.phone-home-bar {
+  position:absolute; bottom:8px; left:50%; transform:translateX(-50%);
+  width:100px; height:4px; background:rgba(255,255,255,0.2); border-radius:10px;
+}
+
+/* ── LOGOS STRIP ─────────────────────────────────────────────── */
+.logos-strip {
+  background: var(--navy-mid);
+  border-top:1px solid var(--border); border-bottom:1px solid var(--border);
+  padding:30px 24px;
+}
+.logos-inner {
+  max-width:1200px; margin:0 auto;
+  display:flex; align-items:center; gap:40px;
+}
+.logos-label {
+  font-size:13px; font-weight:600; color:var(--text-muted);
+  text-transform:uppercase; letter-spacing:1px; white-space:nowrap;
+}
+.logos-grid {
+  display:flex; align-items:center; gap:32px; flex-wrap:wrap;
+}
+.logo-pill {
+  display:flex; align-items:center; gap:8px;
+  font-size:15px; font-weight:700; color:var(--text-light);
+  opacity:0.7; transition:opacity 0.3s;
+}
+.logo-pill:hover { opacity:1; }
+.logo-pill i { font-size:18px; color:var(--green); }
+
+/* ── FEATURES SECTION ────────────────────────────────────────── */
+.features-section { padding:100px 24px; background:var(--navy); }
+.center-text { text-align:center; margin-bottom:60px; }
+.section-tag {
+  display:inline-block; background:rgba(0,212,141,0.1); color:var(--green);
+  padding:6px 14px; border-radius:50px; font-size:13px; font-weight:600; margin-bottom:16px;
+}
+.section-title { font-family:var(--font-head); font-size:clamp(2rem,5vw,3rem); font-weight:800; margin-bottom:20px; line-height:1.1; }
+.section-sub { font-size:18px; color:var(--text-light); max-width:700px; margin:0 auto; }
+.features-grid {
+  display:grid; grid-template-columns:repeat(3,1fr); gap:24px;
+}
+.feature-card {
+  background:var(--card-bg); border:1px solid var(--card-border);
+  border-radius:var(--radius); padding:40px;
+  transition:all 0.3s;
+}
+.feature-card:hover { border-color:rgba(0,212,141,0.3); transform:translateY(-8px); background:rgba(255,255,255,0.06); }
+.feature-card.featured {
+  background: linear-gradient(145deg, rgba(0,212,141,0.1), transparent);
+  border-color:rgba(0,212,141,0.2);
+}
+.fc-icon {
+  width:50px; height:50px; border-radius:14px;
+  background:var(--green-glow); color:var(--green);
+  display:flex; align-items:center; justify-content:center;
+  font-size:20px; margin-bottom:24px;
+}
+.fc-title { font-family:var(--font-head); font-size:20px; font-weight:700; margin-bottom:12px; }
+.fc-desc { font-size:15px; color:var(--text-muted); line-height:1.6; }
+.fc-tag {
+  display:inline-block; margin-top:16px; font-family:monospace;
+  background:rgba(0,212,141,0.15); color:var(--green);
+  padding:4px 10px; border-radius:6px; font-size:14px; font-weight:700;
+}
+
+/* ── DEPOSIT SECTION ─────────────────────────────────────────── */
+.deposit-section { padding:100px 24px; background:var(--navy-mid); }
+.deposit-grid { display:grid; grid-template-columns:1fr 1fr; gap:30px; max-width:1000px; margin:0 auto; }
+.deposit-card {
+  background:var(--navy-light); border:1px solid var(--border);
+  border-radius:var(--radius); padding:40px;
+}
+.dc-header { display:flex; gap:20px; align-items:center; margin-bottom:30px; }
+.dc-icon {
+  width:56px; height:56px; border-radius:50%;
+  display:flex; align-items:center; justify-content:center; font-size:20px;
+}
+.cash-in .dc-icon { background:rgba(0,212,141,0.1); color:var(--green); }
+.cash-out .dc-icon { background:rgba(245,166,35,0.1); color:var(--gold); }
+.dc-header h3 { font-family:var(--font-head); font-size:22px; font-weight:700; }
+.dc-header p { font-size:14px; color:var(--text-muted); }
+.deposit-list { list-style:none; display:grid; grid-template-columns:1fr; gap:14px; }
+.deposit-list li {
+  display:flex; align-items:center; gap:12px;
+  font-size:15px; color:var(--text-light);
+}
+.deposit-list li i { width:20px; color:var(--green); font-size:14px; }
+
+/* ── HOW IT WORKS ────────────────────────────────────────────── */
+.how-section { padding:100px 24px; background:var(--navy); }
+.steps-row {
+  display:grid; grid-template-columns:repeat(4,1fr); gap:24px;
+  position:relative; margin-top:60px;
+}
+.steps-row::before {
+  content:''; position:absolute; top:40px; left:10%; right:10%;
+  height:2px; background:dashed rgba(255,255,255,0.1);
+  z-index:0;
+}
+.step-card { text-align:center; position:relative; z-index:1; }
+.step-num {
+  width:60px; height:60px; border-radius:50%;
+  background:var(--navy-mid); border:2px solid var(--green);
+  display:flex; align-items:center; justify-content:center;
+  margin:0 auto 24px; font-family:var(--font-head); font-size:24px; font-weight:800; color:var(--green);
+  box-shadow: 0 0 20px var(--green-glow);
+}
+.step-card h3 { font-family:var(--font-head); font-size:18px; font-weight:700; margin-bottom:12px; }
+.step-card p { font-size:14px; color:var(--text-muted); line-height:1.6; }
+
+/* ── USSD SECTION ────────────────────────────────────────────── */
+.ussd-section { padding:100px 24px; background:var(--navy-mid); }
+.ussd-inner {
+  max-width:1200px; margin:0 auto;
+  display:grid; grid-template-columns:1fr 1fr; gap:80px; align-items:center;
+}
+.ussd-steps { margin-top:40px; display:flex; flex-direction:column; gap:24px; }
+.ussd-step { display:flex; gap:20px; }
+.us-num {
+  width:32px; height:32px; border-radius:50%;
+  background:rgba(0,212,141,0.1); color:var(--green);
+  display:flex; align-items:center; justify-content:center;
+  font-weight:800; flex-shrink:0; margin-top:4px;
+}
+.us-content h4 { font-family:var(--font-head); font-size:18px; margin-bottom:4px; }
+.us-content p { font-size:14px; color:var(--text-muted); margin-bottom:8px; }
+.us-content code { background:rgba(0,212,141,0.1); color:var(--green); padding:4px 8px; border-radius:6px; font-family:monospace; font-weight:700; }
+
+.terminal-frame {
+  background:#0A1220; border-radius:18px; overflow:hidden;
+  border:1px solid rgba(255,255,255,0.1);
+  box-shadow: 0 40px 80px rgba(0,0,0,0.5);
+}
+.terminal-bar {
+  background:#152340; padding:12px 20px;
+  display:flex; align-items:center; gap:8px;
+}
+.terminal-dot { width:10px; height:10px; border-radius:50%; }
+.terminal-dot:nth-child(1) { background:#FF5F56; }
+.terminal-dot:nth-child(2) { background:#FFBD2E; }
+.terminal-dot:nth-child(3) { background:#27C93F; }
+.terminal-title { flex:1; text-align:center; font-size:11px; color:var(--text-muted); font-family:monospace; }
+.terminal-body {
+  padding:28px 24px;
+  font-family:'Courier New', monospace;
+  color:#00FF88; font-size:14px; line-height:1.8;
+}
+.terminal-header {
+  color:rgba(0,255,136,0.5); border-bottom:1px solid rgba(0,255,136,0.15);
+  padding-bottom:12px; margin-bottom:16px;
+  font-size:12px; letter-spacing:1px; text-transform:uppercase;
+}
+.terminal-line { display:flex; gap:10px; margin:2px 0; }
+.t-num { color:rgba(0,255,136,0.4); user-select:none; }
+.t-text { color:#00FF88; }
+.t-input {
+  margin-top:16px; padding-top:16px;
+  border-top:1px solid rgba(0,255,136,0.1);
+  display:flex; align-items:center; gap:8px;
+  font-size:13px; color:rgba(0,255,136,0.6);
+}
+.t-cursor {
+  display:inline-block; width:8px; height:14px;
+  background:var(--green); margin-left:2px;
+  animation:blink 1.2s step-end infinite;
+}
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+
+/* ── STATS BANNER ─────────────────────────────────────────────── */
+.stats-banner {
+  padding:70px 24px;
+  background: linear-gradient(135deg, #00A870 0%, #007A52 100%);
+  position:relative; overflow:hidden;
+}
+.stats-banner::before {
+  content:''; position:absolute; inset:0;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60'%3E%3Ccircle cx='30' cy='30' r='1' fill='rgba(255,255,255,0.1)'/%3E%3C/svg%3E") repeat;
+}
+.stats-row {
+  max-width:1200px; margin:0 auto;
+  display:grid; grid-template-columns:repeat(4,1fr); gap:0;
+  position:relative; z-index:1;
+}
+.stat-item { text-align:center; padding:20px; position:relative; }
+.stat-item:not(:last-child)::after {
+  content:''; position:absolute; right:0; top:20px; bottom:20px;
+  width:1px; background:rgba(255,255,255,0.2);
+}
+.stat-item .big {
+  font-family: var(--font-head); font-size:clamp(2rem,4vw,2.8rem);
+  font-weight:800; color: var(--white); letter-spacing:-1px;
+}
+.stat-item .small { font-size:14px; color:rgba(255,255,255,0.75); margin-top:4px; }
+
+/* ── APP GALLERY ──────────────────────────────────────────────── */
+.gallery-section {
+  padding:100px 24px;
+  background: var(--navy-mid);
+}
+.gallery-grid {
+  display:grid; grid-template-columns:repeat(4,1fr); gap:20px;
+  margin-top:60px;
+}
+.gallery-item { text-align:center; }
+.gallery-phone {
+  width:160px; height:300px; margin:0 auto 16px;
+  background: linear-gradient(145deg, #1A2035, #0D1525);
+  border-radius:30px;
+  padding:8px;
+  border:1px solid rgba(255,255,255,0.1);
+  box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+  transition: transform 0.3s;
+}
+.gallery-item:hover .gallery-phone { transform:translateY(-8px); }
+.gallery-screen {
+  width:100%; height:100%;
+  background: linear-gradient(160deg, #0F1B2D, #0A1220);
+  border-radius:24px; overflow:hidden;
+  padding:12px 10px;
+}
+.gs-topbar {
+  display:flex; justify-content:space-between;
+  font-size:9px; color:var(--text-muted); margin-bottom:10px;
+}
+.gs-title { font-family: var(--font-head); font-size:11px; font-weight:700; margin-bottom:8px; }
+.gs-balance {
+  background: linear-gradient(135deg, #00C47E, #008A58);
+  border-radius:10px; padding:10px;
+  text-align:center; margin-bottom:8px;
+}
+.gs-balance .bal-label { font-size:7px; opacity:0.8; text-transform:uppercase; letter-spacing:0.5px; }
+.gs-balance .bal-num { font-family: var(--font-head); font-size:15px; font-weight:800; }
+.gs-btn-grid { display:grid; grid-template-columns:1fr 1fr; gap:4px; margin-bottom:8px; }
+.gs-btn {
+  background:rgba(255,255,255,0.06); border-radius:6px;
+  padding:6px 4px; text-align:center; font-size:8px; color:var(--text-muted);
+}
+.gs-btn i { display:block; font-size:10px; color:var(--green); margin-bottom:2px; }
+.gs-txn { display:flex; flex-direction:column; gap:3px; }
+.gs-txn-item {
+  display:flex; align-items:center; gap:6px;
+  padding:4px 0;
+  border-bottom:1px solid rgba(255,255,255,0.05);
+  font-size:8px;
+}
+.gs-dot { width:16px; height:16px; border-radius:5px; display:flex; align-items:center; justify-content:center; font-size:7px; flex-shrink:0; }
+.gs-dot.in { background:rgba(0,212,141,0.15); color:var(--green); }
+.gs-dot.out { background:rgba(245,166,35,0.15); color:var(--gold); }
+.gs-txn-info { flex:1; }
+.gs-txn-name { color:var(--text-light); }
+.gs-txn-time { color:var(--text-muted); }
+.gs-txn-amt { font-weight:600; }
+.gs-txn-amt.in { color:var(--green); }
+.gs-txn-amt.out { color:var(--gold); }
+.gallery-label { font-family: var(--font-head); font-size:14px; font-weight:600; margin-bottom:4px; }
+.gallery-desc { font-size:12px; color:var(--text-muted); }
+
+/* Gallery screens: Airtime */
+.gs-networks { display:flex; flex-direction:column; gap:4px; }
+.gs-network {
+  display:flex; align-items:center; gap:6px;
+  background:rgba(255,255,255,0.06); border-radius:8px;
+  padding:6px 8px; font-size:9px; color:var(--text-light);
+}
+.gs-network.selected { background:rgba(0,212,141,0.15); color:var(--white); }
+.gs-network .dot { width:8px; height:8px; border-radius:50%; flex-shrink:0; }
+.gs-amounts { display:flex; gap:3px; }
+.gs-amount-btn { flex:1; padding:5px 2px; border-radius:6px; text-align:center; font-size:8px; background:rgba(255,255,255,0.06); color:var(--text-muted); }
+.gs-amount-btn.selected { background:rgba(0,212,141,0.15); color:var(--green); font-weight:600; }
+
+/* Gallery: bills */
+.gs-bill-list { display:flex; flex-direction:column; gap:3px; }
+.gs-bill {
+  display:flex; align-items:center; gap:6px;
+  background:rgba(255,255,255,0.06); border-radius:8px;
+  padding:6px 8px; font-size:9px; color:var(--text-light);
+}
+.gs-bill i { color:var(--gold); font-size:10px; }
+
+/* Gallery: voucher */
+.gs-voucher {
+  background:linear-gradient(135deg,#00C47E,#007A52);
+  border-radius:10px; padding:10px; text-align:center; margin-bottom:6px;
+}
+.gs-voucher .v-label { font-size:7px; opacity:0.8; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:4px; }
+.gs-voucher .v-code { font-family:monospace; font-size:12px; font-weight:800; letter-spacing:1px; }
+.gs-voucher .v-sub { font-size:7px; opacity:0.75; margin-top:3px; }
+
+/* ── SERVICE PAGE STYLES (INTEGRATED) ─────────────────────────── */
+.page-header {
+  padding: 160px 24px 80px;
+  background: radial-gradient(ellipse at 70% 50%, rgba(0,212,141,0.08) 0%, transparent 65%), var(--navy);
+  text-align: center;
+}
+.wrap { max-width: 1200px; margin: 0 auto; width: 100%; }
+.service-content { padding: 80px 24px; border-bottom: 1px solid var(--border); background: var(--navy); }
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center; }
+.feature-list { list-style: none; margin-top: 30px; }
+.feature-list li { display: flex; align-items: flex-start; gap: 15px; margin-bottom: 20px; color: var(--text-light); }
+.feature-list li i { color: var(--green); margin-top: 5px; }
+.card {
+  background: var(--card-bg); border: 1px solid var(--card-border);
+  border-radius: var(--radius); padding: 40px;
+}
+
+/* ── CONTACT SECTION ─────────────────────────────────────────── */
+.contact-section { padding: 100px 24px; background: var(--navy-mid); }
+.contact-grid { display: grid; grid-template-columns: 1fr 1.2fr; gap: 60px; max-width: 1200px; margin: 0 auto; }
+.contact-info h2 { font-family: var(--font-head); font-size: 36px; font-weight: 800; margin-bottom: 20px; }
+.contact-info p { color: var(--text-light); font-size: 16px; margin-bottom: 40px; }
+.contact-method { display: flex; gap: 20px; margin-bottom: 30px; }
+.cm-icon {
+  width: 50px; height: 50px; border-radius: 14px;
+  background: var(--green-glow); color: var(--green);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px; flex-shrink: 0;
+}
+.cm-text h4 { font-family: var(--font-head); font-size: 18px; margin-bottom: 4px; }
+.cm-text p { color: var(--text-muted); font-size: 14px; margin-bottom: 0; }
+.contact-socials { display: flex; gap: 15px; margin-top: 40px; }
+.cs-btn {
+  width: 46px; height: 46px; border-radius: 12px;
+  background: var(--card-bg); border: 1px solid var(--card-border);
+  display: flex; align-items: center; justify-content: center;
+  color: var(--white); font-size: 18px; text-decoration: none;
+  transition: all 0.3s;
+}
+.cs-btn:hover { background: var(--green); color: var(--navy); transform: translateY(-5px); border-color: var(--green); }
+.cs-btn.whatsapp:hover { background: #25D366; border-color: #25D366; }
+
+.contact-form-card {
+  background: var(--navy-light); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 40px;
+}
+.form-group { margin-bottom: 20px; }
+.form-group label { display: block; font-size: 14px; font-weight: 500; color: var(--text-light); margin-bottom: 8px; }
+.form-control {
+  width: 100%; background: rgba(255,255,255,0.05);
+  border: 1px solid var(--card-border); border-radius: 10px;
+  padding: 14px 18px; color: var(--white); font-family: var(--font-body);
+  font-size: 15px; transition: all 0.3s;
+}
+.form-control:focus { outline: none; border-color: var(--green); background: rgba(255,255,255,0.08); }
+textarea.form-control { resize: none; min-height: 120px; }
+.submit-btn {
+  width: 100%; background: var(--green); color: var(--navy);
+  border: none; border-radius: 10px; padding: 16px;
+  font-family: var(--font-head); font-size: 16px; font-weight: 700;
+  cursor: pointer; transition: all 0.3s;
+}
+.submit-btn:hover { background: var(--green-dark); transform: translateY(-2px); box-shadow: 0 10px 20px rgba(0,212,141,0.2); }
+
+/* ── DOWNLOAD SECTION ─────────────────────────────────────────── */
+.download-section {
+  padding:100px 24px;
+  background: var(--navy);
+  position:relative; overflow:hidden;
+}
+.download-section::before {
+  content:''; position:absolute; right:-200px; top:-200px;
+  width:600px; height:600px; border-radius:50%;
+  background: radial-gradient(circle, rgba(0,212,141,0.06) 0%, transparent 70%);
+}
+.download-inner {
+  display:grid; grid-template-columns:1fr 1fr; gap:80px;
+  align-items:center; position:relative; z-index:1;
+}
+.download-badges { display:flex; gap:12px; flex-wrap:wrap; margin:28px 0; }
+.store-badge {
+  display:flex; align-items:center; gap:10px;
+  background: rgba(255,255,255,0.07);
+  border:1px solid rgba(255,255,255,0.15);
+  border-radius:14px; padding:10px 18px;
+  text-decoration:none; color:var(--white);
+  transition:all 0.25s; cursor:pointer;
+}
+.store-badge:hover { background:rgba(255,255,255,0.12); border-color:rgba(255,255,255,0.3); transform:translateY(-2px); }
+.store-badge i { font-size:22px; }
+.store-badge .sb-text .sb-small { font-size:10px; color:var(--text-muted); }
+.store-badge .sb-text .sb-big { font-size:14px; font-weight:600; }
+.ussd-pill {
+  display:flex; align-items:center; gap:12px;
+  background:rgba(0,212,141,0.08);
+  border:1px solid rgba(0,212,141,0.2);
+  border-radius:14px; padding:14px 20px;
+  font-size:14px; color:var(--text-light);
+}
+.ussd-pill code {
+  background:rgba(0,212,141,0.15); color:var(--green);
+  font-family:monospace; font-size:15px; font-weight:700;
+  padding:3px 10px; border-radius:6px;
+}
+.dl-phones {
+  display:flex; justify-content:center; align-items:flex-end; gap:-20px;
+  position:relative;
+}
+.dl-phone {
+  width:200px; height:380px;
+  background: linear-gradient(145deg, #1A2035, #0D1525);
+  border-radius:36px; padding:10px;
+  border:1px solid rgba(255,255,255,0.1);
+  position:relative;
+}
+.dl-phone.front {
+  z-index:2;
+  box-shadow: 0 30px 60px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.06);
+}
+.dl-phone.back {
+  position:absolute; left:140px; top:20px;
+  width:180px; height:350px;
+  opacity:0.6; border-radius:32px; padding:9px;
+  z-index:1;
+}
+.dl-screen {
+  width:100%; height:100%;
+  background:linear-gradient(160deg, #0F1B2D, #0A1220);
+  border-radius:28px; overflow:hidden; padding:16px 12px;
+  display:flex; flex-direction:column; gap:10px;
+}
+.dl-screen .ds-topbar { display:flex; justify-content:space-between; font-size:10px; color:var(--text-muted); }
+.ds-welcome { background:linear-gradient(135deg,#00C47E,#008A58); border-radius:14px; padding:16px; text-align:center; }
+.ds-welcome .dw-label { font-size:10px; opacity:0.8; margin-bottom:4px; }
+.ds-welcome .dw-amount { font-family:var(--font-head); font-size:22px; font-weight:800; }
+.ds-actions { display:grid; grid-template-columns:repeat(4,1fr); gap:6px; }
+.ds-act {
+  background:rgba(255,255,255,0.06); border-radius:10px;
+  padding:10px 4px; text-align:center; font-size:9px; color:var(--text-muted);
+}
+.ds-act i { display:block; font-size:13px; color:var(--green); margin-bottom:4px; }
+.dl-phone-back-screen {
+  width:100%; height:100%;
+  background:linear-gradient(160deg,#0F1B2D,#0A1220);
+  border-radius:24px; overflow:hidden; padding:14px 10px;
+  display:flex; align-items:center; justify-content:center;
+}
+.dl-register {
+  text-align:center; width:100%;
+}
+.dl-register h4 { font-family:var(--font-head); font-size:13px; margin-bottom:12px; }
+.dl-input-mock {
+  background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.15);
+  border-radius:10px; padding:10px 12px;
+  font-size:11px; color:var(--text-muted); margin-bottom:8px; text-align:left;
+}
+.dl-otp-btn {
+  width:100%; background:var(--green); color:var(--navy);
+  font-size:11px; font-weight:700; padding:10px;
+  border-radius:10px; border:none; cursor:pointer;
+}
+
+/* ── FOOTER ───────────────────────────────────────────────────── */
+.footer {
+  background: var(--navy-mid);
+  border-top:1px solid var(--border);
+  padding:60px 24px 30px;
+}
+.footer-grid {
+  max-width:1200px; margin:0 auto;
+  display:grid; grid-template-columns:2fr 1fr 1fr 1fr; gap:40px;
+  margin-bottom:50px;
+}
+.footer-brand .logo { display:flex; align-items:center; gap:10px; margin-bottom:14px; font-family:var(--font-head); font-size:20px; font-weight:700; }
+.footer-brand .logo .mark { width:32px; height:32px; background:linear-gradient(135deg,var(--green),var(--green-dark)); border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:800; color:var(--navy); }
+.footer-brand p { font-size:14px; color:var(--text-muted); line-height:1.7; max-width:280px; }
+.footer-col h4 { font-family:var(--font-head); font-size:14px; font-weight:700; margin-bottom:16px; color:var(--white); }
+.footer-col ul { list-style:none; display:flex; flex-direction:column; gap:10px; }
+.footer-col ul li a { font-size:14px; color:var(--text-muted); text-decoration:none; transition:color 0.2s; }
+.footer-col ul li a:hover { color:var(--green); }
+.footer-bottom {
+  max-width:1200px; margin:0 auto;
+  border-top:1px solid var(--border); padding-top:24px;
+  display:flex; justify-content:space-between; align-items:center;
+  flex-wrap:wrap; gap:12px;
+}
+.footer-bottom p { font-size:13px; color:var(--text-muted); }
+.social-row { display:flex; gap:10px; }
+.social-btn {
+  width:36px; height:36px; border-radius:10px;
+  background:rgba(255,255,255,0.06);
+  border:1px solid rgba(255,255,255,0.1);
+  display:flex; align-items:center; justify-content:center;
+  color:var(--text-muted); font-size:14px; text-decoration:none;
+  transition:all 0.2s;
+}
+.social-btn:hover { background:var(--green-glow); border-color:rgba(0,212,141,0.3); color:var(--green); }
+
+/* ── RESPONSIVE ───────────────────────────────────────────────── */
+@media (max-width: 1024px) {
+  .features-grid { grid-template-columns:repeat(2,1fr); }
+  .gallery-grid { grid-template-columns:repeat(2,1fr); }
+  .footer-grid { grid-template-columns:1fr 1fr; }
+  .contact-grid { grid-template-columns: 1fr; gap: 40px; }
+}
+@media (max-width: 768px) {
+  .hero-container { grid-template-columns:1fr; text-align:center; gap:40px; }
+  .hero-content p { margin:0 auto 36px; }
+  .hero-btns { justify-content:center; }
+  .hero-stats { justify-content:center; }
+  .hero-visual { order:-1; }
+  .phone-device { width:220px; height:440px; }
+  .deposit-grid { grid-template-columns:1fr; }
+  .steps-row { grid-template-columns:1fr 1fr; gap:40px; }
+  .steps-row::before { display:none; }
+  .ussd-inner { grid-template-columns:1fr; }
+  .stats-row { grid-template-columns:1fr 1fr; }
+  .stat-item:nth-child(2)::after, .stat-item:nth-child(4)::after { display:none; }
+  .gallery-grid { grid-template-columns:repeat(2,1fr); }
+  .download-inner { grid-template-columns:1fr; }
+  .dl-phones { justify-content:center; }
+  .footer-grid { grid-template-columns:1fr 1fr; }
+  .features-grid { grid-template-columns:1fr; }
+  .nav-links { display:none; }
+  .hamburger { display:flex; }
+  .grid-2 { grid-template-columns: 1fr; text-align: center; }
+}
+@media (max-width: 480px) {
+  .steps-row { grid-template-columns:1fr; }
+  .stats-row { grid-template-columns:1fr 1fr; }
+  .gallery-grid { grid-template-columns:1fr 1fr; }
+  .footer-grid { grid-template-columns:1fr; }
+  .hero-stats { flex-wrap:wrap; gap:20px; }
+}
+
+/* ── SCROLL ANIMATIONS ────────────────────────────────────────── */
+.fade-up { opacity:0; transform:translateY(24px); transition:opacity 0.6s ease, transform 0.6s ease; }
+.fade-up.visible { opacity:1; transform:none; }
+.fade-up:nth-child(2) { transition-delay:0.1s; }
+.fade-up:nth-child(3) { transition-delay:0.2s; }
+.fade-up:nth-child(4) { transition-delay:0.3s; }
+.fade-up:nth-child(5) { transition-delay:0.4s; }
+.fade-up:nth-child(6) { transition-delay:0.5s; }
+</style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar" id="navbar">
+  <div class="nav-inner">
+    <a href="#home" class="nav-logo">
+      <div class="logo-mark">E</div>
+      E-Smart
+    </a>
+    <ul class="nav-links">
+      <li><a href="#home" class="active">Home</a></li>
+      <li><a href="#features">Features</a></li>
+      <li class="nav-dropdown">
+        <a href="#">Services <i class="fas fa-chevron-down" style="font-size:10px;margin-left:4px;"></i></a>
+        <div class="dropdown">
+          <a href="#money-transfer"><i class="fas fa-paper-plane"></i> Money Transfer</a>
+          <a href="#bill-payments"><i class="fas fa-file-invoice-dollar"></i> Bill Payments</a>
+          <a href="#evouchers"><i class="fas fa-ticket-alt"></i> eVouchers</a>
+          <a href="#airtime-data"><i class="fas fa-wifi"></i> Airtime & Data</a>
+        </div>
+      </li>
+      <li><a href="#how">How it works</a></li>
+      <li><a href="#contact">Contact</a></li>
+      <li><a href="#download" class="nav-cta">Download App</a></li>
+    </ul>
+    <div class="hamburger" id="hamburger">
+      <span></span><span></span><span></span>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="home">
+  <div class="hero-bg"></div>
+  <div class="hero-grid-overlay"></div>
+  <div class="hero-container">
+    <div class="hero-content">
+      <div class="hero-badge">
+        <span></span>
+        Now available on all phones — smartphone or basic
+      </div>
+      <h1>Banking Made<br><span class="highlight">Simple for All</span><br>South Africans</h1>
+      <p>Register with just your phone number. Deposit and withdraw anywhere. Works on any phone — even without internet using USSD <strong>*120*3274#</strong>.</p>
+      <div class="hero-btns">
+        <a href="#download" class="btn-primary"><i class="fas fa-download"></i> Download App</a>
+        <a href="#how" class="btn-outline"><i class="fas fa-play"></i> How it works</a>
+      </div>
+      <div class="hero-stats">
+        <div class="hero-stat"><div class="num">50K+</div><div class="lbl">Active Users</div></div>
+        <div class="hero-stat"><div class="num">R0</div><div class="lbl">Monthly Fees</div></div>
+        <div class="hero-stat"><div class="num">500+</div><div class="lbl">Partner Locations</div></div>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <div class="phone-wrap">
+        <div class="phone-device">
+          <div class="phone-notch">
+            <div class="cam"></div>
+          </div>
+          <div class="phone-screen">
+            <div class="screen-status">
+              <span>9:41</span>
+              <div class="status-icons">
+                <i class="fas fa-signal" style="font-size:11px;"></i>
+                <i class="fas fa-wifi" style="font-size:11px;"></i>
+                <i class="fas fa-battery-three-quarters" style="font-size:11px;"></i>
+              </div>
+            </div>
+            <div class="screen-body">
+              <div class="app-topbar">
+                <div>
+                  <div class="greeting">Good afternoon</div>
+                  <div class="app-name">E-Smart</div>
+                </div>
+                <div class="avatar">TM</div>
+              </div>
+              <div class="balance-widget">
+                <div class="lbl">Available Balance</div>
+                <div class="amount">R 2,850.00</div>
+                <div class="sub">Last updated just now</div>
+              </div>
+              <div class="screen-actions">
+                <div class="s-action"><i class="fas fa-arrow-down"></i>Deposit</div>
+                <div class="s-action"><i class="fas fa-arrow-up"></i>Withdraw</div>
+                <div class="s-action"><i class="fas fa-paper-plane"></i>Send</div>
+                <div class="s-action"><i class="fas fa-shopping-cart"></i>Buy</div>
+              </div>
+              <div class="txn-header">
+                <span>Recent</span><span>See all</span>
+              </div>
+              <div class="txn-item">
+                <div class="txn-icon in"><i class="fas fa-plus"></i></div>
+                <div class="txn-info"><div class="txn-name">Deposit — Spaza Shop</div><div class="txn-time">Today, 14:30</div></div>
+                <div class="txn-amt in">+R 200</div>
+              </div>
+              <div class="txn-item">
+                <div class="txn-icon out"><i class="fas fa-bolt"></i></div>
+                <div class="txn-info"><div class="txn-name">Eskom Prepaid</div><div class="txn-time">Yesterday</div></div>
+                <div class="txn-amt out">-R 150</div>
+              </div>
+              <div class="txn-item">
+                <div class="txn-icon in"><i class="fas fa-user"></i></div>
+                <div class="txn-info"><div class="txn-name">Received from Sipho</div><div class="txn-time">Mon, 09:15</div></div>
+                <div class="txn-amt in">+R 500</div>
+              </div>
+            </div>
+            <div class="phone-home-bar"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MONEY TRANSFER SECTION -->
+<div id="money-transfer">
+  <header class="page-header">
+    <div class="wrap">
+      <div class="section-tag">Money Transfer</div>
+      <h1 class="section-title">Send money to anyone,<br><span style="color:var(--green);">anywhere in SA</span></h1>
+      <p class="section-sub">Instantly send money to any South African phone number. No bank account required for you or the recipient.</p>
+    </div>
+  </header>
+  <section class="service-content">
+    <div class="wrap">
+      <div class="grid-2">
+        <div class="fade-up">
+          <h2>Fast, Secure & Simple</h2>
+          <p style="color:var(--text-muted); margin-top:10px;">Whether you're sending money to family in another province or paying for a local service, E-Smart makes it effortless.</p>
+          <ul class="feature-list">
+            <li><i class="fas fa-check-circle"></i> <div><strong>Instant Delivery:</strong> Funds are available to the recipient immediately.</div></li>
+            <li><i class="fas fa-check-circle"></i> <div><strong>No Bank Account Needed:</strong> Use just a phone number to send and receive.</div></li>
+            <li><i class="fas fa-check-circle"></i> <div><strong>Low Flat Fees:</strong> Know exactly what you pay with our transparent pricing.</div></li>
+            <li><i class="fas fa-check-circle"></i> <div><strong>Secure PIN:</strong> Every transaction is protected by your personal secret PIN.</div></li>
+          </ul>
+        </div>
+        <div class="card fade-up">
+          <h3 style="margin-bottom:20px;">How to send money</h3>
+          <div style="display:flex; gap:20px; margin-bottom:20px;">
+            <div style="background:var(--green); color:var(--navy); width:30px; height:30px; border-radius:50%; display:flex; align-items:center; justify-content:center; flex-shrink:0; font-weight:bold;">1</div>
+            <p>Dial <strong>*120*3274#</strong> or open the E-Smart app.</p>
+          </div>
+          <div style="display:flex; gap:20px; margin-bottom:20px;">
+            <div style="background:var(--green); color:var(--navy); width:30px; height:30px; border-radius:50%; display:flex; align-items:center; justify-content:center; flex-shrink:0; font-weight:bold;">2</div>
+            <p>Select 'Send Money' and enter the recipient's phone number.</p>
+          </div>
+          <div style="display:flex; gap:20px; margin-bottom:20px;">
+            <div style="background:var(--green); color:var(--navy); width:30px; height:30px; border-radius:50%; display:flex; align-items:center; justify-content:center; flex-shrink:0; font-weight:bold;">3</div>
+            <p>Enter the amount and confirm with your secure PIN.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- BILL PAYMENTS SECTION -->
+<div id="bill-payments">
+  <header class="page-header">
+    <div class="wrap">
+      <div class="section-tag">Bill Payments</div>
+      <h1 class="section-title">Pay your bills,<br><span style="color:var(--green);">anytime, anywhere</span></h1>
+      <p class="section-sub">Settle your electricity, water, DStv, and more directly from your phone. Fast, reliable, and no queues.</p>
+    </div>
+  </header>
+  <section class="service-content">
+    <div class="wrap">
+      <div class="grid-2">
+        <div class="fade-up">
+          <h2>Skip the Queues</h2>
+          <p style="color:var(--text-muted); margin-top:10px;">Pay your monthly bills and utilities in seconds. No more waiting in long lines at service centers.</p>
+          <ul class="feature-list">
+            <li><i class="fas fa-check-circle"></i> <div><strong>Instant Confirmation:</strong> Receive your payment confirmation immediately.</div></li>
+            <li><i class="fas fa-check-circle"></i> <div><strong>Wide Range of Billers:</strong> Pay for electricity, water, DStv, and more.</div></li>
+            <li><i class="fas fa-check-circle"></i> <div><strong>Scheduled Payments:</strong> Set reminders so you never miss a due date.</div></li>
+            <li><i class="fas fa-check-circle"></i> <div><strong>Secure PIN:</strong> Every transaction is protected by your personal secret PIN.</div></li>
+          </ul>
+        </div>
+        <div class="card fade-up">
+          <h3 style="margin-bottom:20px;">How to pay bills</h3>
+          <div style="display:flex; gap:20px; margin-bottom:20px;">
+            <div style="background:var(--green); color:var(--navy); width:30px; height:30px; border-radius:50%; display:flex; align-items:center; justify-content:center; flex-shrink:0; font-weight:bold;">1</div>
+            <p>Dial <strong>*120*3274#</strong> or open the E-Smart app.</p>
+          </div>
+          <div style="display:flex; gap:20px; margin-bottom:20px;">
+            <div style="background:var(--green); color:var(--navy); width:30px; height:30px; border-radius:50%; display:flex; align-items:center; justify-content:center; flex-shrink:0; font-weight:bold;">2</div>
+            <p>Select 'Pay Bills' and choose your biller from the list.</p>
+          </div>
+          <div style="display:flex; gap:20px; margin-bottom:20px;">
+            <div style="background:var(--green); color:var(--navy); width:30px; height:30px; border-radius:50%; display:flex; align-items:center; justify-content:center; flex-shrink:0; font-weight:bold;">3</div>
+            <p>Enter your account or meter number and the amount.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- EVOUCHERS SECTION -->
+<div id="evouchers">
+  <header class="page-header">
+    <div class="wrap">
+      <div class="section-tag">eVouchers</div>
+      <h1 class="section-title">Cash out at any ATM,<br><span style="color:var(--green);">no card needed</span></h1>
+      <p class="section-sub">Generate a secure eVoucher code on your phone and withdraw cash at any major bank ATM across South Africa.</p>
+    </div>
+  </header>
+  <section class="service-content">
+    <div class="wrap">
+      <div class="grid-2">
+        <div class="fade-up">
+          <h2>Cash in Hand, Instantly</h2>
+          <p style="color:var(--text-muted); margin-top:10px;">Need physical cash? E-Smart eVouchers allow you to withdraw your balance from any ATM without needing a bank card.</p>
+          <ul class="feature-list">
+            <li><i class="fas fa-check-circle"></i> <div><strong>Universal Access:</strong> Works at Absa, FNB, Standard Bank, and Nedbank ATMs.</div></li>
+            <li><i class="fas fa-check-circle"></i> <div><strong>Cardless Convenience:</strong> No plastic card required, just your unique voucher code.</div></li>
+            <li><i class="fas fa-check-circle"></i> <div><strong>Flexible Amounts:</strong> Withdraw exactly what you need, from R50 to R5000.</div></li>
+            <li><i class="fas fa-check-circle"></i> <div><strong>Secure PIN:</strong> Every transaction is protected by your personal secret PIN.</div></li>
+          </ul>
+        </div>
+        <div class="card fade-up">
+          <h3 style="margin-bottom:20px;">How to use eVouchers</h3>
+          <div style="display:flex; gap:20px; margin-bottom:20px;">
+            <div style="background:var(--green); color:var(--navy); width:30px; height:30px; border-radius:50%; display:flex; align-items:center; justify-content:center; flex-shrink:0; font-weight:bold;">1</div>
+            <p>Dial <strong>*120*3274#</strong> or open the E-Smart app.</p>
+          </div>
+          <div style="display:flex; gap:20px; margin-bottom:20px;">
+            <div style="background:var(--green); color:var(--navy); width:30px; height:30px; border-radius:50%; display:flex; align-items:center; justify-content:center; flex-shrink:0; font-weight:bold;">2</div>
+            <p>Select 'eVoucher' and enter the amount you wish to withdraw.</p>
+          </div>
+          <div style="display:flex; gap:20px; margin-bottom:20px;">
+            <div style="background:var(--green); color:var(--navy); width:30px; height:30px; border-radius:50%; display:flex; align-items:center; justify-content:center; flex-shrink:0; font-weight:bold;">3</div>
+            <p>Receive your 10-digit voucher code via SMS instantly.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- AIRTIME & DATA SECTION -->
+<div id="airtime-data">
+  <header class="page-header">
+    <div class="wrap">
+      <div class="section-tag">Airtime & Data</div>
+      <h1 class="section-title">Stay connected,<br><span style="color:var(--green);">top up instantly</span></h1>
+      <p class="section-sub">Buy airtime and data for all major South African networks (Vodacom, MTN, Cell C, Telkom) directly from your balance.</p>
+    </div>
+  </header>
+  <section class="service-content">
+    <div class="wrap">
+      <div class="grid-2">
+        <div class="fade-up">
+          <h2>Instant Top-Ups</h2>
+          <p style="color:var(--text-muted); margin-top:10px;">Never run out of airtime or data. Top up your own phone or send credit to someone else in seconds.</p>
+          <ul class="feature-list">
+            <li><i class="fas fa-check-circle"></i> <div><strong>All Major Networks:</strong> Support for Vodacom, MTN, Cell C, and Telkom.</div></li>
+            <li><i class="fas fa-check-circle"></i> <div><strong>Best Value Bundles:</strong> Access the latest data and voice bundles from your provider.</div></li>
+            <li><i class="fas fa-check-circle"></i> <div><strong>24/7 Availability:</strong> Top up anytime, day or night, without leaving home.</div></li>
+            <li><i class="fas fa-check-circle"></i> <div><strong>Secure PIN:</strong> Every transaction is protected by your personal secret PIN.</div></li>
+          </ul>
+        </div>
+        <div class="card fade-up">
+          <h3 style="margin-bottom:20px;">How to buy airtime</h3>
+          <div style="display:flex; gap:20px; margin-bottom:20px;">
+            <div style="background:var(--green); color:var(--navy); width:30px; height:30px; border-radius:50%; display:flex; align-items:center; justify-content:center; flex-shrink:0; font-weight:bold;">1</div>
+            <p>Dial <strong>*120*3274#</strong> or open the E-Smart app.</p>
+          </div>
+          <div style="display:flex; gap:20px; margin-bottom:20px;">
+            <div style="background:var(--green); color:var(--navy); width:30px; height:30px; border-radius:50%; display:flex; align-items:center; justify-content:center; flex-shrink:0; font-weight:bold;">2</div>
+            <p>Select 'Airtime' or 'Data' and choose your network provider.</p>
+          </div>
+          <div style="display:flex; gap:20px; margin-bottom:20px;">
+            <div style="background:var(--green); color:var(--navy); width:30px; height:30px; border-radius:50%; display:flex; align-items:center; justify-content:center; flex-shrink:0; font-weight:bold;">3</div>
+            <p>Select your desired bundle or enter a custom amount.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- PARTNER LOGOS -->
+<div class="logos-strip">
+  <div class="logos-inner">
+    <span class="logos-label">Deposit at</span>
+    <div class="logos-grid">
+      <div class="logo-pill pnp"><i class="fas fa-store"></i> Pick n Pay</div>
+      <div class="logo-pill shoprite"><i class="fas fa-store"></i> Shoprite</div>
+      <div class="logo-pill boxer"><i class="fas fa-store"></i> Boxer</div>
+      <div class="logo-pill kazang"><i class="fas fa-user-tie"></i> Kazang</div>
+      <div class="logo-pill momo"><i class="fas fa-user-tie"></i> MoMo Agent</div>
+      <div class="logo-pill" style="color:var(--text-muted)"><i class="fas fa-home"></i> Spaza Shops</div>
+    </div>
+  </div>
+</div>
+
+<!-- FEATURES -->
+<section class="features-section" id="features">
+  <div class="wrap">
+    <div class="center-text">
+      <div class="section-tag">Why E-Smart</div>
+      <h2 class="section-title">Banking built for<br>every South African</h2>
+      <p class="section-sub">No minimum balance. No bank account required. No smartphone needed. Just your phone number.</p>
+    </div>
+    <div class="features-grid">
+      <div class="feature-card featured fade-up">
+        <div class="fc-icon"><i class="fas fa-phone"></i></div>
+        <div class="fc-title">Works on Any Phone</div>
+        <div class="fc-desc">Smartphone, feature phone, or basic phone — our USSD service works everywhere without internet.</div>
+        <span class="fc-tag">*120*3274#</span>
+      </div>
+      <div class="feature-card fade-up">
+        <div class="fc-icon"><i class="fas fa-mobile-alt"></i></div>
+        <div class="fc-title">Phone Number Registration</div>
+        <div class="fc-desc">Register in under 2 minutes with just your phone number and OTP. No documents, no branch visits.</div>
+      </div>
+      <div class="feature-card fade-up">
+        <div class="fc-icon"><i class="fas fa-store"></i></div>
+        <div class="fc-title">Deposit Anywhere</div>
+        <div class="fc-desc">Cash in at Pick n Pay, Shoprite, Boxer, Kazang agents, spaza shops, and 500+ locations nationwide.</div>
+      </div>
+      <div class="feature-card fade-up">
+        <div class="fc-icon"><i class="fas fa-ticket-alt"></i></div>
+        <div class="fc-title">eVoucher ATM Withdrawals</div>
+        <div class="fc-desc">Generate an eVoucher code and withdraw cash at any ATM in South Africa — no bank card needed.</div>
+      </div>
+      <div class="feature-card fade-up">
+        <div class="fc-icon"><i class="fas fa-shield-alt"></i></div>
+        <div class="fc-title">Bank-Level Security</div>
+        <div class="fc-desc">OTP verification, PIN protection, and end-to-end encrypted transactions on every action.</div>
+      </div>
+      <div class="feature-card fade-up">
+        <div class="fc-icon"><i class="fas fa-clock"></i></div>
+        <div class="fc-title">24/7 Access</div>
+        <div class="fc-desc">Access your money and support anytime. Our USSD and app platforms never close.</div>
+      </div>
+      <div class="feature-card fade-up">
+        <div class="fc-icon"><i class="fas fa-coins"></i></div>
+        <div class="fc-title">Transparent Low Fees</div>
+        <div class="fc-desc">No monthly charges, no hidden fees, no minimum balance. Pay only for what you use.</div>
+      </div>
+      <div class="feature-card fade-up">
+        <div class="fc-icon"><i class="fas fa-paper-plane"></i></div>
+        <div class="fc-title">Instant Money Transfers</div>
+        <div class="fc-desc">Send money to any South African phone number in seconds — no bank account required on either side.</div>
+      </div>
+      <div class="feature-card fade-up">
+        <div class="fc-icon"><i class="fas fa-language"></i></div>
+        <div class="fc-title">Multi-Language Support</div>
+        <div class="fc-desc">Available in English, Afrikaans, Zulu, Xhosa, and more South African languages.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- DEPOSIT / WITHDRAW -->
+<section class="deposit-section" id="deposit">
+  <div class="wrap">
+    <div class="center-text">
+      <div class="section-tag">Cash In &amp; Cash Out</div>
+      <h2 class="section-title">Your money, your way</h2>
+      <p class="section-sub">Deposit and withdraw at hundreds of locations across South Africa — no bank branch needed.</p>
+    </div>
+    <div class="deposit-grid">
+      <div class="deposit-card cash-in fade-up">
+        <div class="dc-header">
+          <div class="dc-icon"><i class="fas fa-arrow-down"></i></div>
+          <div>
+            <h3>Cash-In (Deposit)</h3>
+            <p>Add money to your E-Smart wallet</p>
+          </div>
+        </div>
+        <ul class="deposit-list">
+          <li><i class="fas fa-credit-card"></i> Bank Card (Visa / Mastercard)</li>
+          <li><i class="fas fa-university"></i> Ozow EFT Online Transfer</li>
+          <li><i class="fas fa-store"></i> Pick n Pay (nationwide)</li>
+          <li><i class="fas fa-store"></i> Boxer Stores</li>
+          <li><i class="fas fa-store"></i> Shoprite / Checkers</li>
+          <li><i class="fas fa-user-tie"></i> Kazang Agents</li>
+          <li><i class="fas fa-user-tie"></i> MoMo Agents</li>
+          <li><i class="fas fa-home"></i> Local Spaza Shops</li>
+          <li><i class="fas fa-store"></i> Blu Merchants</li>
+        </ul>
+      </div>
+      <div class="deposit-card cash-out fade-up">
+        <div class="dc-header">
+          <div class="dc-icon"><i class="fas fa-arrow-up"></i></div>
+          <div>
+            <h3>Cash-Out (Withdraw)</h3>
+            <p>Get your cash wherever you are</p>
+          </div>
+        </div>
+        <ul class="deposit-list">
+          <li><i class="fas fa-university"></i> EFT to any SA Bank Account</li>
+          <li><i class="fas fa-money-bill-wave"></i> All-Banks ATM via eVoucher</li>
+          <li><i class="fas fa-store"></i> Pick n Pay Cash Back</li>
+          <li><i class="fas fa-money-bill"></i> Cash Express ATM Network</li>
+          <li><i class="fas fa-user-tie"></i> Kazang Agents</li>
+          <li><i class="fas fa-user-tie"></i> MoMo Agents</li>
+          <li><i class="fas fa-home"></i> Local Spaza Shops</li>
+          <li><i class="fas fa-store"></i> Blu Merchants</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="how-section" id="how">
+  <div class="wrap">
+    <div class="center-text">
+      <div class="section-tag">Get Started</div>
+      <h2 class="section-title">Up and running in minutes</h2>
+      <p class="section-sub">No paperwork, no waiting, no bank history required.</p>
+    </div>
+    <div class="steps-row">
+      <div class="step-card fade-up">
+        <div class="step-num">1</div>
+        <h3>Register</h3>
+        <p>Download the app or dial <strong>*120*3274#</strong>. Enter your phone number and verify with a one-time PIN.</p>
+      </div>
+      <div class="step-card fade-up">
+        <div class="step-num">2</div>
+        <h3>Deposit</h3>
+        <p>Visit any partner store — Pick n Pay, Shoprite, a spaza shop, or a Kazang agent — and load money onto your wallet.</p>
+      </div>
+      <div class="step-card fade-up">
+        <div class="step-num">3</div>
+        <h3>Transact</h3>
+        <p>Send money, buy airtime, pay electricity and DStv, or generate an eVoucher — all from the app or USSD menu.</p>
+      </div>
+      <div class="step-card fade-up">
+        <div class="step-num">4</div>
+        <h3>Withdraw</h3>
+        <p>Use your eVoucher code at any ATM in South Africa to get cash — no bank card, no restrictions.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- USSD SECTION -->
+<section class="ussd-section" id="ussd">
+  <div class="wrap">
+    <div class="ussd-inner">
+      <div>
+        <div class="section-tag">No Smartphone Needed</div>
+        <h2 class="section-title">USSD Banking — works on any phone</h2>
+        <p class="section-sub" style="margin-bottom:0;">No data, no app, no internet required. Full banking access from a basic phone.</p>
+        <div class="ussd-steps">
+          <div class="ussd-step fade-up">
+            <div class="us-num">1</div>
+            <div class="us-content">
+              <h4>Dial the code</h4>
+              <p>On any mobile phone — basic, feature, or smartphone</p>
+              <code>*120*3274#</code>
+            </div>
+          </div>
+          <div class="ussd-step fade-up">
+            <div class="us-num">2</div>
+            <div class="us-content">
+              <h4>Navigate the menu</h4>
+              <p>Choose from Balance, Send Money, Buy Airtime, Pay Bills, eVoucher, and more</p>
+            </div>
+          </div>
+          <div class="ussd-step fade-up">
+            <div class="us-num">3</div>
+            <div class="us-content">
+              <h4>Confirm with PIN</h4>
+              <p>Enter your secure PIN to authorise the transaction — done in seconds</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="fade-up">
+        <div class="terminal-frame">
+          <div class="terminal-bar">
+            <div class="terminal-dot"></div>
+            <div class="terminal-dot"></div>
+            <div class="terminal-dot"></div>
+            <div class="terminal-title">*120*3274# — E-SMART USSD</div>
+          </div>
+          <div class="terminal-body" id="ussd-display">
+            <div class="terminal-header">E-Smart Mobile Banking</div>
+            <div id="ussd-menu">
+              <div class="terminal-line"><span class="t-num">1.</span><span class="t-text">Check Balance</span></div>
+              <div class="terminal-line"><span class="t-num">2.</span><span class="t-text">Send Money</span></div>
+              <div class="terminal-line"><span class="t-num">3.</span><span class="t-text">Buy Airtime</span></div>
+              <div class="terminal-line"><span class="t-num">4.</span><span class="t-text">Buy Data Bundle</span></div>
+              <div class="terminal-line"><span class="t-num">5.</span><span class="t-text">Pay Bills</span></div>
+              <div class="terminal-line"><span class="t-num">6.</span><span class="t-text">eVoucher — ATM Withdrawal</span></div>
+              <div class="terminal-line"><span class="t-num">0.</span><span class="t-text">More Options</span></div>
+            </div>
+            <div class="t-input">
+              <span>Enter option:</span>
+              <div class="t-cursor"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STATS BANNER -->
+<div class="stats-banner">
+  <div class="stats-row">
+    <div class="stat-item fade-up"><div class="big">50,000+</div><div class="small">Active Users</div></div>
+    <div class="stat-item fade-up"><div class="big">1M+</div><div class="small">Transactions Processed</div></div>
+    <div class="stat-item fade-up"><div class="big">500+</div><div class="small">Partner Locations</div></div>
+    <div class="stat-item fade-up"><div class="big">24/7</div><div class="small">Always Available</div></div>
+  </div>
+</div>
+
+<!-- APP GALLERY -->
+<section class="gallery-section" id="gallery">
+  <div class="wrap">
+    <div class="center-text">
+      <div class="section-tag">App Screens</div>
+      <h2 class="section-title">Designed for everyone</h2>
+      <p class="section-sub">Clean, simple, and fast — whether you're checking your balance or sending money across town.</p>
+    </div>
+    <div class="gallery-grid">
+
+      <!-- Dashboard -->
+      <div class="gallery-item fade-up">
+        <div class="gallery-phone">
+          <div class="gallery-screen">
+            <div class="gs-topbar"><span>9:41</span><span><i class="fas fa-signal"></i> <i class="fas fa-battery-three-quarters"></i></span></div>
+            <div class="gs-title">E-Smart</div>
+            <div class="gs-balance">
+              <div class="bal-label">Balance</div>
+              <div class="bal-num">R 2,450.00</div>
+            </div>
+            <div class="gs-btn-grid">
+              <div class="gs-btn"><i class="fas fa-arrow-down"></i>Deposit</div>
+              <div class="gs-btn"><i class="fas fa-arrow-up"></i>Withdraw</div>
+              <div class="gs-btn"><i class="fas fa-paper-plane"></i>Send</div>
+              <div class="gs-btn"><i class="fas fa-wifi"></i>Airtime</div>
+            </div>
+            <div class="gs-txn">
+              <div class="gs-txn-item">
+                <div class="gs-dot in"><i class="fas fa-plus"></i></div>
+                <div class="gs-txn-info"><div class="gs-txn-name">Deposit</div><div class="gs-txn-time">Today</div></div>
+                <div class="gs-txn-amt in">+R200</div>
+              </div>
+              <div class="gs-txn-item">
+                <div class="gs-dot out"><i class="fas fa-bolt"></i></div>
+                <div class="gs-txn-info"><div class="gs-txn-name">Eskom</div><div class="gs-txn-time">Yesterday</div></div>
+                <div class="gs-txn-amt out">-R150</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="gallery-label">Dashboard</div>
+        <div class="gallery-desc">Clean home screen at a glance</div>
+      </div>
+
+      <!-- Airtime -->
+      <div class="gallery-item fade-up">
+        <div class="gallery-phone">
+          <div class="gallery-screen">
+            <div class="gs-topbar"><span>9:41</span><span><i class="fas fa-signal"></i></span></div>
+            <div class="gs-title">Buy Airtime &amp; Data</div>
+            <div class="gs-networks">
+              <div class="gs-network selected"><div class="dot" style="background:#e30613;"></div> Vodacom</div>
+              <div class="gs-network"><div class="dot" style="background:#ffd200;"></div> MTN</div>
+              <div class="gs-network"><div class="dot" style="background:#0066cc;"></div> Cell C</div>
+              <div class="gs-network"><div class="dot" style="background:#00a651;"></div> Telkom</div>
+            </div>
+            <div style="font-size:8px;color:var(--text-muted);margin:8px 0 4px;">Amount</div>
+            <div class="gs-amounts">
+              <div class="gs-amount-btn">R25</div>
+              <div class="gs-amount-btn selected">R50</div>
+              <div class="gs-amount-btn">R100</div>
+              <div class="gs-amount-btn">R200</div>
+            </div>
+            <div style="margin-top:8px;background:var(--green);color:var(--navy);font-size:8px;font-weight:700;padding:7px;border-radius:8px;text-align:center;">BUY R50 AIRTIME</div>
+          </div>
+        </div>
+        <div class="gallery-label">Airtime & Data</div>
+        <div class="gallery-desc">All major networks in one tap</div>
+      </div>
+
+      <!-- eVoucher -->
+      <div class="gallery-item fade-up">
+        <div class="gallery-phone">
+          <div class="gallery-screen">
+            <div class="gs-topbar"><span>9:41</span><span><i class="fas fa-signal"></i></span></div>
+            <div class="gs-title">eVoucher Withdrawal</div>
+            <div class="gs-voucher">
+              <div class="v-label">Voucher Code</div>
+              <div class="v-code">4821 6730 95</div>
+              <div class="v-sub">R 500.00 · Valid 24 hours</div>
+            </div>
+            <div style="font-size:8px;color:var(--text-muted);margin:6px 0 4px;">Use at any ATM in South Africa</div>
+            <div class="gs-bill-list">
+              <div class="gs-bill"><i class="fas fa-university"></i> Absa ATM</div>
+              <div class="gs-bill"><i class="fas fa-university"></i> FNB ATM</div>
+              <div class="gs-bill"><i class="fas fa-university"></i> Standard Bank ATM</div>
+              <div class="gs-bill"><i class="fas fa-university"></i> Nedbank ATM</div>
+            </div>
+          </div>
+        </div>
+        <div class="gallery-label">eVoucher</div>
+        <div class="gallery-desc">Withdraw at any ATM</div>
+      </div>
+
+      <!-- Bill Payments -->
+      <div class="gallery-item fade-up">
+        <div class="gallery-phone">
+          <div class="gallery-screen">
+            <div class="gs-topbar"><span>9:41</span><span><i class="fas fa-signal"></i></span></div>
+            <div class="gs-title">Pay Bills</div>
+            <div class="gs-bill-list">
+              <div class="gs-bill" style="background:rgba(0,212,141,0.1);border:1px solid rgba(0,212,141,0.2);"><i class="fas fa-bolt" style="color:var(--green);"></i> Eskom Prepaid</div>
+              <div class="gs-bill"><i class="fas fa-tv" style="color:var(--gold);"></i> DStv Subscription</div>
+              <div class="gs-bill"><i class="fas fa-tint" style="color:#3B82F6;"></i> Municipal Water</div>
+              <div class="gs-bill"><i class="fas fa-wifi" style="color:var(--green);"></i> Telkom Internet</div>
+              <div class="gs-bill"><i class="fas fa-graduation-cap" style="color:var(--gold);"></i> School Fees</div>
+              <div class="gs-bill"><i class="fas fa-heartbeat" style="color:#ef4444;"></i> Discovery Health</div>
+            </div>
+          </div>
+        </div>
+        <div class="gallery-label">Bill Payments</div>
+        <div class="gallery-desc">Electricity, DStv & more</div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT SECTION -->
+<section class="contact-section" id="contact">
+  <div class="wrap">
+    <div class="contact-grid">
+      <div class="contact-info fade-up">
+        <div class="section-tag">Get in Touch</div>
+        <h2>Have questions?<br><span style="color:var(--green);">We're here to help.</span></h2>
+        <p>Our support team is available 24/7 to assist you with any banking queries or technical issues.</p>
+        
+        <div class="contact-method">
+          <div class="cm-icon"><i class="fas fa-envelope"></i></div>
+          <div class="cm-text">
+            <h4>Email Support</h4>
+            <p>support@e-smart.co.za</p>
+          </div>
+        </div>
+        
+        <div class="contact-method">
+          <div class="cm-icon"><i class="fas fa-phone-alt"></i></div>
+          <div class="cm-text">
+            <h4>Call Center</h4>
+            <p>0800 123 4567 (Toll-Free)</p>
+          </div>
+        </div>
+        
+        <div class="contact-method">
+          <div class="cm-icon"><i class="fas fa-map-marker-alt"></i></div>
+          <div class="cm-text">
+            <h4>Head Office</h4>
+            <p>123 Digital Square, Sandton, Johannesburg</p>
+          </div>
+        </div>
+
+        <div class="contact-socials">
+          <a href="#" class="cs-btn"><i class="fab fa-facebook-f"></i></a>
+          <a href="#" class="cs-btn"><i class="fab fa-twitter"></i></a>
+          <a href="#" class="cs-btn"><i class="fab fa-instagram"></i></a>
+          <a href="#" class="cs-btn"><i class="fab fa-linkedin-in"></i></a>
+          <a href="#" class="cs-btn whatsapp"><i class="fab fa-whatsapp"></i></a>
+        </div>
+      </div>
+      
+      <div class="contact-form-card fade-up">
+        <form id="contactForm">
+          <div class="form-group">
+            <label>Full Name</label>
+            <input type="text" class="form-control" placeholder="Enter your name" required>
+          </div>
+          <div class="form-group">
+            <label>Phone Number</label>
+            <input type="tel" class="form-control" placeholder="+27 XX XXX XXXX" required>
+          </div>
+          <div class="form-group">
+            <label>Subject</label>
+            <select class="form-control">
+              <option>General Inquiry</option>
+              <option>Account Support</option>
+              <option>Transaction Issue</option>
+              <option>Partnership</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Message</label>
+            <textarea class="form-control" placeholder="How can we help you?"></textarea>
+          </div>
+          <button type="submit" class="submit-btn">Send Message</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- DOWNLOAD -->
+<section class="download-section" id="download">
+  <div class="wrap">
+    <div class="download-inner">
+      <div class="fade-up">
+        <div class="section-tag">Get the App</div>
+        <h2 class="section-title">Start banking today —<br>it's completely free</h2>
+        <p class="section-sub">Download E-Smart or dial USSD on any phone. Join 50,000+ South Africans already using E-Smart.</p>
+        <div class="download-badges">
+          <div class="store-badge">
+            <i class="fab fa-google-play"></i>
+            <div class="sb-text">
+              <div class="sb-small">Get it on</div>
+              <div class="sb-big">Google Play</div>
+            </div>
+          </div>
+          <div class="store-badge">
+            <i class="fab fa-apple"></i>
+            <div class="sb-text">
+              <div class="sb-small">Download on the</div>
+              <div class="sb-big">App Store</div>
+            </div>
+          </div>
+        </div>
+        <div class="ussd-pill">
+          <i class="fas fa-phone" style="color:var(--green);"></i>
+          <span>No smartphone? Dial</span>
+          <code>*120*3274#</code>
+          <span>on any phone</span>
+        </div>
+      </div>
+      <div class="dl-phones">
+        <div class="dl-phone back">
+          <div class="dl-phone-back-screen">
+            <div class="dl-register">
+              <h4>Register Now</h4>
+              <div class="dl-input-mock">+27 XX XXX XXXX</div>
+              <div class="dl-otp-btn">Send OTP →</div>
+            </div>
+          </div>
+        </div>
+        <div class="dl-phone front">
+          <div class="dl-screen">
+            <div class="ds-topbar"><span>9:41</span><span><i class="fas fa-signal"></i> <i class="fas fa-wifi"></i></span></div>
+            <div class="ds-welcome">
+              <div class="dw-label">Available Balance</div>
+              <div class="dw-amount">R 1,250.00</div>
+            </div>
+            <div class="ds-actions">
+              <div class="ds-act"><i class="fas fa-arrow-down"></i>Deposit</div>
+              <div class="ds-act"><i class="fas fa-arrow-up"></i>Withdraw</div>
+              <div class="ds-act"><i class="fas fa-paper-plane"></i>Send</div>
+              <div class="ds-act"><i class="fas fa-shopping-cart"></i>Buy</div>
+            </div>
+            <div style="font-size:9px;color:var(--text-muted);margin-bottom:6px;">Recent transactions</div>
+            <div class="gs-txn">
+              <div class="gs-txn-item">
+                <div class="gs-dot in"><i class="fas fa-plus"></i></div>
+                <div class="gs-txn-info"><div class="gs-txn-name" style="font-size:9px;">Deposit — Pick n Pay</div><div class="gs-txn-time">Today</div></div>
+                <div class="gs-txn-amt in" style="font-size:9px;">+R500</div>
+              </div>
+              <div class="gs-txn-item">
+                <div class="gs-dot out"><i class="fas fa-paper-plane"></i></div>
+                <div class="gs-txn-info"><div class="gs-txn-name" style="font-size:9px;">Sent to Thabo</div><div class="gs-txn-time">Yesterday</div></div>
+                <div class="gs-txn-amt out" style="font-size:9px;">-R200</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <div class="logo"><div class="mark">E</div> E-Smart</div>
+      <p>Banking made simple for everyone in South Africa. Register with just your phone number — smartphone or basic phone.</p>
+      <div class="social-row" style="margin-top:20px;">
+        <a href="#" class="social-btn"><i class="fab fa-facebook-f"></i></a>
+        <a href="#" class="social-btn"><i class="fab fa-twitter"></i></a>
+        <a href="#" class="social-btn"><i class="fab fa-instagram"></i></a>
+        <a href="#" class="social-btn"><i class="fab fa-linkedin-in"></i></a>
+        <a href="#" class="social-btn"><i class="fab fa-whatsapp"></i></a>
+      </div>
+    </div>
+    <div class="footer-col">
+      <h4>Product</h4>
+      <ul>
+        <li><a href="#features">Features</a></li>
+        <li><a href="#how">How It Works</a></li>
+        <li><a href="#ussd">USSD Banking</a></li>
+        <li><a href="#download">App Download</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Services</h4>
+      <ul>
+        <li><a href="#money-transfer">Money Transfer</a></li>
+        <li><a href="#bill-payments">Bill Payments</a></li>
+        <li><a href="#evouchers">eVouchers</a></li>
+        <li><a href="#airtime-data">Airtime & Data</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Company</h4>
+      <ul>
+        <li><a href="#">About Us</a></li>
+        <li><a href="#contact">Contact</a></li>
+        <li><a href="#">Privacy Policy</a></li>
+        <li><a href="#">Terms of Service</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2025 E-Smart Digital. All rights reserved.</p>
+    <p style="color:var(--text-muted);font-size:13px;">Regulated financial services. South Africa.</p>
+  </div>
+</footer>
+
+<script>
+'use strict';
+
+// Navbar scroll effect
+const navbar = document.getElementById('navbar');
+window.addEventListener('scroll', () => {
+  if (window.scrollY > 60) {
+    navbar.style.background = 'rgba(8,15,30,0.97)';
+    navbar.style.boxShadow = '0 4px 30px rgba(0,0,0,0.3)';
+  } else {
+    navbar.style.background = 'rgba(8,15,30,0.85)';
+    navbar.style.boxShadow = 'none';
+  }
+});
+
+// Hamburger toggle
+document.getElementById('hamburger').addEventListener('click', function() {
+  const links = document.querySelector('.nav-links');
+  const open = links.style.display === 'flex';
+  links.style.cssText = open ? '' : 'display:flex;flex-direction:column;position:fixed;top:72px;left:0;right:0;background:rgba(8,15,30,0.98);padding:20px 24px;gap:6px;border-bottom:1px solid rgba(255,255,255,0.08);z-index:999;';
+});
+
+// Smooth scrolling
+document.querySelectorAll('a[href^="#"]').forEach(a => {
+  a.addEventListener('click', e => {
+    const target = document.querySelector(a.getAttribute('href'));
+    if (target) {
+      e.preventDefault();
+      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  });
+});
+
+// Scroll fade-in animation
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); } });
+}, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+
+// USSD terminal cycling
+const ussdScreens = [
+  { header: 'E-Smart Mobile Banking', lines: ['1. Check Balance','2. Send Money','3. Buy Airtime','4. Buy Data Bundle','5. Pay Bills','6. eVoucher — ATM Withdrawal','0. More Options'], input: 'Enter option:' },
+  { header: 'Balance Inquiry', lines: ['Account: Thabo Mokoena','','Available Balance:','  R 2,450.00','','Last updated: Today 14:30','1. Back to menu'], input: 'Enter option:' },
+  { header: 'Send Money', lines: ['Enter recipient number:','> +27 71 234 5678','','Enter amount:','> R 200.00','','1. Confirm  0. Cancel'], input: 'Enter option:' },
+  { header: 'Buy Airtime', lines: ['Select network:','1. Vodacom','2. MTN','3. Cell C','4. Telkom','','0. Back'], input: 'Enter option:' },
+];
+let ussdIdx = 0;
+function updateUSSD() {
+  const s = ussdScreens[ussdIdx];
+  const menu = document.getElementById('ussd-menu');
+  if (!menu) return;
+  menu.style.opacity = '0';
+  menu.style.transition = 'opacity 0.3s';
+  setTimeout(() => {
+    document.querySelector('.terminal-header').textContent = s.header;
+    menu.innerHTML = s.lines.map(l => l ? `<div class="terminal-line"><span class="t-text">${l}</span></div>` : '<div style="height:6px;"></div>').join('');
+    document.querySelector('.t-input span').textContent = s.input;
+    menu.style.opacity = '1';
+  }, 300);
+  ussdIdx = (ussdIdx + 1) % ussdScreens.length;
+}
+setInterval(updateUSSD, 3500);
+
+// Contact form submission mock
+document.getElementById('contactForm').addEventListener('submit', function(e) {
+  e.preventDefault();
+  const btn = this.querySelector('.submit-btn');
+  const originalText = btn.textContent;
+  btn.textContent = 'Sending...';
+  btn.disabled = true;
+  
+  setTimeout(() => {
+    btn.textContent = 'Message Sent!';
+    btn.style.background = '#00A870';
+    this.reset();
+    setTimeout(() => {
+      btn.textContent = originalText;
+      btn.style.background = '';
+      btn.disabled = false;
+    }, 3000);
+  }, 1500);
+});
+
+// Store badge "coming soon" toast
+document.querySelectorAll('.store-badge').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const t = document.createElement('div');
+    t.textContent = 'Coming soon! We\'ll notify you when it\'s available.';
+    t.style.cssText = 'position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#0D1A30;color:#fff;border:1px solid rgba(0,212,141,0.3);padding:14px 24px;border-radius:50px;font-size:14px;z-index:9999;box-shadow:0 8px 30px rgba(0,0,0,0.4);';
+    document.body.appendChild(t);
+    setTimeout(() => { t.style.transition='opacity 0.4s'; t.style.opacity='0'; setTimeout(()=>t.remove(),400); }, 3000);
+  });
+});
+</script>
+</body>
+</html>
