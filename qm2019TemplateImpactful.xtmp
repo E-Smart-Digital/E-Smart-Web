@@ -1,0 +1,484 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<xTemplate>
+	<metadata>
+		<version major="1" minor="0"/>
+		<description xml:lang="en-US">Question by question assessment template</description>
+		<author>Questionmark</author>
+		<createdDate>2007-07-28T10:37</createdDate>
+		<comments>
+			<comment author="Questionmark" date="2007-07-28T10:37" xml:lang="en-US">Equivalent to V4 qxqon.template</comment>
+		</comments>
+	</metadata>
+	<devices>
+		<alternate>
+			<class id="mobile">qxqon.xtmp</class>
+		</alternate>
+	</devices>
+	<settings>
+		<entry id="HOOK_SCRIPT" type="text" category="default">
+			<value>
+				<![CDATA[
+					<script type="text/javascript">
+						$(document).ready(function() {
+							function ContrastImageChange() {
+								var qmContrastDiv = document.getElementById("qmContrastChange");
+								var qmFontDiv = document.getElementById("qmFontChange");
+								var qmHelpDiv = document.getElementsByClassName("qm_HELP");
+								var isHighContrast = $("#qm_QUESTION").hasClass("HIGH_CONTRAST");
+
+								if (qmContrastDiv && qmFontDiv && qmHelpDiv) {
+									ToggleContrastImage(isHighContrast, qmContrastDiv.getElementsByTagName('img')[0], "contrast.png", "contrastyellow.png");
+									ToggleContrastImage(isHighContrast, qmFontDiv.getElementsByTagName('img')[0], "font.png", "fontyellow.png");
+									ToggleContrastImage(isHighContrast, qmHelpDiv[0].getElementsByTagName('img')[0], "help.png", "helpyellow.png");
+								}
+
+								var imgGraphicInputs = document.getElementsByClassName("qm_Graphic_Inputs");
+								ToggleInputGraphicsContrast(isHighContrast, imgGraphicInputs);
+							}
+
+							function ToggleContrastImage(isHighContrast, imgElement, defaultImage, contrastImage) {
+								if (imgElement != null) {
+									var filename = imgElement.src.replace(/^.*[\\\/]/, '');
+
+									if (isHighContrast) {
+										imgElement.src = imgElement.src.replace(filename, contrastImage);
+									} else {
+										imgElement.src = imgElement.src.replace(filename, defaultImage);
+									}
+								}
+							}
+
+							function ToggleInputGraphicsContrast(isHighContrast, imgGraphicInputs) {
+								for (var i = 0; i < imgGraphicInputs.length; i++) {
+									if (imgGraphicInputs[i].src) {
+										if (imgGraphicInputs[i].src.indexOf("radio-unchecked") > -1) {
+											ToggleContrastImage(isHighContrast, imgGraphicInputs[i], "radio-unchecked.png", "radio-unchecked-yellow.png");
+											radioOffGraphic = imgGraphicInputs[i].src;
+										} else if (imgGraphicInputs[i].src.indexOf("checkbox-unchecked") > -1) {
+											ToggleContrastImage(isHighContrast, imgGraphicInputs[i], "checkbox-unchecked.png", "checkbox-unchecked-yellow.png");
+											checkboxOffGraphic = imgGraphicInputs[i].src;
+										}
+									}
+								}
+							}
+
+							function LinearModeAlignment() {
+								if (isNavigationModeLinear === true) {
+									$("#qm_FOOTER").css("cssText", "height:47px !important;");
+									$(".qm_QUESTION").css("bottom", "100px");
+									$(".base-timer_align").css("left", "88%");
+								}
+							}
+
+							LinearModeAlignment();
+
+// UI elements hidden
+								$("#qmFontChange, #qmContrastChange, .qm_HELP, #qm_FLAG_IMAGE, #qm_UNFLAG_IMAGE").hide();
+								$("#qm_ASSESSMENT_HEADER").append($(".qm_TIMER"));
+								$("#qm_Date").wrap("<div class='qm_LOG_INFO'></div>");
+								$("#qm_Loger").prependTo($(".qm_LOG_INFO"));
+							
+							// FIX: Add 50ms timeout so ContrastImageChange executes AFTER Questionmark toggles the classes on body/containers
+							$("#qmContrastChange").click(function() {
+								setTimeout(ContrastImageChange, 50);
+							});
+						});
+
+						WebFontConfig = {
+							google: {
+								families: ['Droid+Sans:400,700:latin']
+							}
+						};
+
+						$('body').ready(function() {
+							$('input[type=radio]').click(function() {
+								DoRadioClick(this);
+							});
+							$('input[type=checkbox]').click(function() {
+								$(this).parent().find('img:first').click();
+							});
+							$('input[type=checkbox]').click(function() {
+								DoCheckClick(this);
+							});
+							$('.qm_PROGRESS_Text').insertAfter('#qm_BANNER_HEADER_TEXT');
+							// Calculator removed from JS
+							$('.qm_calculator').prop('title', $('.qm_QXQNAVBUTTON').prop('value'));
+							$('.qm_calculator').keypress(function(e) {
+								if (e.keyCode == 13 || e.keyCode == 32) {
+									$('.qm_QXQNAVBUTTON').click();
+								}
+							});
+							if (isNavigationModeLinear === true) {
+								$('#qm_NEXT').attr('style', 'width:auto !important');
+								$('#qm_SUB').attr('style', 'float:right; margin-right: 15px');
+								$("#nav_palette_control").hide();
+							}
+						});
+
+						function openCalculator() {
+							$('.qm_QXQNAVBUTTON').click();
+						}
+					</script>
+					]]>
+      </value>
+    </entry>
+<entry id="HEADER_GRAPHIC" type="image" category="default">
+	      <value>xtmpgfx/Questionmark/logo.png</value>
+	      <description xml:lang="en">Graphic for page header</description>
+	    </entry>
+	<entry id="FAVICON_GRAPHIC" type="image" category="default">
+	  <value>/static/qm_logo_bg_no_default.png?v=2</value>
+	  <description xml:lang="en">Graphic for favicon</description>
+	</entry>
+    <entry id="USE_QXQ" type="boolean" category="delivery">
+      <value>0</value>
+      <description xml:lang="en-US">Use question by question delivery</description>
+    </entry>
+    <entry id="STYLE" type="text" category="default">
+      <value>
+		  html { background-color: #fff}
+		  body,td,th,input,select,textarea,.qm_QUESTION,.qm_HTML_CONTENT,.qm_INTRO,#qm_ASSESSMENT_HEADER .qm_TITLE,.qm_NUMBER,.qm_QXQBUTTON,.qm_QXQNAVBUTTON,#qm_Nav.qm_BUTTON,#qm_QUIT.qm_BUTTON,#qm_CONT.qm_BUTTON,#qm_END.qm_BUTTON,.navst_link,.qm_QXQ_NAV_BLOCK_TITLE,.nav_cell_unanswered_hightlight,.nav_cell_unanswered,.nav_cell_answered,.nav_cell_answered_hightlight,.qm_FEEDBACK_ITEM,.qm_QUESTION_FEEDBACK{color:#333;font-family:'Droid Sans',sans-serif;font-size:18px;line-height:1.42857;font-weight:300}
+		  body .ui-tooltip{font-size:10pt !important;}
+		  body.MEDIUM .ui-tooltip{font-size:11pt !important;}
+		  body.LARGE .ui-tooltip{font-size:12pt !important;}
+		  .qm_QXQBUTTON,.qm_QXQNAVBUTTON,#qm_Nav.qm_BUTTON,#qm_QUIT.qm_BUTTON,#qm_CONT.qm_BUTTON,#qm_END.qm_BUTTON{font-size:16px}
+		  #qm_QUESTION > #qm_HEADER{border-bottom:1px solid #d8d8d8;height:80px!important}
+		  .qm_BANNER{background:transparent;height:80px;left:0;padding:0;position:absolute;right:50%;top:0}
+		  .qm_WELCOME, body.MEDIUM .qm_WELCOME, body.LARGE .qm_WELCOME{background:transparent;border:medium none;height:80px;left:50%;padding:0;position:absolute;right:0;top:0}
+		  .qm_BANNER img{height: auto !important;;margin-left:5%;margin-top:5px;width:clamp(221px, 24%, 1368px)!important;background:white;border-radius:7px;}
+		  #Logo_Text{color:#3e6aae;display:inline;font-size:24px;margin-left:10px;position:absolute;top:24px}
+		  .qm_ICONS{display:none!important}
+		  .qm_LOG_INFO{height:36px;margin-right:4%}
+		  .qm_HEADER_WELCOME_TEXT, body.MEDIUM .qm_HEADER_WELCOME_TEXT, body.LARGE .qm_HEADER_WELCOME_TEXT{float:right;margin-top:10px;font-size: 18px !important;}
+		  
+		  /* FIX: Make qm_DOCUMENT positioned absolutely and sized properly so top/bottom rules stretch it correctly */
+		  #qm_DOCUMENT,#qm_QUESTION #qm_DOCUMENT{position:absolute;left:2.5%;right:2.5%;width:auto;padding:0!important;top:80px!important;bottom:0!important;overflow:hidden;}
+		  .qm_INTRO{margin-left:5%;width:90%}
+		  .qm_SEPARATOR{display:none}
+
+		  .qm_QUESTION_INTRO{padding:0;width:100%!important}
+		  #qm_ASSESSMENT_TITLE{top:50%;position:absolute;margin-top:-20px}
+		  .qm_TIMER::after{content:"\a Time remaining";font-size:11px;font-weight:400;white-space: pre}
+		  .qm_TIMER { color: #545454; font-size: 24px; font-weight: 700; line-height: 14px; padding: 0 !important; text-align: center; width: auto !important; float: none; right: 2.5%; position: absolute; top: 50%; margin-top: -9px; visibility: visible !important;}
+		  body.MEDIUM .qm_TIMER { font-size: 26px !important; }
+		  body.LARGE .qm_TIMER { font-size: 28px !important; }
+		  /* FIX: Position .qm_QXQPAGE absolutely within the document container and set overflow scrollbar to handle overflow safely */
+		  .qm_QXQPAGE{position:absolute!important;left:0!important;right:0!important;top:87px!important;bottom:168px!important;width:100%!important;overflow-y:auto!important;border-top:1px solid #d8d8d8;}
+		  
+		  /* FIX: Set .qm_QUESTION to relative height and flow naturally, letting the outer scrollbar handle vertical scrolling */
+		  .qm_QUESTION { position: relative !important; top: 0 !important; left: 0 !important; right: 0 !important; bottom: auto !important; height: auto !important; overflow-y: visible !important; width: 100% !important; margin: 0 !important; padding: 0 !important;}
+		  .qm_QA_CONTENT{margin-left:auto;margin-right:auto;width:95%}
+		  div.qm_QUESTION div.qm_QA_CONTENT legend{width:90%}
+		  #qm_FLAG_IMAGE,#qm_UNFLAG_IMAGE{display:none!important}
+		  .qm_NUMBER, body.MEDIUM .qm_NUMBER, body.LARGE .qm_NUMBER{margin-left:auto;margin-right:auto;width:95%;margin-bottom:15px;font-weight:700;font-size:16px}
+		  .qm_NUMBER::before{content:"Question "}
+		  .qm_QUESTION_mc tr{display:table;margin:10px 0 10px 15px;padding:0}
+		  #Highlight_Text, #Remove_Highlight_Text{font-size:11px}
+		  #qm_FOOTER, body.MEDIUM #qm_FOOTER, body.LARGE #qm_FOOTER { bottom: 37px !important; height: 129px !important; left: 2.5%; margin: 0; padding: 0; position: absolute; right: 2.5%; width: 95%;}
+		  .qm_CONTROL, body.MEDIUM .qm_CONTROL, body.LARGE .qm_CONTROL { background: transparent; margin: 0 1px !important; padding: 0 !important;}
+		  .qm_FOOTNOTE { display: none !important; }
+		  #qm_INTRO_btn{display:none!important}
+		  #qm_NEXT_btn{float:right;margin-right:15px}
+		  #qm_PREV_btn{margin-left:15px}
+		  #Submit_Text{font-size:11px}
+		  #qm_NAV_btn{display:none}
+		  .nav_cell_unanswered_hightlight,.nav_cell_unanswered,.nav_cell_answered,.nav_cell_answered_hightlight{font-size:18px}
+		  .nav_palette_visible, body.MEDIUM .nav_palette_visible, body.LARGE .nav_palette_visible{bottom:88px;left:-350px;margin:0 0 0 50%;right:2.5%;width:780px;z-index:1}
+		  .navst_box{background:transparent;border:medium none;margin-left:auto;margin-right:auto;width:640px;float:left;}
+		  .navst_title_tr{display:none}
+		  .qm_QXQ_NAV_BLOCKS{background:transparent}
+		  .navToolsGap{display:none}
+		  .qm_QXQ_NAV_BLOCK_TITLE{display:none}
+		  .qm_QXQ_NAV_BLOCKS ~ .qm_QXQ_NAV_BLOCKS{display:none}
+		  .nav_cell_unanswered_hightlight{background:transparent;border:2px solid #000;color:#000;font-size:16px}
+		  .nav_cell_answered_hightlight{ background: linear-gradient(to right bottom, #4CAE4C 0%,#4CAE4C 49.9%,#000000 50%,#000000 52%,#4CAE4C 52.1%,#4CAE4C 100%); background-repeat: no-repeat; color:#000; font-size: 16px; border:2px solid #000;}
+
+		  .nav_cell_unanswered{background:#fff none repeat scroll 0 0;font-size:16px}
+		  .nav_cell_empty{background:#fff none repeat scroll 0 0;font-size:16px}
+		  .nav_cell_answered{ background: linear-gradient(to right bottom, #4cae4c 0%,#4cae4c 49.9%,#000000 50%,#000000 52%,#4cae4c 52.1%,#4cae4c 100%); background-repeat: no-repeat; color:#000;font-size:16px}
+
+		  #qm_PREV, #qm_NEXT, #qm_SUB, #qm_END { background: #33588E none repeat scroll 0 0; border: 2px solid #33588E; border-radius: 7px; color: #fff; font-size: 17px !important; height: 62px; padding: 0 20px; width: 137px; font-family: 'FontAwesome','Droid Sans',sans-serif; transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;}
+		  #qm_PREV:hover, #qm_NEXT:hover, #qm_SUB:hover, #qm_END:hover { background: #fff; color: #33588E;}
+		  #qm_Submit, #qm_EndAssessment { bottom: 24px; padding: 0; position: fixed; text-align: center; width: auto; left: 2.7%; right: 2.7%; margin: 0}
+		  body.HIGH_CONTRAST input#qm_SUB, body.HIGH_CONTRAST input#qm_END, body.HIGH_CONTRAST .ui-button { border: 2px solid #ffff00 !important;}
+		  body.HIGH_CONTRAST #qm_Submit, body.HIGH_CONTRAST #qm_Continue, body.HIGH_CONTRAST #qm_EndAssessment { padding-right: 0; margin-right: 0 !important;}
+		  input#qm_SUB, input#qm_END { width: auto !important;}
+		  .base-timer_align.IE,.base-timer_align.IE10 { right: 100px !important;}
+		  .base-timer_align.IE9 { right: 0px !important;}
+		  body.HIGH_CONTRAST .qm_TIMER{color:#ff0!important}
+		  body.HIGH_CONTRAST #qm_FOOTER .qm_CONTROL{border:medium none}
+		  body.HIGH_CONTRAST #qm_Submit,body.HIGH_CONTRAST #qm_EndAssessment{border:medium none!important;}
+		  body.HIGH_CONTRAST #qm_EndAssessment{border: none;}
+		  body.MEDIUM .qm_HTML_CONTENT{font-size:22px}
+		  body.MEDIUM .qm_NUMBER{font-size:24px}
+		  body.MEDIUM .qm_TIMER::after{font-size:16px}
+		  body.MEDIUM #Submit_Text{font-size:19px}
+		  body.MEDIUM #qm_PREV,body.MEDIUM #qm_NEXT, body.MEDIUM #qm_SUB, body.MEDIUM #qm_END {font-size:24px !important;width:100%;}
+		  body.MEDIUM #Highlight_Text, body.MEDIUM #Remove_Highlight_Text{font-size:19px}
+		  body.MEDIUM .qm_HEADER_WELCOME_TEXT{font-size:22px}
+		  body.LARGE .qm_HTML_CONTENT{font-size:24px}
+		  body.LARGE .qm_NUMBER{font-size:26px}
+		  body.LARGE .qm_TIMER::after{font-size:18px}
+		  body.LARGE #Submit_Text{font-size:21px}
+		  body.LARGE #qm_PREV,body.LARGE #qm_NEXT, body.LARGE #qm_SUB, body.LARGE #qm_END{font-size:25px !important; width:100%;}
+		  body.LARGE #Highlight_Text, body.LARGE #Remove_Highlight_Text{font-size:21px}
+		  body.LARGE .qm_TIMER{width:145px}
+		  body.LARGE .qm_HEADER_WELCOME_TEXT{font-size:24px}
+		  body.HIGH_CONTRAST,body.HIGH_CONTRAST td,body.HIGH_CONTRAST th,body.HIGH_CONTRAST input,body.HIGH_CONTRAST select,body.HIGH_CONTRAST textarea,body.HIGH_CONTRAST .qm_QUESTION,body.HIGH_CONTRAST .qm_HTML_CONTENT,body.HIGH_CONTRAST .qm_INTRO,body.HIGH_CONTRAST #qm_ASSESSMENT_HEADER .qm_TITLE,body.HIGH_CONTRAST .qm_NUMBER,body.HIGH_CONTRAST .qm_QXQBUTTON,body.HIGH_CONTRAST .qm_QXQNAVBUTTON,body.HIGH_CONTRAST #qm_Nav.qm_BUTTON,body.HIGH_CONTRAST #qm_QUIT.qm_BUTTON,body.HIGH_CONTRAST #qm_CONT.qm_BUTTON,body.HIGH_CONTRAST #qm_END.qm_BUTTON,body.HIGH_CONTRAST .navst_link,body.HIGH_CONTRAST .qm_QXQ_NAV_BLOCK_TITLE,body.HIGH_CONTRAST .nav_cell_unanswered_hightlight,body.HIGH_CONTRAST .nav_cell_unanswered,body.HIGH_CONTRAST .nav_cell_answered,body.HIGH_CONTRAST .nav_cell_answered_hightlight,body.HIGH_CONTRAST .qm_FEEDBACK_ITEM,body.HIGH_CONTRAST .qm_QUESTION_FEEDBACK{color:#ff0}
+		  body.HIGH_CONTRAST .qm_BANNER{background:#003 none repeat scroll 0 0}
+		  body.HIGH_CONTRAST #Logo_Text{color:#ff0}
+		  body#qm_QUESTION.HIGH_CONTRAST{background:#003 none repeat scroll 0 0}
+		  body.HIGH_CONTRAST .nav_cell_unanswered{background:#003 none repeat scroll 0 0;border:1px outset #888}
+		  body.HIGH_CONTRAST .nav_cell_answered_hightlight,body.HIGH_CONTRAST .nav_cell_answered{ background: linear-gradient(to right bottom, blue 0%,blue 49.9%,#000000 50%,#000000 56%,blue 56.1%,blue 100%); background-repeat: no-repeat; color:#003;}
+
+
+		  .navst_box, body.MEDIUM .navst_box, body.LARGE .navst_box {background: transparent;border: medium none;margin-left: auto;margin-right: auto; width: 640px; padding:0}
+		  /* FIX: Align .qm_INTRO to flow relative in normal document layout to avoid overlapping with question elements */
+		  .qm_INTRO { position: relative !important; top: 0 !important; left: 0 !important; right: 0 !important; margin: 15px auto !important; width: 95% !important; z-index: 2; float: none !important;}
+		  body.MEDIUM .nav_cell_unanswered_hightlight, body.MEDIUM .nav_cell_unanswered, body.MEDIUM .nav_cell_answered, body.MEDIUM .nav_cell_answered_hightlight { font-size: 15px; width: 30px;}
+		  body.LARGE .nav_cell_unanswered_hightlight, body.LARGE .nav_cell_unanswered, body.LARGE .nav_cell_answered, body.LARGE .nav_cell_answered_hightlight { font-size: 16px; width: 30px;}
+		  
+		  /* FIX: Make qm_DOCUMENT have correct absolute positioning for sub-views as well */
+		  #qm_DOCUMENT, #qm_QUESTION #qm_DOCUMENT, body.MEDIUM #qm_DOCUMENT, body.LARGE #qm_DOCUMENT { position: absolute; left: 2.5%; right: 2.5%; width: auto; padding: 0!important; top: 104px!important; bottom: 0 !important; overflow: hidden; border: 1px solid #d8d8d8; border-bottom: none;}
+
+		  div#qmFontChange { padding-top: 3px; padding-right: 12px;}
+		  div#qmContrastChange { padding-right: 15px;}
+		  .qm_HELP, body.MEDIUM .qm_HELP, body.LARGE .qm_HELP { padding-right: 10px;}
+		  .qm_PROGRESS_BAR_CONTAINER, body.MEDIUM .qm_PROGRESS_BAR_CONTAINER, body.LARGE .qm_PROGRESS_BAR_CONTAINER { position: fixed; top: 32px; height: 15px; border-radius: 4px; box-shadow: inset 0 1px 2px rgba(0,0,0,0.1); background: #f5f5f5; transform: scale(1.25); left: 0; right: 0; margin: 0 auto; border: 1px solid #CCC; border-radius: 4px;}
+		  .nav_cell_unanswered_hightlight, .nav_cell_unanswered, .nav_cell_answered, .nav_cell_answered_hightlight { font-size: 14px;}
+		  div#qm_PROGRESS_BAR { background: #4cae4c; height: 100%; border-radius: 4px;}
+		  .nav_cell_unanswered_hightlight, .nav_cell_unanswered, .nav_cell_answered, .nav_cell_answered_hightlight { font-size: 14px;}
+		  body.MEDIUM .qm_INTRO {font-size: 24px;}
+		  body.LARGE .qm_INTRO {font-size: 26px;}
+		  body.MEDIUM .qm_HTML_CONTENT {font-size: 24px;}
+		  body.LARGE .qm_HTML_CONTENT {font-size: 26px;}
+		  .qm_BANNER, body.MEDIUM .qm_BANNER, body.LARGE .qm_BANNER { background: transparent; height: 80px; left: 0; padding: 0; position: absolute; right: 50%; top: 0;}
+		  body.HIGH_CONTRAST #qm_PREV, body.HIGH_CONTRAST #qm_NEXT { border: 2px solid #ffff00;}
+		  .qm_FOOTNOTE, body.MEDIUM .qm_FOOTNOTE, body.LARGE .qm_FOOTNOTE { font-size: 14px !important;}
+		  div#nav_palette { height: 60px !important;}
+
+		  body.MEDIUM .qm_FOOTER_QxQ_BUTTONS#qm_FLAG_IMAGE img, body.MEDIUM .qm_FOOTER_QxQ_BUTTONS#qm_UNFLAG_IMAGE img, body.LARGE .qm_FOOTER_QxQ_BUTTONS#qm_FLAG_IMAGE img, body.LARGE .qm_FOOTER_QxQ_BUTTONS#qm_UNFLAG_IMAGE img { height: 40px; width: 40px;}
+		  
+		  /* FIX: Make sure the margin and borders align perfectly for qm_DOCUMENT under all device presets */
+		  #qm_DOCUMENT, #qm_QUESTION #qm_DOCUMENT, body.MEDIUM #qm_DOCUMENT, body.LARGE #qm_DOCUMENT { position: absolute; left: 2.5%; right: 2.5%; width: auto; padding: 0!important; top: 104px!important; bottom: 0 !important; overflow: hidden; border: 1px solid #d8d8d8; border-bottom: none;}
+		  #qm_Loger {font-family: 'FontAwesome', 'Droid Sans';}
+		  #qm_Date {font-family: 'FontAwesome', 'Droid Sans';}
+		  .qm_calculator {cursor:pointer; padding-top:10px; padding-left:5px;}
+		  @media (max-width: 1100px) {
+		  .nav_palette_visible{display:none}
+		  }
+		  @media (max-width: 965px) {
+		  .qm_PROGRESS_BAR_CONTAINER { display: none;}
+		  .qm_PROGRESS_Text { display: none;}
+		  }
+		  @media (max-width: 630px) {
+		  .qm_HEADER_WELCOME_TEXT { display: none;}
+		  }
+		  @media (max-width: 440px) {
+		  div#qmTimer { display: none;}
+		  }
+		  @media (max-width: 400px) {
+		  .qm_ICONS { display: none;}
+		  #qm_FLAG_IMAGE, #qm_UNFLAG_IMAGE { display: none !important;}
+		  }
+		  @media (max-width: 335px) {
+		  #qm_PREV, #qm_NEXT { width: 85px; font-size: 13px; padding: 0;}
+		  }
+
+		  .qm_SELECT_match {  max-width: 500px;}
+
+		  #qm_CONT {
+		  background: #33588E none repeat scroll 0 0;
+		  border: 2px solid #33588E;
+		  border-radius: 7px;
+		  font-size: 17px !important;
+		  color:#FFFFFF;
+		  height: 62px;
+		  padding: 0 20px;
+		  width: 137px;
+		  font-family: 'FontAwesome','Droid Sans',sans-serif;
+		  transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s                                       ease-in-out,box-shadow .15s ease-in-out;
+
+		  }
+
+		  /* Feedback	*/
+
+		  #qm_ASSESSMENT_HEADER .qm_TITLE { border: none; padding-left: 2.5%; margin-left: 1px; position: absolute; margin-top: 20px; top: 0; font-size: 24px;}
+		  .qm_ASSESSMENT_OUTCOME .qm_SECTION_HEADER { font-size: 18px; border: none;}
+		  #qm_ASSESSMENT_HEADER, body.MEDIUM #qm_ASSESSMENT_HEADER, #qm_BLOCK_SCORE, body.LARGE #qm_ASSESSMENT_HEADER, body.LARGE #qm_BLOCK_SCORE{height:85px;margin-top:0;padding:0;position:fixed;top:104px;width:95%;left:2.5%;right:2.5%}
+		  .qm_TITLE { visibility: visible !important;}
+		  .qm_QUESTION_FEEDBACK { margin: 0 2.5%;}
+		  input#qm_END.qm_BUTTON { color: #fff;}
+		  input#qm_END.qm_BUTTON:hover { background: #fff; color: #33588E;}
+
+		  body.MEDIUM #qm_ASSESSMENT_HEADER .qm_TITLE { font-size: 26px !important; }
+		  body.LARGE #qm_ASSESSMENT_HEADER .qm_TITLE { font-size: 28px !important; }
+		  .qm_ASSESSMENT_OUTCOME, body.MEDIUM .qm_ASSESSMENT_OUTCOME, body.LARGE .qm_ASSESSMENT_OUTCOME { margin: 110px 2.5% 25px;}
+		  input#qm_END.qm_BUTTON { color: #fff; font-family: 'FontAwesome', 'Droid Sans';}
+
+		  body.MEDIUM .smatHead, body.MEDIUM .smatHeadHighlight, body.MEDIUM .smatRow, body.MEDIUM .smatRowHighlight {font-size: 20px;}
+		  body.LARGE .smatHead, body.LARGE .smatHeadHighlight, body.LARGE .smatRow, body.LARGE .smatRowHighlight {font-size: 22px;}
+		  .qm_PROGRESS_Text { float: right; padding-top: 28px; padding-right: 155px; font-size: 12pt; font-weight: 300;}
+		  body.MEDIUM .qm_PROGRESS_Text { float: right; padding-top: 27px; padding-right: 155px; font-size: 13pt;}
+		  body.LARGE .qm_PROGRESS_Text { float: right; padding-top: 26px; padding-right: 155px; font-size: 14pt; }
+	  </value>
+		</entry>
+		<entry id="ALLOW_AUTO_RESIZE" type="integer" category="default">
+			<value>0</value>
+			<description xml:lang="en-US">
+				Auto resizing of page display depending on width and/or height
+				0 - do not auto resize
+				1 - auto resize, only for height adjustment
+				2 - auto resize, only for width adjustment
+				3 - auto resize, for both width and height adjustment
+			</description>
+		</entry>
+		<entry id="SHOW_QUESTION_PROGRESS" type="integer" category="delivery">
+			<value>1</value>
+			<description xml:lang="en-US">
+				show the question progress as per the below conditions
+				0 - don't show any progress bar at all
+				1 - show only progress bar
+				2 - show only text question progress
+				3 - show both text question progress and progress bar
+			</description>
+		</entry>
+		<entry id="SHOW_QUESTION_BLOCK" type="boolean" category="delivery">
+			<value>0</value>
+			<description xml:lang="en-US">show block progress</description>
+		</entry>
+		<entry id="HELP_BUTTON_GRAPHIC" type="image" category="default">
+			<value>xtmpgfx/Questionmark/help.png</value>
+			<description xml:lang="en-US">Graphic for Help button</description>
+		</entry>
+		<entry id="CONTRAST_STYLE_CHANGE_GRAPHIC" type="image" category="delivery">
+			<value>xtmpgfx/Questionmark/contrast.png</value>
+			<description xml:lang="en-US">Graphic for contrast change icon</description>
+		</entry>
+		<entry id="FONTSIZE_STYLE_CHANGE_GRAPHIC" type="image" category="delivery">
+			<value>xtmpgfx/Questionmark/font.png</value>
+			<description xml:lang="en-US">Graphic for fontsize change icon</description>
+		</entry>
+		<entry id="FLAG_GRAPHIC" type="image" category="question">
+			<value>xtmpgfx/Questionmark/mark.png</value>
+			<description xml:lang="en-US">Graphic for flagging a question</description>
+		</entry>
+		<entry id="UNFLAG_GRAPHIC" type="image" category="question">
+			<value>xtmpgfx/Questionmark/removemark.png</value>
+			<description xml:lang="en-US">Graphic for unflagging a question</description>
+		</entry>
+		<entry id="NAVIGATOR_FLAG_GRAPHIC" type="image" category="question">
+			<value>xtmpgfx/Questionmark/nav_bg.png</value>
+			<description xml:lang="en-US">Graphic for navigator flag to be used inside the navigator</description>
+		</entry>
+		<entry id="NAVIGATOR_FLAG_GRAPHIC_ANSWERED" type="image" category="question">
+			<value>xtmpgfx/Questionmark/nav_bg-answered.png</value>
+			<description xml:lang="en-US">Graphic for navigator flag for answered question to be used inside the navigator</description>
+		</entry>
+		<entry id="NAVIGATOR_ROWS" type="integer" category="delivery">
+			<value>2</value>
+			<description xml:lang="en-US">Number of rows of questions to show in the Assessment Navigator </description>
+		</entry>
+		<entry id="NAVIGATOR_COLUMNS" type="integer" category="delivery">
+			<value>20</value>
+			<description xml:lang="en-US">Number of columns of questions to show in the Assessment Navigator </description>
+		</entry>
+<entry id="SHOW_NAVIGATOR" type="integer" category="delivery">
+				<value>0</value>
+				<description xml:lang="en-US">
+					Whether to display the Assessment Navigator
+					0 - don't show the Navigator or the button to invoke it
+					1 - show the Navigator button but not the Navigator itself
+					2 - show the Navigator button and display the Navigator itself
+				</description>
+			</entry>
+		<entry id="USE_GRAPHIC_INPUTS" type="integer" category="delivery">
+			<value>1</value>
+			<description xml:lang="en-US">Use graphic inputs for html elements like radio button and checkboxes</description>
+		</entry>
+		<entry id="RADIO_ON_GRAPHIC" type="image" category="delivery">
+			<value>xtmpgfx/Questionmark/radio-checked.png</value>
+			<description xml:lang="en-US">Graphic for Radio input - ON</description>
+		</entry>
+		<entry id="RADIO_OFF_GRAPHIC" type="image" category="delivery">
+			<value>xtmpgfx/Questionmark/radio-unchecked.png</value>
+			<description xml:lang="en-US">Graphic for Radio input - OFF</description>
+		</entry>
+		<entry id="CHECKBOX_ON_GRAPHIC" type="image" category="delivery">
+			<value>xtmpgfx/Questionmark/checkbox-checked.png</value>
+			<description xml:lang="en-US">Graphic for checkbox input - ON</description>
+		</entry>
+		<entry id="CHECKBOX_OFF_GRAPHIC" type="image" category="delivery">
+			<value>xtmpgfx/Questionmark/checkbox-unchecked.png</value>
+			<description xml:lang="en-US">Graphic for checkbox input - OFF</description>
+		</entry>
+		<entry id="HELP_WINDOW_URL" type="text" category="default">
+			<value>https://candidate-support.questionmark.com</value>
+			<description xml:lang="en-US">URL for online help</description>
+		</entry>
+		<entry id="DISABLE_SHORTCUT_KEYS" type="image" category="default">
+			<value>1</value>
+			<description xml:lang="en-US"></description>
+		</entry>
+		<entry id="HOME_BUTTON_OPEN_ACTION" type="integer" category="end">
+			<value>1</value>
+			<description xml:lang="en-US">
+				The action of the Home button at the end of an assessment if the assessment is launched from an open entry point and does not branch
+				0 - return to the initial entry point (e.g. the assessment list page)
+				1 - close the browser window or (will only have an effect if the window or tab was opened by Javascript in the first place)
+				2 - branch to the URL defined in HOME_BUTTON_URL
+				3 - do not display a Home button
+			</description>
+		</entry>
+	</settings>
+	<tools>
+<!-- CALCULATOR removed -->
+	</tools>
+	<text>
+		<entry id="TIME_REMAINING_TEXT" type="text" category="question">
+			<description xml:lang="en-US"><![CDATA[Text used to show time remaining]]></description>
+			<value xml:lang="en-US"><![CDATA[]]></value>
+		</entry>
+		<entry id="NEXT_QUESTION_BUTTON_TEXT" type="text" translate="yes" category="delivery">
+			<description xml:lang="en-US"><![CDATA[Text for next question button]]></description>
+			<value xml:lang="en-US">Next &#xf0a9;</value>
+		</entry>
+    <entry id="NEXT_QUESTION_TOOLTIP_BUTTON_TEXT" type="text" translate="yes" category="delivery">
+      <description xml:lang="en-US"><![CDATA[Text for next question button]]></description>
+      <value xml:lang="en-US">Next &#xf0a9;</value>
+    </entry>
+		<entry id="PREVIOUS_QUESTION_BUTTON_TEXT" type="text" translate="yes" category="delivery">
+			<description xml:lang="en-US"><![CDATA[Text for previous question button]]></description>
+			<value xml:lang="en-US">&#xf0a8; Previous</value>
+		</entry>
+    <entry id="PREVIOUS_QUESTION_TOOLTIP_BUTTON_TEXT" type="text" translate="yes" category="delivery">
+      <description xml:lang="en-US"><![CDATA[Text for previous question button]]></description>
+      <value xml:lang="en-US">&#xf0a8; Previous</value>
+    </entry>
+		<entry id="SUBMIT_TEXT" type="text" translate="yes" category="question">
+			<description xml:lang="en-US"><![CDATA[Text for Submit button]]></description>
+			<value xml:lang="en-US">Submit answers &#xf1d8;</value>
+		</entry>
+		<entry id="LINK_CLOSE_TEXT" type="text" translate="yes" category="delivery">
+			<description xml:lang="en-US"><![CDATA[Text for Close button]]></description>
+			<value xml:lang="en-US">Close &#xf057;</value>
+		</entry>
+		<entry id="FINISH_TOOLTIP" type="text" translate="yes" category="question">
+			<description xml:lang="en-US"><![CDATA[Tooltip for submit button]]></description>
+			<value xml:lang="en-US"><![CDATA[Submit your answers]]></value>
+		</entry>
+		<entry id="ASSESSMENT_RESULTS_TEXT" type="text" translate="yes" category="end">
+			<description xml:lang="en-US"><![CDATA[Text for total assessment score]]></description>
+			<value xml:lang="en-US"><![CDATA[Overall score:]]></value>
+		</entry>
+		<entry id="LOGGED_IN_TEXT" type="text" translate="yes" category="default">
+			<description xml:lang="en-US"><![CDATA[Logged in as]]></description>
+			<value xml:lang="en-US">&#xf007;</value>
+		</entry>
+		<entry id="TRYOUT_TEXT" type="text" translate="yes" category="default">
+		  <description xml:lang="en-US"><![CDATA[tryout]]></description>
+		  <value xml:lang="ar-SA"><![CDATA[قم بتجربة]]></value>
+		  <value xml:lang="en-US"><![CDATA[tryout]]></value>
+		</entry>
+	</text>
+</xTemplate>
