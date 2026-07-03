@@ -1,0 +1,1488 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<xTemplate>
+	<metadata>
+		<version major="1" minor="0"/>
+		<description xml:lang="en-US">Updated Questionmark Default template</description>
+		<author>Shaun Wilson</author>
+		<createdDate>019-05-25T10:37</createdDate>
+		<comments>
+			<comment author="Shaun Wilson" date="2019-05-25T10:37" xml:lang="en-US">Updated Questionmark Default template</comment>
+		</comments>
+	</metadata>
+	<devices>
+		<alternate>
+			<class id="mobile">qxqon.xtmp</class>
+		</alternate>
+	</devices>
+	<settings>
+		<entry id="HOOK_SCRIPT" type="text" category="default">
+			<value>
+				<![CDATA[
+					<script type="text/javascript">
+						$(document).ready(function() {
+						    function ContrastImageChange() {
+						        var qmContrastDiv = document.getElementById("qmContrastChange");
+						        var qmFontDiv = document.getElementById("qmFontChange");
+						        var qmHelpDiv = document.getElementsByClassName("qm_HELP");
+						        var isHighContrast = $("#qm_QUESTION").hasClass("HIGH_CONTRAST");
+
+						        if (qmContrastDiv && qmFontDiv && qmHelpDiv) {
+						            ToggleContrastImage(isHighContrast, qmContrastDiv.getElementsByTagName('img')[0], "contrast-nb.png", "contrastyellow-nb.png");
+						            ToggleContrastImage(isHighContrast, qmFontDiv.getElementsByTagName('img')[0], "font-nb.png", "fontyellow-nb.png");
+						            ToggleContrastImage(isHighContrast, qmHelpDiv[0].getElementsByTagName('img')[0], "help-nb.png", "helpyellow-nb.png");
+						        }
+
+						        var imgGraphicInputs = document.getElementsByClassName("qm_Graphic_Inputs");
+						        ToggleInputGraphicsContrast(isHighContrast, imgGraphicInputs);
+						    }
+
+						    function ToggleContrastImage(isHighContrast, imgElement, defaultImage, contrastImage) {
+						        if (imgElement != null) {
+						            var filename = imgElement.src.replace(/^.*[\\\/]/, '');
+
+						            if (isHighContrast) {
+						                imgElement.src = imgElement.src.replace(filename, contrastImage);
+						            } else {
+						                imgElement.src = imgElement.src.replace(filename, defaultImage);
+						            }
+						        }
+						    }
+
+						    function ToggleInputGraphicsContrast(isHighContrast, imgGraphicInputs) {
+						        for (var i = 0; i < imgGraphicInputs.length; i++) {
+						            if (imgGraphicInputs[i].src) {
+						                if (imgGraphicInputs[i].src.indexOf("radio-unchecked") > -1) {
+						                    ToggleContrastImage(isHighContrast, imgGraphicInputs[i], "radio-unchecked-nb.png", "radio-unchecked-yellow-nb.png");
+						                    radioOffGraphic = imgGraphicInputs[i].src;
+						                } else if (imgGraphicInputs[i].src.indexOf("checkbox-unchecked") > -1) {
+						                    ToggleContrastImage(isHighContrast, imgGraphicInputs[i], "checkbox-unchecked-nb.png", "checkbox-unchecked-yellow-nb.png");
+						                    checkboxOffGraphic = imgGraphicInputs[i].src;
+						                }
+						            }
+						        }
+						    }
+
+// Elements removed from JS
+							    $("#qmFontChange, #qmContrastChange, .qm_HELP, #qm_UNFLAG_IMAGE, #qm_FLAG_IMAGE").hide();
+						    $("#qmContrastChange").click(function() {
+						        ContrastImageChange();
+						    });
+
+							if (isNavigationModeLinear === true && autoAdvanceTime > 0) {
+								var timerInterval = setInterval(AdjustForAutoAdvanceTimer, 300);
+								setTimeout(function() { clearInterval(timerInterval); }, 3000);
+							}
+						});
+
+						WebFontConfig = {
+						    google: {
+						        families: ['Droid+Sans:400,700:latin']
+						    }
+						};
+
+						$('body').ready(function() {
+						    $('input[type=radio]').click(function() {
+						        DoRadioClick(this);
+						    });
+						    $('input[type=checkbox]').click(function() {
+						        $(this).parent().find('img:first').click();
+						    });
+						    $('input[type=checkbox]').click(function() {
+						        DoCheckClick(this);
+						    });
+						});
+
+						function AdjustForAutoAdvanceTimer() {
+							if (isNavigationModeLinear !== true || autoAdvanceTime <= 0)
+								return;
+
+							// For Auto-Advance Timer
+							var timerDimension = 150;
+							var alignment = 0.875;
+
+							var top = ($("#qm_DOCUMENT").height()/2) - (timerDimension/2);
+							var alignValue = ($("#qm_DOCUMENT").width() * alignment) - timerDimension/2;
+							var alignDirection = "left";
+
+							// Footer Alignment
+
+							if ($("html").attr("dir") === "rtl") {
+								alignDirection = "right";
+								$(".qm_SAYG_BUTTON").css("left", alignValue + "px");
+							} else {
+								$(".qm_SAYG_BUTTON").css("right", alignValue + "px");
+							}
+
+							$(".qm_QXQBUTTON, .qm_BUTTON").css("width", timerDimension + "px");
+
+							var submitButtonDiv = $(".qm_FOOTER_BUTTON");
+							submitButtonDiv.css("float", "none");
+							submitButtonDiv.css("position", "absolute");
+							submitButtonDiv.css(alignDirection, alignValue + "px");
+
+							if (alignDirection === "right")
+								submitButtonDiv.css("padding-right", 0);
+
+							submitButtonDiv.show();
+
+							// Content Alignment
+
+							$(".qm_QA_CONTENT").width("75%");
+
+							var autoAdvanceQuestionTimer = $("#autoAdvanceQuestionTimer");
+							autoAdvanceQuestionTimer.css(alignDirection, alignValue + "px");
+							autoAdvanceQuestionTimer.css("top", top + "px");
+
+							$("#autoAdvanceQuestionBaseTimer").width(timerDimension + "px");
+							$("#autoAdvanceQuestionBaseTimer").height(timerDimension + "px");
+							var baseTimerLabel = $("#base-timer-label");
+							baseTimerLabel.width(timerDimension + "px");
+							baseTimerLabel.height(timerDimension + "px");
+							baseTimerLabel.css("font-size", (timerDimension/5) + "px");
+
+							// IE specific fixes
+							if (navigator.appName === 'Microsoft Internet Explorer' || (navigator.userAgent.match(/Trident/))) {
+								if (alignDirection === "right") {
+									autoAdvanceQuestionTimer.css(alignDirection, (alignValue + 100 + timerDimension/4) + "px");
+								}
+							}
+						}
+
+						window.addEventListener("resize", AdjustForAutoAdvanceTimer);
+					</script>
+					
+					]]>
+			</value>
+		</entry>
+<entry id="HEADER_GRAPHIC" type="image" category="default">
+				<value>xtmpgfx/Questionmark/logo.png</value>
+				<description xml:lang="en">Graphic for page header</description>
+			</entry>
+		<entry id="FAVICON_GRAPHIC" type="image" category="default">
+			<value>/static/qm_logo_bg_no_default.png?v=2</value>
+			<description xml:lang="en">Graphic for favicon</description>
+		</entry>
+		<entry id="USE_QXQ" type="boolean" category="delivery">
+			<value>1</value>
+			<description xml:lang="en-US">Use question by question delivery</description>
+		</entry>
+		<entry id="STYLE" type="text" category="default">
+			<value>
+				html {background: #fff}
+				/* Font */
+				body, td, th, input, select, textarea, .qm_QUESTION_INTRO, .qm_QUESTION, .qm_HTML_CONTENT, .qm_INTRO, #qm_ASSESSMENT_HEADER .qm_TITLE, .qm_NUMBER, .qm_QXQBUTTON, .qm_QXQNAVBUTTON, #qm_Nav.qm_BUTTON, #qm_SUB.qm_BUTTON, #qm_QUIT.qm_BUTTON, #qm_CONT.qm_BUTTON, #qm_END.qm_BUTTON, .navst_link, .qm_QXQ_NAV_BLOCK_TITLE, .nav_cell_unanswered_hightlight, .nav_cell_unanswered, .nav_cell_answered, .nav_cell_answered_hightlight, .qm_FEEDBACK_ITEM, .qm_QUESTION_FEEDBACK { color: #333; font-family: 'Open Sans', sans-serif; font-size: 18px; line-height: 1.42857; font-weight: 300;}
+				.qm_QXQBUTTON, .qm_QXQNAVBUTTON, #qm_Nav.qm_BUTTON, #qm_SUB.qm_BUTTON, #qm_QUIT.qm_BUTTON, #qm_CONT.qm_BUTTON, #qm_END.qm_BUTTON { font-size: 16px;}
+				body .ui-tooltip{font-size:10pt !important;}
+				body.MEDIUM .ui-tooltip{font-size:11pt !important;}
+				body.LARGE .ui-tooltip{font-size:12pt !important;}
+				/* Header and Banner section */
+				.qm_BANNER { background: #fff none repeat scroll 0 0; height: 76px; padding: 3px 0 !important;}
+				.qm_WELCOME { border: medium none; color: #333; height: 37px !important; padding: 13px 0 4px !important; background-size: contain; background-color: #000;}
+				.qm_PROGRESS_BAR_CONTAINER { float:right; border: 1px solid #fff; height: 9px; border-radius: 5px;}
+				.qm_PROGRESS_BAR { background: #000 none repeat scroll 0 0; height: 9px; border-radius: 5px;}
+				#qm_Date { margin-left: 25px;}
+				.qm_HELP { display: none !important; }
+				.qm_HEADER_WELCOME_TEXT { float: left; width: auto; margin-top: 3px; padding-left: 5px; font-size: 16px; font-weight: 300;}
+				#qm_Date { margin-left: 5%;}
+				.qm_HELP { display: none !important; }
+				.qm_PROGRESS_Text { float: right; padding-bottom: 5px; padding-top: 3px; padding-right: 5px; font-size: 11pt; font-weight: 300;color: #fff}
+				.qm_TIMER { float: right; padding-bottom: 5px; padding-top: 3px; padding-right: 8px; padding-left: 8px; font-size: 16px; font-weight: 300;}
+				.qm_Style_Icons { display: none !important; }
+				.qm_HELP { display: none !important; }
+
+
+
+				/* Document and question section */
+				#qm_DOCUMENT { bottom: 70px !important; top: 137px !important; right: 130px;}
+				#qm_QUESTION #qm_DOCUMENT { padding-left: 0;}
+				#qm_ASSESSMENT_HEADER .qm_TITLE { border: medium none; color: inherit; font-family: 'Open Sans', sans-serif; font-size: 35px; font-weight: 100; line-height: 1.1; margin-bottom: 18px;}
+				.qm_SEPARATOR { display: none;}
+				.qm_QA_CONTENT { margin: 0 5%;}
+				.qm_NUMBER { margin: 20px 5% 0;}
+				.qm_EXPLANATION { margin: 20px 5% 0;}
+				.qm_QUESTION_INTRO > #qm_ASSESSMENT_HEADER { margin: 0 5% 0; text-align: left; width: auto;}
+				.qm_INTRO { margin: 0 5%;}
+				.qm_QUESTION_INTRO { padding: 0; width: 100% !important;}
+				.qm_QUESTION { padding: 0; width: 100% !important;}
+				#qm_ASSESSMENT_HEADER { margin: 0 5% 0;}
+
+				/* Footer section */
+				#qm_FOOTER { background: #d8d8d8 none repeat scroll 0 0; height: 75px !important;}
+				.qm_FOOTNOTE { display: none;}
+				.qm_CONTROL { background: rgba(0, 0, 0, 0) none repeat scroll 0 0;}
+				#qm_INTRO_btn { display: none !important;}
+				.qm_QXQBUTTON, .qm_QXQNAVBUTTON, #qm_Nav.qm_BUTTON, #qm_SUB.qm_BUTTON, #qm_QUIT.qm_BUTTON, #qm_CONT.qm_BUTTON, #qm_END.qm_BUTTON { background: #000; border: 2px solid #000; color: #fff; font-size: 16px; height: 45px; margin-right: 10px; margin-top: 5px; border-radius: 5px; font-family: 'FontAwesome', 'Open Sans', sans-serif; padding: 10px 15px; width:115px;}
+				input#qm_Nav.qm_BUTTON { background: #4E515D; border: 2px solid #4E515D;}
+
+				/* Navigator section */
+				.navst_link { font-size: 16px;}
+				.qm_QXQ_NAV_BLOCK_TITLE { font-size: 16px;}
+				.navst_box { background: #d8d8d8 none repeat scroll 0 0; border: 1px solid #333;}
+				.qm_QXQ_NAV_BLOCKS { background: #d8d8d8 none repeat scroll 0 0; text-align: center; font-size: 16px;}
+				.nav_cell_unanswered_hightlight { background: #4E515D none repeat scroll 0 0; border: 1px solid #fff; color: #fff; font-size: 16px;}
+				.nav_cell_answered_hightlight { background: #3e6aae none repeat scroll 0 0; border: 1px solid #fff; color: #fff; font-size: 16px;}
+				.nav_cell_unanswered { background: #fff none repeat scroll 0 0; font-size: 16px;}
+				.nav_cell_empty { background: #fff none repeat scroll 0 0; font-size: 16px;}
+				.nav_cell_answered { background: #3e6aae none repeat scroll 0 0; color: #fff; font-size: 16px;}
+
+				/* Feedback section */
+				.qm_FEEDBACK_ITEM { background-color: #eaeaea;}
+				.qm_QUESTION_FEEDBACK { background: #d8d8d8 none repeat scroll 0 0; margin: 0 5%; padding: 7px; width: auto;}
+
+
+				/* Medium Font CSS */
+				body.MEDIUM .qm_BANNER { padding: 3px 0;}
+				body.MEDIUM #qm_HEADER { height: 55px; top: 0;}
+				body.MEDIUM .qm_HEADER_WELCOME_TEXT { margin-top: 3px; padding-left: 5px;}
+				body.MEDIUM .qm_HELP { padding: 0 0 0 5px;}
+				body.MEDIUM .qm_PROGRESS_BAR_CONTAINER { height: 9px; padding: 1px; top: 8px;}
+				body.MEDIUM .qm_PROGRESS_BAR { height: 9px;}
+				body.MEDIUM #qm_ASSESSMENT_HEADER .qm_TITLE { font-size: 40px;}
+				body.MEDIUM #qm_ASSESSMENT_HEADER, #qm_BLOCK_SCORE { margin: 0 5% 0;}
+				body.MEDIUM .qm_INTRO { font-size: 20px;}
+				body.MEDIUM .qm_QUESTION_INTRO { font-size: 20px; padding: 0;}
+				body.MEDIUM .qm_NUMBER { font-size: 20px; margin: 20px 5% 0;}
+				body.MEDIUM .qm_HTML_CONTENT { font-size: 20px;}
+				body.MEDIUM .qm_QUESTION { padding-top: 0;}
+				body.MEDIUM #qm_FOOTER { bottom: 0; height: 75px !important;}
+				body.MEDIUM .qm_QXQBUTTON, body.MEDIUM .qm_QXQNAVBUTTON, body.MEDIUM #qm_Nav.qm_BUTTON, body.MEDIUM #qm_SUB.qm_BUTTON, body.MEDIUM #qm_QUIT.qm_BUTTON, body.MEDIUM #qm_CONT.qm_BUTTON, body.MEDIUM #qm_END.qm_BUTTON { font-size: 17px;}
+				body.MEDIUM .qm_CONTROL { height: 27px !important; padding: 6px 0 2px 7px !important;}
+				body.MEDIUM .navst_link { font-size: 19px; padding-left: 6px;}
+				body.MEDIUM .smatHead, body.MEDIUM .smatHeadHighlight, body.MEDIUM .smatRow, body.MEDIUM .smatRowHighlight { font-size: 20px; }
+
+				/* Large Font CSS */
+				body.LARGE .qm_BANNER { padding: 3px 0;}
+				body.LARGE #qm_HEADER { height: 55px; top: 0;}
+				body.LARGE .qm_HEADER_WELCOME_TEXT { margin-top: 3px; padding-left: 5px;}
+				body.LARGE .qm_HELP { padding: 2px 0 0 5px;}
+				body.LARGE .qm_PROGRESS_BAR_CONTAINER { height: 9px; padding: 1px; top: 8px; border: 1px solid #ccc;}
+				body.LARGE .qm_PROGRESS_BAR { height: 9px;}
+				body.LARGE #qm_ASSESSMENT_HEADER .qm_TITLE { font-size: 45px;}
+				body.LARGE #qm_ASSESSMENT_HEADER, #qm_BLOCK_SCORE { margin: 0 5% 0;}
+				body.LARGE .qm_INTRO { font-size: 22px;}
+				body.LARGE .qm_QUESTION_INTRO { font-size: 22px; padding: 0;}
+				body.LARGE .qm_NUMBER { font-size: 22px; margin: 20px 5% 0;}
+				body.LARGE .qm_HTML_CONTENT { font-size: 22px;}
+				body.LARGE .qm_QUESTION { padding-top: 0;}
+				body.LARGE #qm_FOOTER { bottom: 0; height: 75px !important;}
+				body.LARGE .qm_QXQBUTTON, body.LARGE .qm_QXQNAVBUTTON, body.LARGE #qm_Nav.qm_BUTTON, body.LARGE #qm_SUB.qm_BUTTON, body.LARGE #qm_QUIT.qm_BUTTON, body.LARGE #qm_CONT.qm_BUTTON, body.LARGE #qm_END.qm_BUTTON { font-size: 18px;}
+				body.LARGE .qm_CONTROL { height: 27px !important; padding: 6px 0 2px 7px !important;}
+				body.LARGE .navst_link { font-size: 20px; padding-left: 6px;}
+				body.LARGE .smatHead, body.LARGE .smatHeadHighlight, body.LARGE .smatRow, body.LARGE .smatRowHighlight { font-size: 22px; }
+
+				body.MEDIUM .qm_PROGRESS_Text { padding: 2px 5px 5px !important; font-size: 12pt;}
+				body.LARGE .qm_PROGRESS_Text { padding: 1px 5px 5px !important; font-size: 13pt;}
+				body.MEDIUM .qm_TIMER, body.LARGE .qm_TIMER { padding: 3px 8px 5px 8px;}
+				body.MEDIUM .qm_TIMER {font-size: 18px;}
+				body.LARGE .qm_TIMER {font-size: 20px;}
+				.qm_HELP, body.MEDIUM .qm_HELP, body.LARGE .qm_HELP { float: right; width: 20px !important; padding: 0 0 0 5px !important; height: 25px !important;}
+
+				@media (max-width: 1260px)
+				{
+				#qm_Date { margin-left: 25px;}
+				.qm_HELP { display: none !important; }
+				}
+
+				/* Nav Styling */
+				.nav_cell_unanswered_hightlight,.nav_cell_unanswered,.nav_cell_answered,.nav_cell_answered_hightlight{font-size:16px}
+				.nav_palette_visible, body.MEDIUM .nav_palette_visible, body.LARGE .nav_palette_visible { bottom: 84px; margin: 0; right: 40px; z-index: 1; position: fixed; overflow: auto; outline: none; background: #405968; height: 200px; border-radius: 5px; border: 2px solid #000; padding: 5px;}
+				.navst_box{background:transparent;border:medium none;margin-left:auto;margin-right:auto;width:640px}
+				.qm_QXQ_NAV_BLOCKS{background:transparent}
+				.navToolsGap{display:none}
+				.qm_QXQ_NAV_BLOCK_TITLE{display:none}
+				.nav_cell_unanswered_hightlight{background:transparent;border:2px solid #000;color:#000;font-size:14px}
+				.nav_cell_answered_hightlight{ background: #4E515D; border: 2px solid #000; color: #fff; font-size: 14px;}
+				.nav_cell_unanswered{background:#fff none repeat scroll 0 0;font-size:14px}
+				.nav_cell_empty{background:#fff none repeat scroll 0 0;font-size:14px}
+				.nav_cell_answered{background:#4E515D none repeat scroll 0 0;color:#fff;font-size:16px}.navst_box, body.MEDIUM .navst_box, body.LARGE .navst_box {background: transparent;border: medium none;margin-left: auto;margin-right: auto; width: auto; padding:0}
+				body.MEDIUM .nav_cell_unanswered_hightlight, body.MEDIUM .nav_cell_unanswered, body.MEDIUM .nav_cell_answered, body.MEDIUM .nav_cell_answered_hightlight { font-size: 15px; width: 30px;}
+				body.LARGE .nav_cell_unanswered_hightlight, body.LARGE .nav_cell_unanswered, body.LARGE .nav_cell_answered, body.LARGE .nav_cell_answered_hightlight { font-size: 16px; width: 30px;}
+				#nav_title_tr td { text-align: center;}
+				#nav_title_tr td img { height: 20px; width: auto;}
+				.navst_box tbody { background: #405968;}
+				span.navst_link { font-family: 'FontAwesome', 'Open Sans', Arial; color: #000; background: #405968; border-radius: 3px; padding: 5px 5px 6px 5px;}
+
+				/* Highlight Flag */
+				body.MEDIUM .qm_FOOTER_QxQ_BUTTONS#qm_FLAG_IMAGE img, body.MEDIUM .qm_FOOTER_QxQ_BUTTONS#qm_UNFLAG_IMAGE img, body.LARGE .qm_FOOTER_QxQ_BUTTONS#qm_FLAG_IMAGE img, body.LARGE .qm_FOOTER_QxQ_BUTTONS#qm_UNFLAG_IMAGE img { height: 20px; width: auto;}
+
+				.qm_HEADER_WELCOME_TEXT { color: #fff;}
+				.qm_BLOCK_TEXT_PROGRESS { display: none !important;}
+				.qm_TIMER { color: #fff;}
+				div#qm_FOOTER { background: #fff;}
+				div#banner-text { position: absolute; top: 23px; right: 25px; color: #879baa; font-weight: bold; font-size: 14px;}
+				div#footer-text { display: inline !important; position: fixed; width: auto; bottom: 0px; font-size: 11px; right: 25px;}
+				div#footer1 { display: inline !important; color: #ed3830; font-size: 13px;}
+				div#footer2 { display: inline !important; font-size: 13px;}
+				.qm_Style_Icons img { height: 27px; width: auto;}
+				.qm_HELP img { height: 27px; width: auto;}
+
+				/* below th css fixes the issue with content being misaligned on some screen sizes */
+				th { text-align: left !important;}
+				legend {max-width:100%;}
+
+				div#qm_SAYG_ICON,div#qm_SAYG_WORKING_ICON { margin-top: 14px; position: absolute; right: 275px;}
+				.assessListTable td { white-space: normal;}
+				td.nav_cell_empty { display: none;}
+				tr.GridHeader { background: #405968;}
+				.qm_QUESTION_FEEDBACK { background: #fff;}
+
+
+#qm_FLAG_IMAGE, #qm_UNFLAG_IMAGE { display: none !important; }
+				#Highlight_Text, #Remove_Highlight_Text { font-size: 12px; float: right; margin-top: 6px; font-weight: bold;}
+
+				/* Questionmark Specific */
+				.qm_BANNER { background: #000;}
+				div#qm_Loger, div#qm_Date { color: #fff;}
+				.qm_WELCOME { background: linear-gradient(to right, #1c96fc, #166efd)}
+				.qm_QXQBUTTON, .qm_QXQNAVBUTTON, #qm_Nav.qm_BUTTON, #qm_SUB.qm_BUTTON, #qm_QUIT.qm_BUTTON, #qm_CONT.qm_BUTTON, #qm_END.qm_BUTTON {width:auto}
+				#qm_DOCUMENT {right: 0}
+
+				/* Questionmark NEW High Contrast */
+				body.HIGH_CONTRAST th {color: #fff !important;}
+				body.HIGH_CONTRAST, body.HIGH_CONTRAST .qm_WELCOME, body.HIGH_CONTRAST .qm_QUESTION .qm_QA_CONTENT, body.HIGH_CONTRAST .qm_HEADER_WELCOME_TEXT, body.HIGH_CONTRAST #qm_HTML_CONTENT,
+				body.HIGH_CONTRAST #qm_QUESTION #qm_FOOTER, body.HIGH_CONTRAST .qm_FOOTNOTE, body.HIGH_CONTRAST #qm_DOCUMENT, body.HIGH_CONTRAST .qm_FINAL_SCORE, body.HIGH_CONTRAST #qm_ASSESSMENT_HEADER .qm_TITLE,
+				body.HIGH_CONTRAST .qm_INTRO, body.HIGH_CONTRAST .qm_QUESTION, body.HIGH_CONTRAST .qm_ANSWERED, body.HIGH_CONTRAST .qm_NOT_ANSWERED, body.HIGH_CONTRAST .qm_HTML_CONTENT,
+				body.HIGH_CONTRAST .qm_ASSESSMENT_OUTCOME, body.HIGH_CONTRAST .assessListTable td, body.HIGH_CONTRAST .assessListTable th, body.HIGH_CONTRAST .qm_TEXT_tm, body.HIGH_CONTRAST INPUT[type=text],
+				body.HIGH_CONTRAST textarea, body.HIGH_CONTRAST .qm_TEXT_essay, body.HIGH_CONTRAST .ui-widget-content, body.HIGH_CONTRAST .ui-dialog-content, body.HIGH_CONTRAST .qm_SELECT_sab,
+				body.HIGH_CONTRAST .qm_SELECT_match, body.HIGH_CONTRAST .qm_SELECT_rank, body.HIGH_CONTRAST .qm_SELECT_sel, body.HIGH_CONTRAST .GridHeader td, body.HIGH_CONTRAST .Gridheader th,
+				body.HIGH_CONTRAST input.button, body.HIGH_CONTRAST .qm_QXQBUTTON, body.HIGH_CONTRAST .qm_QXQNAVBUTTON, body.HIGH_CONTRAST .qm_FOOTER_BUTTON, body.HIGH_CONTRAST .qm_BUTTON,
+				body.HIGH_CONTRAST .qm_BUTTON_upload, body.HIGH_CONTRAST #qm_FOOTER .qm_CONTROL, body.HIGH_CONTRAST .navst_box, body.HIGH_CONTRAST #nav_title_tr td, body.HIGH_CONTRAST .navst_link,
+				body.HIGH_CONTRAST .qm_QXQ_NAV_BLOCK_TITLE, body.HIGH_CONTRAST .qm_NUMBER, body.HIGH_CONTRAST #qm_NEXT_btn, body.HIGH_CONTRAST #qm_NEXT, body.HIGH_CONTRAST #qm_Nav, body.HIGH_CONTRAST #qm_NAV_btn,
+				body.HIGH_CONTRAST #qm_INTRO_btn, body.HIGH_CONTRAST #qm_INT, body.HIGH_CONTRAST #qm_PREV_btn, body.HIGH_CONTRAST #qm_PREV, body.HIGH_CONTRAST .qm_BUTTON, body.HIGH_CONTRAST #qm_Submit,
+				body.HIGH_CONTRAST #qm_Submit #qm_SUB, body.HIGH_CONTRAST #qm_EndAssessment, body.HIGH_CONTRAST #qm_EndAssessment #qm_END, body.HIGH_CONTRAST .qm_CONTROL, body.HIGH_CONTRAST .qm_FOOTNOTE,
+				body.HIGH_CONTRAST .ui-dialog, body.HIGH_CONTRAST .ui-dialog-titlebar, body.HIGH_CONTRAST .ui-dialog-content, body.HIGH_CONTRAST .ui-button
+				{ background: #000 !important; color: #fff !important; font-weight: bold;}
+
+				body.HIGH_CONTRAST .qm_BANNER { background: #000;}
+				body.HIGH_CONTRAST .qm_BANNER img { background: #fff;}
+				body.HIGH_CONTRAST .qm_WELCOME { background: #101010 !important;}
+				body.HIGH_CONTRAST div#qm_FOOTER, body.HIGH_CONTRAST #qm_FOOTER .qm_CONTROL, body.HIGH_CONTRAST .ui-dialog-buttonpane { background: #101010 !important;}
+				body.HIGH_CONTRAST div#qm_Submit, body.HIGH_CONTRAST div#qm_EndAssessment, body.HIGH_CONTRAST div#qm_NEXT_btn, body.HIGH_CONTRAST div#qm_PREV_btn, body.HIGH_CONTRAST #qm_NAV_btn { border: none; background: #101010 !important;}
+				body.HIGH_CONTRAST .qm_TIMER {  color: #fff; font-weight: lighter;}
+				body.HIGH_CONTRAST div#nav_palette_control { background: #101010 !important;}
+				body.HIGH_CONTRAST .qm_BANNER { background: #000 !important;}
+				body.HIGH_CONTRAST .nav_cell_unanswered, body.HIGH_CONTRAST .nav_cell_empty { background: #000;}
+				body.HIGH_CONTRAST .nav_cell_answered { background: #fff; color: #000 !important;}
+				body.HIGH_CONTRAST .nav_cell_answered_hightlight { background: linear-gradient(to right bottom, #ffffff 0%,#ffffff 49.9%,#000000 50%,#000000 52%,#ffffff 52.1%,#ffffff 100%); background-repeat: no-repeat; color:#000 !important; }
+				body.HIGH_CONTRAST .navst_box tr { background: #101010;}
+				div#qm_Loger, div#qm_Date { display: inline !important; position: fixed; right: 5%; font-family: 'FontAwesome', 'Open Sans', arial;}
+				div#qm_Date { top: 10px;}
+				div#qm_Loger { top: 45px; width: auto;}
+				body.HIGH_CONTRAST .qm_QUESTION_FEEDBACK, body.HIGH_CONTRAST .qm_ANSWERED, body.HIGH_CONTRAST .qm_NOT_ANSWERED, body.HIGH_CONTRAST .qm_FEEDBACK_ITEM, body.HIGH_CONTRAST .smatHeadHighlight, body.HIGH_CONTRAST .smatRowHighlight { background: #101010;}
+				body.HIGH_CONTRAST .qm_FEEDBACK_ITEM { border-bottom: none; border-right: none; border-left: none;}
+				body.HIGH_CONTRAST .qm_NOT_ANSWERED, body.HIGH_CONTRAST .smatHeadHighlight, body.HIGH_CONTRAST .smatRowHighlight { border: none;}
+				body.HIGH_CONTRAST .qm_SELECT_sel, body.HIGH_CONTRAST .qm_SELECT_match, body.HIGH_CONTRAST .qm_SELECT_sab, body.HIGH_CONTRAST .qm_SELECT_rank { border-style: inset; border-color: inherit; border-width: 2px;}
+				body.HIGH_CONTRAST .questionOptionContainer, body.HIGH_CONTRAST td, body.HIGH_CONTRAST font, body.HIGH_CONTRAST span, body.HIGH_CONTRAST div, body.HIGH_CONTRAST a
+				{ color: #fff;}
+				code { background: #DCDDE0;}
+				body.HIGH_CONTRAST code {color: #000;font-weight: lighter;}
+
+				div#qm_DOCUMENT, body.MEDIUM #qm_DOCUMENT, body.LARGE #qm_DOCUMENT { right: 0; left: 0;}
+				body.HIGH_CONTRAST, body.HIGH_CONTRAST .qm_WELCOME, body.HIGH_CONTRAST .qm_QUESTION .qm_QA_CONTENT, body.HIGH_CONTRAST .qm_HEADER_WELCOME_TEXT, body.HIGH_CONTRAST #qm_HTML_CONTENT, body.HIGH_CONTRAST #qm_QUESTION #qm_FOOTER, body.HIGH_CONTRAST .qm_FOOTNOTE,
+				body.HIGH_CONTRAST #qm_DOCUMENT, body.HIGH_CONTRAST .qm_FINAL_SCORE, body.HIGH_CONTRAST #qm_ASSESSMENT_HEADER .qm_TITLE, body.HIGH_CONTRAST .qm_INTRO, body.HIGH_CONTRAST .qm_QUESTION, body.HIGH_CONTRAST .qm_ANSWERED, body.HIGH_CONTRAST .qm_NOT_ANSWERED,
+				body.HIGH_CONTRAST .qm_HTML_CONTENT, body.HIGH_CONTRAST .qm_ASSESSMENT_OUTCOME, body.HIGH_CONTRAST .assessListTable td, body.HIGH_CONTRAST .assessListTable th, body.HIGH_CONTRAST .qm_TEXT_tm, body.HIGH_CONTRAST INPUT[type=text], body.HIGH_CONTRAST textarea,
+				body.HIGH_CONTRAST .qm_TEXT_essay, body.HIGH_CONTRAST .ui-widget-content, body.HIGH_CONTRAST .ui-dialog-content, body.HIGH_CONTRAST .qm_SELECT_sab, body.HIGH_CONTRAST .qm_SELECT_match, body.HIGH_CONTRAST .qm_SELECT_rank, body.HIGH_CONTRAST .qm_SELECT_sel,
+				body.HIGH_CONTRAST .GridHeader td, body.HIGH_CONTRAST .Gridheader th, body.HIGH_CONTRAST input.button, body.HIGH_CONTRAST .qm_QXQBUTTON, body.HIGH_CONTRAST .qm_QXQNAVBUTTON, body.HIGH_CONTRAST .qm_FOOTER_BUTTON, body.HIGH_CONTRAST .qm_BUTTON,
+				body.HIGH_CONTRAST .qm_BUTTON_upload, body.HIGH_CONTRAST #qm_FOOTER .qm_CONTROL, body.HIGH_CONTRAST .navst_box, body.HIGH_CONTRAST #nav_title_tr td, body.HIGH_CONTRAST .navst_link, body.HIGH_CONTRAST .qm_QXQ_NAV_BLOCK_TITLE, body.HIGH_CONTRAST .qm_NUMBER,
+				body.HIGH_CONTRAST #qm_NEXT_btn, body.HIGH_CONTRAST #qm_NEXT, body.HIGH_CONTRAST #qm_Nav, body.HIGH_CONTRAST #qm_NAV_btn, body.HIGH_CONTRAST #qm_INTRO_btn, body.HIGH_CONTRAST #qm_INT, body.HIGH_CONTRAST #qm_PREV_btn, body.HIGH_CONTRAST #qm_PREV,
+				body.HIGH_CONTRAST .qm_BUTTON, body.HIGH_CONTRAST #qm_Submit, body.HIGH_CONTRAST #qm_Submit #qm_SUB, body.HIGH_CONTRAST #qm_EndAssessment, body.HIGH_CONTRAST #qm_EndAssessment #qm_END, body.HIGH_CONTRAST .qm_CONTROL, body.HIGH_CONTRAST .qm_FOOTNOTE,
+				body.HIGH_CONTRAST .ui-button
+				{ font-weight: inherit;}
+
+				body.HIGH_CONTRAST .qm_TEXT_tm, body.HIGH_CONTRAST INPUT[type=text], body.HIGH_CONTRAST textarea, body.HIGH_CONTRAST .qm_TEXT_essay { border: 2px solid #fff;}
+				body.HIGH_CONTRAST #qm_FOOTER .qm_CONTROL { border: none;}
+
+				body.HIGH_CONTRAST #qm_NEXT_btn, body.HIGH_CONTRAST #qm_NEXT, body.HIGH_CONTRAST #qm_Nav, body.HIGH_CONTRAST #qm_NAV_btn, body.HIGH_CONTRAST #qm_INTRO_btn, body.HIGH_CONTRAST #qm_INT, body.HIGH_CONTRAST #qm_PREV_btn, body.HIGH_CONTRAST #qm_PREV,
+				body.HIGH_CONTRAST .qm_BUTTON, body.HIGH_CONTRAST #qm_Submit, body.HIGH_CONTRAST #qm_Submit #qm_SUB, body.HIGH_CONTRAST #qm_EndAssessment, body.HIGH_CONTRAST #qm_EndAssessment #qm_END,
+				body.HIGH_CONTRAST .ui-button
+				{ border: none;}
+
+				body.HIGH_CONTRAST .qm_SELECT_sel, body.HIGH_CONTRAST .qm_SELECT_match, body.HIGH_CONTRAST .qm_SELECT_sab, body.HIGH_CONTRAST .qm_SELECT_rank { border-style: solid; border-color: #fff; border-width: 2px;}
+				body.HIGH_CONTRAST .navst_box {border: none;}
+				body.HIGH_CONTRAST #nav_title_tr td { border-bottom: none;}
+				body.HIGH_CONTRAST .navst_box { background: #101010 !important;}
+				body.HIGH_CONTRAST .qm_QXQ_NAV_BLOCKS { background: #101010;}
+				body.HIGH_CONTRAST .navst_chars { border: none;}
+				body.HIGH_CONTRAST .navst_link { background: #101010 !important;}
+				body.HIGH_CONTRAST #nav_title_tr td { background: #101010 !important;}
+				body.HIGH_CONTRAST .qm_PROGRESS_BAR { background: #EDB0D4 none repeat scroll 0 0;}
+				body.HIGH_CONTRAST .qm_PROGRESS_BAR_CONTAINER { background: #000; border-color: #fff;}
+				body.HIGH_CONTRAST .nav_cell_answered { background: linear-gradient(to right bottom, #19838C 0%,#19838C 49.9%,#000000 50%,#000000 52%,#19838C 52.1%,#19838C 100%); background-repeat: no-repeat; color: #fff !important;}
+				body.HIGH_CONTRAST .nav_cell_unanswered_hightlight { background: #54C4C2; color: #FFFFFF !important;}
+				body.HIGH_CONTRAST .nav_cell_unanswered_hightlight { background: #54C4C2; color: #FFFFFF !important;}
+
+				/* QuillJs Rich Text Editor in High Contrast */
+				body.HIGH_CONTRAST .ql-toolbar .ql-fill, body.HIGH_CONTRAST .ql-toolbar .ql-stroke {
+				fill: #fff !important;
+				stroke: #fff !important
+				}
+
+				body.HIGH_CONTRAST .ql-snow .ql-toolbar .ql-picker-item.ql-selected .ql-fill, body.HIGH_CONTRAST .ql-snow .ql-toolbar .ql-picker-item.ql-selected .ql-stroke.ql-fill, body.HIGH_CONTRAST .ql-snow .ql-toolbar .ql-picker-item:hover .ql-fill, body.HIGH_CONTRAST .ql-snow .ql-toolbar .ql-picker-item:hover .ql-stroke.ql-fill, body.HIGH_CONTRAST .ql-snow .ql-toolbar .ql-picker-label.ql-active .ql-fill, body.HIGH_CONTRAST .ql-snow .ql-toolbar .ql-picker-label.ql-active .ql-stroke.ql-fill, body.HIGH_CONTRAST .ql-snow .ql-toolbar .ql-picker-label:hover .ql-fill, body.HIGH_CONTRAST .ql-snow .ql-toolbar .ql-picker-label:hover .ql-stroke.ql-fill, body.HIGH_CONTRAST .ql-snow .ql-toolbar button.ql-active .ql-fill, body.HIGH_CONTRAST .ql-snow .ql-toolbar button.ql-active .ql-stroke.ql-fill, body.HIGH_CONTRAST .ql-snow .ql-toolbar button:focus .ql-fill, body.HIGH_CONTRAST .ql-snow .ql-toolbar button:focus .ql-stroke.ql-fill, body.HIGH_CONTRAST .ql-snow .ql-toolbar button:hover .ql-fill, body.HIGH_CONTRAST .ql-snow .ql-toolbar button:hover .ql-stroke.ql-fill, body.HIGH_CONTRAST .ql-snow.ql-toolbar .ql-picker-item.ql-selected .ql-fill, body.HIGH_CONTRAST .ql-snow.ql-toolbar .ql-picker-item.ql-selected .ql-stroke.ql-fill, body.HIGH_CONTRAST .ql-snow.ql-toolbar .ql-picker-item:hover .ql-fill, body.HIGH_CONTRAST .ql-snow.ql-toolbar .ql-picker-item:hover .ql-stroke.ql-fill, body.HIGH_CONTRAST .ql-snow.ql-toolbar .ql-picker-label.ql-active .ql-fill, body.HIGH_CONTRAST .ql-snow.ql-toolbar .ql-picker-label.ql-active .ql-stroke.ql-fill, body.HIGH_CONTRAST .ql-snow.ql-toolbar .ql-picker-label:hover .ql-fill, body.HIGH_CONTRAST .ql-snow.ql-toolbar .ql-picker-label:hover .ql-stroke.ql-fill, body.HIGH_CONTRAST .ql-snow.ql-toolbar button.ql-active .ql-fill, body.HIGH_CONTRAST .ql-snow.ql-toolbar button.ql-active .ql-stroke.ql-fill, body.HIGH_CONTRAST .ql-snow.ql-toolbar button:focus .ql-fill, body.HIGH_CONTRAST .ql-snow.ql-toolbar button:focus .ql-stroke.ql-fill, body.HIGH_CONTRAST .ql-snow.ql-toolbar button:hover .ql-fill, body.HIGH_CONTRAST .ql-snow.ql-toolbar button:hover .ql-stroke.ql-fill {
+				fill: #fff !important
+				}
+
+				body.HIGH_CONTRAST .ql-snow .ql-toolbar .ql-picker-item.ql-selected .ql-stroke, body.HIGH_CONTRAST .ql-snow .ql-toolbar .ql-picker-item.ql-selected .ql-stroke-miter, body.HIGH_CONTRAST .ql-snow .ql-toolbar .ql-picker-item:hover .ql-stroke, body.HIGH_CONTRAST .ql-snow .ql-toolbar .ql-picker-item:hover .ql-stroke-miter, body.HIGH_CONTRAST .ql-snow .ql-toolbar .ql-picker-label.ql-active .ql-stroke, body.HIGH_CONTRAST .ql-snow .ql-toolbar .ql-picker-label.ql-active .ql-stroke-miter, body.HIGH_CONTRAST .ql-snow .ql-toolbar .ql-picker-label:hover .ql-stroke, body.HIGH_CONTRAST .ql-snow .ql-toolbar .ql-picker-label:hover .ql-stroke-miter, body.HIGH_CONTRAST .ql-snow .ql-toolbar button.ql-active .ql-stroke, body.HIGH_CONTRAST .ql-snow .ql-toolbar button.ql-active .ql-stroke-miter, body.HIGH_CONTRAST .ql-snow .ql-toolbar button:focus .ql-stroke, body.HIGH_CONTRAST .ql-snow .ql-toolbar button:focus .ql-stroke-miter, body.HIGH_CONTRAST .ql-snow .ql-toolbar button:hover .ql-stroke, body.HIGH_CONTRAST .ql-snow .ql-toolbar button:hover .ql-stroke-miter, body.HIGH_CONTRAST .ql-snow.ql-toolbar .ql-picker-item.ql-selected .ql-stroke, body.HIGH_CONTRAST .ql-snow.ql-toolbar .ql-picker-item.ql-selected .ql-stroke-miter, body.HIGH_CONTRAST .ql-snow.ql-toolbar .ql-picker-item:hover .ql-stroke, body.HIGH_CONTRAST .ql-snow.ql-toolbar .ql-picker-item:hover .ql-stroke-miter, body.HIGH_CONTRAST .ql-snow.ql-toolbar .ql-picker-label.ql-active .ql-stroke, body.HIGH_CONTRAST .ql-snow.ql-toolbar .ql-picker-label.ql-active .ql-stroke-miter, body.HIGH_CONTRAST .ql-snow.ql-toolbar .ql-picker-label:hover .ql-stroke, body.HIGH_CONTRAST .ql-snow.ql-toolbar .ql-picker-label:hover .ql-stroke-miter, body.HIGH_CONTRAST .ql-snow.ql-toolbar button.ql-active .ql-stroke, body.HIGH_CONTRAST .ql-snow.ql-toolbar button.ql-active .ql-stroke-miter, body.HIGH_CONTRAST .ql-snow.ql-toolbar button:focus .ql-stroke, body.HIGH_CONTRAST .ql-snow.ql-toolbar button:focus .ql-stroke-miter, body.HIGH_CONTRAST .ql-snow.ql-toolbar button:hover .ql-stroke, body.HIGH_CONTRAST .ql-snow.ql-toolbar button:hover .ql-stroke-miter {
+				stroke: #fff !important
+				}
+
+				body.HIGH_CONTRAST .ql-snow .ql-toolbar .ql-picker-item.ql-selected, body.HIGH_CONTRAST .ql-snow .ql-toolbar .ql-picker-item:hover, body.HIGH_CONTRAST .ql-snow .ql-toolbar .ql-picker-label.ql-active, body.HIGH_CONTRAST .ql-snow .ql-toolbar .ql-picker-label:hover, body.HIGH_CONTRAST .ql-snow .ql-toolbar button.ql-active, body.HIGH_CONTRAST .ql-snow .ql-toolbar button:focus, body.HIGH_CONTRAST .ql-snow .ql-toolbar button:hover, body.HIGH_CONTRAST .ql-snow a, body.HIGH_CONTRAST .ql-snow.ql-toolbar .ql-picker-item.ql-selected, body.HIGH_CONTRAST .ql-snow.ql-toolbar .ql-picker-item:hover, body.HIGH_CONTRAST .ql-snow.ql-toolbar .ql-picker-label.ql-active, body.HIGH_CONTRAST .ql-snow.ql-toolbar .ql-picker-label:hover, body.HIGH_CONTRAST .ql-snow.ql-toolbar button.ql-active, body.HIGH_CONTRAST .ql-snow.ql-toolbar button:focus, body.HIGH_CONTRAST .ql-snow.ql-toolbar button:hover, body.HIGH_CONTRAST .ql-picker-label, body.HIGH_CONTRAST .ql-toolbar .ql-picker {
+				color: #fff !important
+				}
+
+				body.HIGH_CONTRAST .ql-underline .ql-stroke, body.HIGH_CONTRAST .ql-bold .ql-stroke, body.HIGH_CONTRAST .ql-picker-label .ql-stroke {
+				fill: none !important
+				}
+
+				body.HIGH_CONTRAST .ql-picker-options {
+				background: #000;
+				}
+
+				div#qm_DOCUMENT, body.MEDIUM #qm_DOCUMENT, body.LARGE #qm_DOCUMENT { right: 0; left: 0;}
+
+				/* New Branding */
+				.qm_QXQBUTTON, .qm_QXQNAVBUTTON, #qm_Nav.qm_BUTTON, #qm_SUB.qm_BUTTON, #qm_QUIT.qm_BUTTON, #qm_CONT.qm_BUTTON, #qm_END.qm_BUTTON { background: #143345; border: 2px solid #143345;}
+				input#qm_Nav.qm_BUTTON { background: #405968; border: 2px solid #405968;}
+
+				.qm_PROGRESS_BAR { background: #ee348c none repeat scroll 0 0;}
+				span.navst_link { color: #fff;}
+				img.qm_Graphic_Inputs { height: 27px; width: auto;}
+				.nav_cell_unanswered_hightlight { background: #54C4C2; background-repeat: no-repeat;}
+				.nav_cell_answered_hightlight { background: linear-gradient(to right bottom, #5fc0c2 0%,#5fc0c2 49.9%,#000000 50%,#000000 52%,#5fc0c2 52.1%,#5fc0c2 100%); background-repeat: no-repeat; border: none;}
+				.nav_cell_answered { background: linear-gradient(to right bottom, #5fc0c2 0%,#5fc0c2 49.9%,#000000 50%,#000000 52%,#5fc0c2 52.1%,#5fc0c2 100%); background-repeat: no-repeat; border: none;}
+				.assessListTable .GridHeader td { color: #fff; font-weight: lighter;}
+
+				.qm_BANNER { background: url(xtmpgfx/Questionmark/corner-triangle.png) no-repeat, #1F3346;}
+				.qm_WELCOME:before { content: ''; background: #13222d; height: 54px; width: 100px; position: absolute; transform: skewX(-50deg); top: 83px; left: -36px;}
+				.qm_WELCOME { border-top: 1px solid #13222d; background: #1f3346;}
+				.qm_BANNER img { height: clamp(48px, 24%, 70px)!important; margin: 1px 15px; width: auto; border-radius: 7px; padding-top: 16px;}
+				input#qm_SUB.qm_BUTTON, input#qm_END.qm_BUTTON { background: #5FC0C2; border: 0.125rem solid rgba(0, 0, 0, 0.1); font-family: 'FontAwesome', 'Open Sans', sans-serif; color: #000; border-radius: 0; box-shadow: 0 0.25rem 0.25rem rgba(0, 0, 0, 0.26);}
+				.qm_QXQBUTTON, .qm_QXQNAVBUTTON, #qm_Nav.qm_BUTTON, #qm_SUB.qm_BUTTON, #qm_QUIT.qm_BUTTON, #qm_CONT.qm_BUTTON, #qm_END.qm_BUTTON { background: #143345; border: 0.125rem solid rgba(0, 0, 0, 0.1); border-radius: 0; box-shadow: 0 0.25rem 0.25rem rgba(0, 0, 0, 0.26);}
+				.qm_QXQBUTTON:hover, .qm_QXQNAVBUTTON:hover, #qm_Nav.qm_BUTTON:hover, #qm_QUIT.qm_BUTTON:hover, #qm_CONT.qm_BUTTON:hover, input#qm_NEXT:hover, input#qm_PREV:hover { background: #13222d; color: #fff;}
+				input#qm_Nav.qm_BUTTON { background: #405968; border: 2px solid #405968; box-shadow: 0 0.25rem 0.25rem rgba(0, 0, 0, 0.26); border: 0.125rem solid rgba(0, 0, 0, 0.1);}
+				#qm_Nav.qm_BUTTON:hover { background: #143345;}
+				#qm_SUB.qm_BUTTON:hover, #qm_END.qm_BUTTON:hover { background: #19838C;}
+				.nav_palette_visible, body.MEDIUM .nav_palette_visible, body.LARGE .nav_palette_visible { border-radius: 0; box-shadow: 0 0.25rem 0.25rem rgba(0, 0, 0, 0.26); border: 0.125rem solid rgba(0, 0, 0, 0.1);}
+				.nav_cell_answered {background: linear-gradient(to right bottom, #19838C 0%,#19838C 49.9%,#000000 50%,#000000 52%,#19838C 52.1%,#19838C 100%);background-repeat: no-repeat;}
+
+				.nav_cell_unanswered, .nav_cell_unanswered_hightlight, .nav_cell_unanswered, .nav_cell_answered, .nav_cell_answered_hightlight {border: 0.125rem ;}
+				tr.GridHeader { background: #1f3346;}
+
+				/* New Text Colour */
+				body, td, th, input, select, textarea, .qm_QUESTION_INTRO, .qm_QUESTION, .qm_HTML_CONTENT, .qm_INTRO, #qm_ASSESSMENT_HEADER .qm_TITLE, .qm_NUMBER, .qm_QXQBUTTON, .qm_QXQNAVBUTTON, #qm_Nav.qm_BUTTON, #qm_SUB.qm_BUTTON, #qm_QUIT.qm_BUTTON, #qm_CONT.qm_BUTTON, #qm_END.qm_BUTTON, .navst_link, .qm_QXQ_NAV_BLOCK_TITLE, .nav_cell_unanswered_hightlight, .nav_cell_unanswered, .nav_cell_answered, .nav_cell_answered_hightlight, .qm_FEEDBACK_ITEM, .qm_QUESTION_FEEDBACK { color: #1f3346;}
+				.qm_QXQBUTTON, .qm_QXQNAVBUTTON, #qm_Nav.qm_BUTTON, #qm_SUB.qm_BUTTON, #qm_QUIT.qm_BUTTON, #qm_CONT.qm_BUTTON, #qm_END.qm_BUTTON { color: #fff;}
+				.qm_ANSWERED, .qm_NOT_ANSWERED { background: #1f3346; color: #fff;}
+				p.qm_SECTION_HEADER { font-size: 18px; font-weight: normal;}
+				#qm_ASSESSMENT_HEADER .qm_TITLE { color: #AA1357;}
+				.assessListTable td a { color: #e72b80;}
+
+				/* Question Time */
+				body.HIGH_CONTRAST.base-timer__label {color: #fff; }
+				body.HIGH_CONTRAST #base-timer-path-remaining { color: #EB9ECA !important;}
+
+				/* Question padding not consistent in QxQ */
+				p { margin-top: 0;}
+				.qm_QUESTION_fib { padding-top: 0;}
+				.qm_QUESTION_sab { padding-top: 0;}
+
+				html[dir="rtl"] .smatTable {border-left: 1px solid lightgrey; margin-top: 5px; padding:0px; border-right: none }
+				html[dir="rtl"] .smatHead { font-family: verdana, tahoma; text-align:center; border-top: 1px solid lightgrey; border-right: 1px solid lightgrey; border-bottom: 1px solid lightgrey; font-weight:normal; border-left: none }
+				html[dir="rtl"] .smatRow { font-family: verdana, tahoma; border-bottom: 1px solid lightgrey; border-right: 1px solid lightgrey; border-left: none }
+				html[dir="rtl"] .smatOption { border-bottom: 1px solid lightgrey; border-right: 1px solid lightgrey; text-align: center; cursor: pointer; border-left: none; }
+				html[dir="rtl"] .qm_FOOTER_QxQ_BUTTONS {float:right;}
+				html[dir="rtl"] .qm_FOOTER_QxQ_NAVIGATOR_BUTTON {float:right;}
+				html[dir="rtl"] .qm_FOOTER_BUTTON {float:left;}
+				html[dir="rtl"] .qm_HELP {margin-left:5%;margin-right:0%}
+				html[dir="rtl"] #qm_ASSESSMENT_HEADER {float:right;}.
+				html[dir="rtl"] .qm_TITLE {float:right;}
+				html[dir="rtl"] .qm_INTRO {float:right;width:100%}
+				html[dir="rtl"] .qm_QUESTION_INTRO {width:92% !important}
+				html[dir="rtl"] div#qm_Loger {left:5%;right:auto;top:45px}
+				html[dir="rtl"] div#qm_Date {left:5%;right:auto;top:20px}
+				html[dir="rtl"] #qm_Date {margin-right:5%;margin-left:0%;}
+				html[dir="rtl"] .qm_BANNER {-webkit-transform: scaleX(-1); transform: scaleX(-1);transform: scaleX(-1);-ms-transform: scaleX(-1);}
+				html[dir="rtl"] .qm_BANNER img {float:left; padding-right:0px; padding-left:20px; -webkit-transform: scaleX(-1); transform: scaleX(-1);-ms-transform: scaleX(-1);}
+				html[dir="rtl"] .qm_TIMER {float:left;}
+				html[dir="rtl"] .qm_PROGRESS_BAR_CONTAINER {float:left;}
+				html[dir="rtl"] .qm_WELCOME:before {left:0px;right:0px;transform: skewX(50deg)}
+				html[dir='rtl'] #qm_QUESTION #qm_DOCUMENT {padding-right:0px}
+				html[dir='rtl'] .qm_HELP, html[dir='rtl'] body.MEDIUM .qm_HELP, html[dir='rtl'] body.LARGE .qm_HELP {float:left;}
+				html[dir='rtl'] .qm_QUESTION_hot{float:right;width:100%;}
+				html[dir='rtl'] .qm_ANSWERED,html[dir='rtl'] .qm_NOT_ANSWERED { float:right;width:100%;}
+				html[dir='rtl'] .qm_PROGRESS_Text { float: left; padding-bottom: 5px; padding-top: 1px; padding-left: 5px; font-weight: 300;color: #fff}
+				.qm_RADIO_hidden, .qm_CHECK_hidden {width:auto;margin:-3}
+
+				/* Bug Fixes */
+				.qm_CHOICE_num, .qm_CHOICE_sab, .qm_CHOICE_fib, .qm_COMMENT, .qm_BUTTON_upload { margin: 5px; }
+				.qm_SAYG_BUTTON img {height: 24px !important;width: 24px  !important;}
+				body.MEDIUM .qm_SAYG_BUTTON img, body.LARGE .qm_SAYG_BUTTON img {height: 24px !important;width: 24px  !important;}
+				body.HIGH_CONTRAST #qm_SAYG_ICON img { content : url(xtmpgfx/Questionmark/qm2020/qmSAYG-hc.svg)}
+				body.HIGH_CONTRAST #qm_SAYG_WORKING_ICON img { content: url(xtmpgfx/Questionmark/qm2020/load-hc.svg)}
+
+			</value>
+		</entry>
+		<entry id="DISABLE_SHORTCUT_KEYS" type="integer" category="default">
+			<value>1</value>
+			<description xml:lang="en-US">Disables the use of Alt key and partially disables Ctrl and 'Backspace' key allowing them to be used to do text editing like copy, paste, delete etc.</description>
+		</entry>
+<!-- HELP_BUTTON_GRAPHIC removed -->
+<!-- CONTRAST_STYLE_CHANGE_GRAPHIC removed -->
+<!-- FONTSIZE_STYLE_CHANGE_GRAPHIC removed -->
+		<entry id="SAYG_GRAPHIC" type="image" category="question">
+			<value>xtmpgfx/Questionmark/qm2020/qmSAYG.svg</value>
+			<description xml:lang="en-US">Graphic for Save As You Go button</description>
+		</entry>
+		<entry id="SAYG_WORKING_GRAPHIC" type="image" category="question">
+			<value>xtmpgfx/Questionmark/qm2020/load.svg</value>
+			<description xml:lang="en-US">Graphic for Save As You Go button - while waiting or working on something</description>
+		</entry>
+<!-- FLAG_GRAPHIC removed -->
+<!-- UNFLAG_GRAPHIC removed -->
+		<entry id="NAVIGATOR_FLAG_GRAPHIC" type="image" category="question">
+			<value>xtmpgfx/Questionmark/nav_bg-nb.png</value>
+			<description xml:lang="en-US">Graphic for navigator flag to be used inside the navigator</description>
+		</entry>
+		<entry id="NAVIGATOR_FLAG_GRAPHIC_ANSWERED" type="image" category="question">
+			<value>xtmpgfx/Questionmark/nav_bg-nb-answered.png</value>
+			<description xml:lang="en-US">Graphic for navigator flag to be used inside the navigator</description>
+		</entry>
+		<entry id="NAVIGATOR_CLOSE_GRAPHIC" type="image" category="delivery">
+			<value>xtmpgfx/Questionmark/navclose-nb.png</value>
+			<description xml:lang="en-US">Graphic for close button on assessment navigator</description>
+		</entry>
+		<entry id="NAVIGATOR_ROWS" type="integer" category="delivery">
+			<value>5</value>
+			<description xml:lang="en-US">Number of rows of questions to show in the Assessment Navigator </description>
+		</entry>
+		<entry id="NAVIGATOR_COLUMNS" type="integer" category="delivery">
+			<value>5</value>
+			<description xml:lang="en-US">Number of columns of questions to show in the Assessment Navigator </description>
+		</entry>
+<entry id="SHOW_NAVIGATOR" type="integer" category="delivery">
+				<value>0</value>
+				<description xml:lang="en-US">
+					Whether to display the Assessment Navigator
+					0 - don't show the Navigator or the button to invoke it
+					1 - show the Navigator button but not the Navigator itself
+					2 - show the Navigator button and display the Navigator itself
+				</description>
+			</entry>
+		<entry id="HOME_BUTTON_SECURE_ACTION" type="integer" category="end">
+			<value>1</value>
+			<description xml:lang="en-US">
+				The action of the Home button at the end of an assessment if the assessment is launched from a secure entry point and does not branch and is not controlled by PIP
+				0 - return to the assessment list page or other entry point
+				1 - close the browser window or (will only have an effect if the window or tab was opened by Javascript in the first place)
+				2 - branch to the URL defined in HOME_BUTTON_URL
+				3 - do not display a Home button
+			</description>
+		</entry>
+		<entry id="HOME_BUTTON_OPEN_ACTION" type="integer" category="end">
+			<value>1</value>
+			<description xml:lang="en-US">
+				The action of the Home button at the end of an assessment if the assessment is launched from an open entry point and does not branch
+				0 - return to the intial entry point (e.g. the assessment list page)
+				1 - close the browser window or (will only have an effect if the window or tab was opened by Javascript in the first place)
+				2 - branch to the URL defined in HOME_BUTTON_URL
+				3 - do not display a Home button
+			</description>
+		</entry>
+		<entry id="USE_GRAPHIC_INPUTS" type="integer" category="delivery">
+			<value>1</value>
+			<description xml:lang="en-US">Use graphic inputs for html elements like radio button and checkboxes</description>
+		</entry>
+		<entry id="RADIO_ON_GRAPHIC" type="image" category="delivery">
+			<value>xtmpgfx/Questionmark/radio-checked-nb.png</value>
+			<description xml:lang="en-US">Graphic for Radio input - ON</description>
+		</entry>
+		<entry id="RADIO_OFF_GRAPHIC" type="image" category="delivery">
+			<value>xtmpgfx/Questionmark/radio-unchecked-nb.png</value>
+			<description xml:lang="en-US">Graphic for Radio input - OFF</description>
+		</entry>
+		<entry id="CHECKBOX_ON_GRAPHIC" type="image" category="delivery">
+			<value>xtmpgfx/Questionmark/checkbox-checked-nb.png</value>
+			<description xml:lang="en-US">Graphic for checkbox input - ON</description>
+		</entry>
+		<entry id="CHECKBOX_OFF_GRAPHIC" type="image" category="delivery">
+			<value>xtmpgfx/Questionmark/checkbox-unchecked-nb.png</value>
+			<description xml:lang="en-US">Graphic for checkbox input - OFF</description>
+		</entry>
+		<entry id="HELP_WINDOW_URL" type="text" category="default">
+			<value>https://candidate-support.questionmark.com</value>
+			<description xml:lang="en-US">URL for online help</description>
+		</entry>
+	</settings>
+	<text>
+		<entry id="WINDOW_TITLE" type="text" category="default">
+			<description xml:lang="en-US"><![CDATA[Title for all pages]]></description>
+			<value xml:lang="en-US"><![CDATA[Questionmark]]></value>
+		</entry>
+		<entry id="ASSESSMENT_NAVIGATOR_BUTTON_TEXT" type="text" translate="yes" category="default">
+			<description xml:lang="en-US"><![CDATA[Text for assessment navigator button]]></description>
+
+			<value xml:lang="af-ZA"><![CDATA[Evalueringsnavigator]]> &#xF0CE; </value>
+			<value xml:lang="ar-SA">&#xF0CE; <![CDATA[متصفح التقييم]]> </value>
+			<value xml:lang="bg-BG"><![CDATA[Навигатор за оценка]]> &#xF0CE; </value>
+			<value xml:lang="bn-BD"><![CDATA[মূল্যায়ন ন্যাভিগেটর]]> &#xF0CE; </value>
+			<value xml:lang="cs-CZ"><![CDATA[Navigátor hodnocení]]> &#xF0CE; </value>
+			<value xml:lang="de-DE"><![CDATA[Assessment-Navigator]]> &#xF0CE; </value>
+			<value xml:lang="el-GR"><![CDATA[Πρόγραμμα πλοήγησης αξιολόγησης]]> &#xF0CE; </value>
+			<value xml:lang="en-US"><![CDATA[Assessment Navigator]]> &#xF0CE; </value>
+			<value xml:lang="es-ES"><![CDATA[Explorador para evaluación]]> &#xF0CE; </value>
+			<value xml:lang="fa-IR"><![CDATA[پیمایشگر ارزیابی]]> &#xF0CE; </value>
+			<value xml:lang="fr-FR"><![CDATA[Navigateur du questionnaire]]> &#xF0CE; </value>
+			<value xml:lang="he-IL"><![CDATA[נווט הערכה]]> &#xF0CE; </value>
+			<value xml:lang="hi-IN"><![CDATA[आंकलन नेविगेटर]]> &#xF0CE; </value>
+			<value xml:lang="hu-HU"><![CDATA[Értékelési navigátor]]> &#xF0CE; </value>
+			<value xml:lang="it-IT"><![CDATA[Struttura valutazione]]> &#xF0CE; </value>
+			<value xml:lang="ja-JP"><![CDATA[アセスメント ナビゲータ]]> &#xF0CE; </value>
+			<value xml:lang="km-KH"><![CDATA[អ្នកនាំទៅកាន់ទំព័រផ្សេងៗនៃការវាយតំលៃ]]> &#xF0CE; </value>
+			<value xml:lang="ko-KR"><![CDATA[평가 네비게이터]]> &#xF0CE; </value>
+			<value xml:lang="martian"><![CDATA[aAssessment Navigator.....b]]> &#xF0CE; </value>
+			<value xml:lang="mk-MK"><![CDATA[Навигатор за оценување]]> &#xF0CE; </value>
+			<value xml:lang="nb-NO"><![CDATA[Vurderingsnavigatør]]> &#xF0CE; </value>
+			<value xml:lang="nl-NL"><![CDATA[Assessmentnavigator]]> &#xF0CE; </value>
+			<value xml:lang="pa-IN"><![CDATA[ਮੁਲਾਂਕਣ ਨੈਵੀਗੇਟਰ]]> &#xF0CE; </value>
+			<value xml:lang="pl-PL"><![CDATA[Nawigator po teście]]> &#xF0CE; </value>
+			<value xml:lang="pt-BR"><![CDATA[Navegador da Avaliação]]> &#xF0CE; </value>
+			<value xml:lang="pt-PT"><![CDATA[Navegador do estudo]]> &#xF0CE; </value>
+			<value xml:lang="ru-RU"><![CDATA[Навигатор заданий]]> &#xF0CE; </value>
+			<value xml:lang="si-LK"><![CDATA[ඇගයීමේ යාත්රිකයා]]> &#xF0CE; </value>
+			<value xml:lang="sl-SI"><![CDATA[Krmar po preverjanju znanja]]> &#xF0CE; </value>
+			<value xml:lang="so-SO"><![CDATA[Qiimeeynta Kala-sooca]]> &#xF0CE; </value>
+			<value xml:lang="sv-SE"><![CDATA[Navigering för utvärdering]]> &#xF0CE; </value>
+			<value xml:lang="tr-TR"><![CDATA[Değerlendirme Kılavuzu]]> &#xF0CE; </value>
+			<value xml:lang="ur-PK">&#xF0CE; <![CDATA[جانچ نیویگیٹر]]> </value>
+			<value xml:lang="xh-ZA"><![CDATA[Ukuhla unyuka koHlolo]]> &#xF0CE; </value>
+			<value xml:lang="xx"><![CDATA[ASSESSMENT_NAVIGATOR_TEXT]]> &#xF0CE; </value>
+			<value xml:lang="zh-HANT"><![CDATA[評估導覽]]> &#xF0CE; </value>
+			<value xml:lang="zh-HANS"><![CDATA[考试/评测导航]]> &#xF0CE; </value>
+			<value xml:lang="zu-ZA"><![CDATA[Umhlwayi Wohlaziyo]]> &#xF0CE; </value>
+			<value xml:lang="th-TH"><![CDATA[การประเมินทาง]]> &#xF0CE; </value>
+			<value xml:lang="cy-GB"><![CDATA[Llywiwr asesiad]]> &#xF0CE; </value>
+		</entry>
+		<entry id="NEXT_QUESTION_BUTTON_TEXT" type="text" translate="yes" category="delivery">
+			<description xml:lang="en-US"><![CDATA[Text for next question button]]></description>
+			<value xml:lang="af-ZA"><![CDATA[Volgende Vraag ]]>  &#xf0a9; </value>
+			<value xml:lang="ar-SA"> &#xf0a9;  <![CDATA[السؤال التالي ]]></value>
+			<value xml:lang="bg-BG"><![CDATA[Следващ въпрос]]>  &#xf0a9; </value>
+			<value xml:lang="bn-BD"><![CDATA[পরবর্তী প্রশ্ন ]]>  &#xf0a9; </value>
+			<value xml:lang="cs-CZ"><![CDATA[Další otázka ]]>  &#xf0a9; </value>
+			<value xml:lang="de-DE"><![CDATA[Nächste Frage ]]>  &#xf0a9; </value>
+			<value xml:lang="el-GR"><![CDATA[Επόμενη ερώτηση ]]>  &#xf0a9; </value>
+			<value xml:lang="en-US"><![CDATA[Next Question]]>  &#xf0a9; </value>
+			<value xml:lang="es-ES"><![CDATA[Próxima pregunta ]]>  &#xf0a9; </value>
+			<value xml:lang="fa-IR"><![CDATA[سؤال بعدی ]]>  &#xf0a9; </value>
+			<value xml:lang="fr-FR"><![CDATA[Question suivante ]]>  &#xf0a9; </value>
+			<value xml:lang="he-IL"><![CDATA[השאלה הבאה ]]>  &#xf0a9; </value>
+			<value xml:lang="hi-IN"><![CDATA[अगला प्रश्न ]]>  &#xf0a9; </value>
+			<value xml:lang="hu-HU"><![CDATA[Következő kérdés ]]>  &#xf0a9; </value>
+			<value xml:lang="it-IT"><![CDATA[Domanda successiva ]]>  &#xf0a9; </value>
+			<value xml:lang="ja-JP"><![CDATA[次のクエスチョン ]]>  &#xf0a9; </value>
+			<value xml:lang="km-KH"><![CDATA[សំនូរបន្ទាប់]]>  &#xf0a9; </value>
+			<value xml:lang="ko-KR"><![CDATA[다음 질문 ]]>  &#xf0a9; </value>
+			<value xml:lang="martian"><![CDATA[aNext Question.........b]]>  &#xf0a9; </value>
+			<value xml:lang="mk-MK"><![CDATA[Следно прашање ]]>  &#xf0a9; </value>
+			<value xml:lang="nb-NO"><![CDATA[Neste spørsmål ]]>  &#xf0a9; </value>
+			<value xml:lang="nl-NL"><![CDATA[Volgende vraag ]]>  &#xf0a9; </value>
+			<value xml:lang="pa-IN"><![CDATA[ਅਗਲਾ ਸਵਾਲ ]]>  &#xf0a9; </value>
+			<value xml:lang="pl-PL"><![CDATA[Następne pytanie ]]>  &#xf0a9; </value>
+			<value xml:lang="pt-BR"><![CDATA[Pergunta seguinte ]]>  &#xf0a9; </value>
+			<value xml:lang="pt-PT"><![CDATA[Próxima pergunta ]]>  &#xf0a9; </value>
+			<value xml:lang="ru-RU"><![CDATA[Следующий вопрос ]]>  &#xf0a9; </value>
+			<value xml:lang="si-LK"><![CDATA[ඊළඟ ප්රශ්නය ]]>  &#xf0a9; </value>
+			<value xml:lang="sl-SI"><![CDATA[Naslednje vprašanje ]]>  &#xf0a9; </value>
+			<value xml:lang="so-SO"><![CDATA[Su`aasha xiga]]>  &#xf0a9; </value>
+			<value xml:lang="sv-SE"><![CDATA[Nästa fråga ]]>  &#xf0a9; </value>
+			<value xml:lang="tr-TR"><![CDATA[Sonraki Soru ]]>  &#xf0a9; </value>
+			<value xml:lang="ur-PK"> &#xf0a9;  <![CDATA[اگلا سوال ]]></value>
+			<value xml:lang="xh-ZA"><![CDATA[Umbuzo olandelayo ]]>  &#xf0a9; </value>
+			<value xml:lang="xx"><![CDATA[NEXT_QUESTION_TEXT]]>  &#xf0a9; </value>
+			<value xml:lang="zh-HANT"><![CDATA[下一個問題 ]]>  &#xf0a9; </value>
+			<value xml:lang="zh-HANS"><![CDATA[下一问题 ]]>  &#xf0a9; </value>
+			<value xml:lang="zu-ZA"><![CDATA[Umbuzo Olandelayo ]]>  &#xf0a9; </value>
+			<value xml:lang="th-TH"><![CDATA[คำถามถัดไป ]]>  &#xf0a9; </value>
+			<value xml:lang="cy-GB"><![CDATA[Cwestiwn nesaf ]]>  &#xf0a9; </value>
+		</entry>
+    <entry id="NEXT_QUESTION_TOOLTIP_BUTTON_TEXT" type="text" translate="yes" category="delivery">
+			<description xml:lang="en-US"><![CDATA[Text for next question button]]></description>
+			<value xml:lang="af-ZA"><![CDATA[Volgende Vraag ]]>  &#xf0a9; </value>
+			<value xml:lang="ar-SA"> &#xf0a9;  <![CDATA[السؤال التالي ]]></value>
+			<value xml:lang="bg-BG"><![CDATA[Следващ въпрос]]>  &#xf0a9; </value>
+			<value xml:lang="bn-BD"><![CDATA[পরবর্তী প্রশ্ন ]]>  &#xf0a9; </value>
+			<value xml:lang="cs-CZ"><![CDATA[Další otázka ]]>  &#xf0a9; </value>
+			<value xml:lang="de-DE"><![CDATA[Nächste Frage ]]>  &#xf0a9; </value>
+			<value xml:lang="el-GR"><![CDATA[Επόμενη ερώτηση ]]>  &#xf0a9; </value>
+			<value xml:lang="en-US"><![CDATA[Next Question]]>  &#xf0a9; </value>
+			<value xml:lang="es-ES"><![CDATA[Próxima pregunta ]]>  &#xf0a9; </value>
+			<value xml:lang="fa-IR"><![CDATA[سؤال بعدی ]]>  &#xf0a9; </value>
+			<value xml:lang="fr-FR"><![CDATA[Question suivante ]]>  &#xf0a9; </value>
+			<value xml:lang="he-IL"><![CDATA[השאלה הבאה ]]>  &#xf0a9; </value>
+			<value xml:lang="hi-IN"><![CDATA[अगला प्रश्न ]]>  &#xf0a9; </value>
+			<value xml:lang="hu-HU"><![CDATA[Következő kérdés ]]>  &#xf0a9; </value>
+			<value xml:lang="it-IT"><![CDATA[Domanda successiva ]]>  &#xf0a9; </value>
+			<value xml:lang="ja-JP"><![CDATA[次のクエスチョン ]]>  &#xf0a9; </value>
+			<value xml:lang="km-KH"><![CDATA[សំនូរបន្ទាប់]]>  &#xf0a9; </value>
+			<value xml:lang="ko-KR"><![CDATA[다음 질문 ]]>  &#xf0a9; </value>
+			<value xml:lang="martian"><![CDATA[aNext Question.........b]]>  &#xf0a9; </value>
+			<value xml:lang="mk-MK"><![CDATA[Следно прашање ]]>  &#xf0a9; </value>
+			<value xml:lang="nb-NO"><![CDATA[Neste spørsmål ]]>  &#xf0a9; </value>
+			<value xml:lang="nl-NL"><![CDATA[Volgende vraag ]]>  &#xf0a9; </value>
+			<value xml:lang="pa-IN"><![CDATA[ਅਗਲਾ ਸਵਾਲ ]]>  &#xf0a9; </value>
+			<value xml:lang="pl-PL"><![CDATA[Następne pytanie ]]>  &#xf0a9; </value>
+			<value xml:lang="pt-BR"><![CDATA[Pergunta seguinte ]]>  &#xf0a9; </value>
+			<value xml:lang="pt-PT"><![CDATA[Próxima pergunta ]]>  &#xf0a9; </value>
+			<value xml:lang="ru-RU"><![CDATA[Следующий вопрос ]]>  &#xf0a9; </value>
+			<value xml:lang="si-LK"><![CDATA[ඊළඟ ප්රශ්නය ]]>  &#xf0a9; </value>
+			<value xml:lang="sl-SI"><![CDATA[Naslednje vprašanje ]]>  &#xf0a9; </value>
+			<value xml:lang="so-SO"><![CDATA[Su`aasha xiga]]>  &#xf0a9; </value>
+			<value xml:lang="sv-SE"><![CDATA[Nästa fråga ]]>  &#xf0a9; </value>
+			<value xml:lang="tr-TR"><![CDATA[Sonraki Soru ]]>  &#xf0a9; </value>
+			<value xml:lang="ur-PK"> &#xf0a9;  <![CDATA[اگلا سوال ]]></value>
+			<value xml:lang="xh-ZA"><![CDATA[Umbuzo olandelayo ]]>  &#xf0a9; </value>
+			<value xml:lang="xx"><![CDATA[NEXT_QUESTION_TEXT]]>  &#xf0a9; </value>
+			<value xml:lang="zh-HANT"><![CDATA[下一個問題 ]]>  &#xf0a9; </value>
+			<value xml:lang="zh-HANS"><![CDATA[下一问题 ]]>  &#xf0a9; </value>
+			<value xml:lang="zu-ZA"><![CDATA[Umbuzo Olandelayo ]]>  &#xf0a9; </value>
+			<value xml:lang="th-TH"><![CDATA[คำถามถัดไป ]]>  &#xf0a9; </value>
+			<value xml:lang="cy-GB"><![CDATA[Cwestiwn nesaf ]]>  &#xf0a9; </value>
+		</entry>
+		<entry id="PREVIOUS_QUESTION_BUTTON_TEXT" type="text" translate="yes" category="delivery">
+			<description xml:lang="en-US"><![CDATA[Text for previous question button]]></description>
+			<value xml:lang="af-ZA">&#xf0a8; <![CDATA[ Vorige Vraag]]></value>
+			<value xml:lang="ar-SA"><![CDATA[ السؤال السابق]]> &#xf0a8;</value>
+			<value xml:lang="bg-BG">&#xf0a8; <![CDATA[Предишен въпрос]]></value>
+			<value xml:lang="bn-BD">&#xf0a8; <![CDATA[ পূর্ববর্তী প্রশ্ন]]></value>
+			<value xml:lang="cs-CZ">&#xf0a8; <![CDATA[ Předchozí otázka]]></value>
+			<value xml:lang="de-DE">&#xf0a8; <![CDATA[ Vorherige Frage]]></value>
+			<value xml:lang="el-GR">&#xf0a8; <![CDATA[ Προηγούμενη ερώτηση]]></value>
+			<value xml:lang="en-US">&#xf0a8; <![CDATA[ Previous Question]]></value>
+			<value xml:lang="es-ES">&#xf0a8; <![CDATA[ Pregunta anterior]]></value>
+			<value xml:lang="fa-IR">&#xf0a8; <![CDATA[ سؤال قبلی]]></value>
+			<value xml:lang="fr-FR">&#xf0a8; <![CDATA[ Question précédente]]></value>
+			<value xml:lang="he-IL">&#xf0a8; <![CDATA[> שאלה קודמת]]></value>
+			<value xml:lang="hi-IN">&#xf0a8; <![CDATA[ पिछला प्रश्न]]></value>
+			<value xml:lang="hu-HU">&#xf0a8; <![CDATA[ Előző kérdés]]></value>
+			<value xml:lang="it-IT">&#xf0a8; <![CDATA[ Domanda precedente]]></value>
+			<value xml:lang="ja-JP">&#xf0a8; <![CDATA[ 前のクエスチョン]]></value>
+			<value xml:lang="km-KH">&#xf0a8; <![CDATA[សំនួរមុន]]></value>
+			<value xml:lang="ko-KR">&#xf0a8; <![CDATA[ 이전]]></value>
+			<value xml:lang="martian">&#xf0a8; <![CDATA[a< Previous Question..b]]></value>
+			<value xml:lang="mk-MK">&#xf0a8; <![CDATA[ Претходно прашање]]></value>
+			<value xml:lang="nb-NO">&#xf0a8; <![CDATA[ Forrige spørsmål]]></value>
+			<value xml:lang="nl-NL">&#xf0a8; <![CDATA[ Vorige vraag]]></value>
+			<value xml:lang="pa-IN">&#xf0a8; <![CDATA[ ਪਿੱਛਲਾ ਸਵਾਲ]]></value>
+			<value xml:lang="pl-PL">&#xf0a8; <![CDATA[ Poprzednie pytanie]]></value>
+			<value xml:lang="pt-BR">&#xf0a8; <![CDATA[ Pergunta Anterior]]></value>
+			<value xml:lang="pt-PT">&#xf0a8; <![CDATA[ Pergunta anterior]]></value>
+			<value xml:lang="ru-RU">&#xf0a8; <![CDATA[ Предыдущий вопрос]]></value>
+			<value xml:lang="si-LK">&#xf0a8; <![CDATA[ කළින් ප්රශ්නය]]></value>
+			<value xml:lang="sl-SI">&#xf0a8; <![CDATA[ Prejšnje vprašanje]]></value>
+			<value xml:lang="so-SO">&#xf0a8; <![CDATA[Su`aasha Horey]]></value>
+			<value xml:lang="sv-SE">&#xf0a8; <![CDATA[ Föregående fråga]]></value>
+			<value xml:lang="tr-TR">&#xf0a8; <![CDATA[ Önceki Soru]]></value>
+			<value xml:lang="ur-PK"><![CDATA[ سابقہ سوال]]> &#xf0a8;</value>
+			<value xml:lang="xh-ZA">&#xf0a8; <![CDATA[Umbuzo oNgaphambili]]></value>
+			<value xml:lang="xx">&#xf0a8; <![CDATA[PREVIOUS_QUESTION_TEXT]]></value>
+			<value xml:lang="zh-HANT">&#xf0a8; <![CDATA[ 上一個問題]]></value>
+			<value xml:lang="zh-HANS">&#xf0a8; <![CDATA[ 上一问题]]></value>
+			<value xml:lang="zu-ZA">&#xf0a8; <![CDATA[ Umbuzo Waphambilini]]></value>
+			<value xml:lang="th-TH">&#xf0a8; <![CDATA[ คำถามก่อนหน้า]]></value>
+			<value xml:lang="cy-GB">&#xf0a8; <![CDATA[ Cwestiwn blaenorol]]></value>
+		</entry>
+    <entry id="PREVIOUS_QUESTION_TOOLTIP_BUTTON_TEXT" type="text" translate="yes" category="delivery">
+      <description xml:lang="en-US"><![CDATA[Text for previous question button]]></description>
+      <value xml:lang="af-ZA">&#xf0a8; <![CDATA[ Vorige Vraag]]></value>
+      <value xml:lang="ar-SA"><![CDATA[ السؤال السابق]]> &#xf0a8;</value>
+      <value xml:lang="bg-BG">&#xf0a8; <![CDATA[Предишен въпрос]]></value>
+      <value xml:lang="bn-BD">&#xf0a8; <![CDATA[ পূর্ববর্তী প্রশ্ন]]></value>
+      <value xml:lang="cs-CZ">&#xf0a8; <![CDATA[ Předchozí otázka]]></value>
+      <value xml:lang="de-DE">&#xf0a8; <![CDATA[ Vorherige Frage]]></value>
+      <value xml:lang="el-GR">&#xf0a8; <![CDATA[ Προηγούμενη ερώτηση]]></value>
+      <value xml:lang="en-US">&#xf0a8; <![CDATA[ Previous Question]]></value>
+      <value xml:lang="es-ES">&#xf0a8; <![CDATA[ Pregunta anterior]]></value>
+      <value xml:lang="fa-IR">&#xf0a8; <![CDATA[ سؤال قبلی]]></value>
+      <value xml:lang="fr-FR">&#xf0a8; <![CDATA[ Question précédente]]></value>
+      <value xml:lang="he-IL">&#xf0a8; <![CDATA[> שאלה קודמת]]></value>
+      <value xml:lang="hi-IN">&#xf0a8; <![CDATA[ पिछला प्रश्न]]></value>
+      <value xml:lang="hu-HU">&#xf0a8; <![CDATA[ Előző kérdés]]></value>
+      <value xml:lang="it-IT">&#xf0a8; <![CDATA[ Domanda precedente]]></value>
+      <value xml:lang="ja-JP">&#xf0a8; <![CDATA[ 前のクエスチョン]]></value>
+      <value xml:lang="km-KH">&#xf0a8; <![CDATA[សំនួរមុន]]></value>
+      <value xml:lang="ko-KR">&#xf0a8; <![CDATA[ 이전]]></value>
+      <value xml:lang="martian">&#xf0a8; <![CDATA[a< Previous Question..b]]></value>
+      <value xml:lang="mk-MK">&#xf0a8; <![CDATA[ Претходно прашање]]></value>
+      <value xml:lang="nb-NO">&#xf0a8; <![CDATA[ Forrige spørsmål]]></value>
+      <value xml:lang="nl-NL">&#xf0a8; <![CDATA[ Vorige vraag]]></value>
+      <value xml:lang="pa-IN">&#xf0a8; <![CDATA[ ਪਿੱਛਲਾ ਸਵਾਲ]]></value>
+      <value xml:lang="pl-PL">&#xf0a8; <![CDATA[ Poprzednie pytanie]]></value>
+      <value xml:lang="pt-BR">&#xf0a8; <![CDATA[ Pergunta Anterior]]></value>
+      <value xml:lang="pt-PT">&#xf0a8; <![CDATA[ Pergunta anterior]]></value>
+      <value xml:lang="ru-RU">&#xf0a8; <![CDATA[ Предыдущий вопрос]]></value>
+      <value xml:lang="si-LK">&#xf0a8; <![CDATA[ කළින් ප්රශ්නය]]></value>
+      <value xml:lang="sl-SI">&#xf0a8; <![CDATA[ Prejšnje vprašanje]]></value>
+      <value xml:lang="so-SO">&#xf0a8; <![CDATA[Su`aasha Horey]]></value>
+      <value xml:lang="sv-SE">&#xf0a8; <![CDATA[ Föregående fråga]]></value>
+      <value xml:lang="tr-TR">&#xf0a8; <![CDATA[ Önceki Soru]]></value>
+      <value xml:lang="ur-PK"><![CDATA[ سابقہ سوال]]> &#xf0a8;</value>
+      <value xml:lang="xh-ZA">&#xf0a8; <![CDATA[Umbuzo oNgaphambili]]></value>
+      <value xml:lang="xx">&#xf0a8; <![CDATA[PREVIOUS_QUESTION_TEXT]]></value>
+      <value xml:lang="zh-HANT">&#xf0a8; <![CDATA[ 上一個問題]]></value>
+      <value xml:lang="zh-HANS">&#xf0a8; <![CDATA[ 上一问题]]></value>
+      <value xml:lang="zu-ZA">&#xf0a8; <![CDATA[ Umbuzo Waphambilini]]></value>
+      <value xml:lang="th-TH">&#xf0a8; <![CDATA[ คำถามก่อนหน้า]]></value>
+      <value xml:lang="cy-GB">&#xf0a8; <![CDATA[ Cwestiwn blaenorol]]></value>
+    </entry>
+		<entry id="SUBMIT_TEXT" type="text" translate="yes" category="question">
+			<description xml:lang="en-US"><![CDATA[Text for Submit button]]></description>
+			<value xml:lang="af-ZA"><![CDATA[Dien in]]> &#xf1d8;</value>
+			<value xml:lang="ar-SA">&#xf1d8; <![CDATA[إرسال]]></value>
+			<value xml:lang="bg-BG"><![CDATA[Изпращане]]> &#xf1d8;</value>
+			<value xml:lang="bn-BD"><![CDATA[দাখিল]]> &#xf1d8;</value>
+			<value xml:lang="cs-CZ"><![CDATA[Předat]]> &#xf1d8;</value>
+			<value xml:lang="de-DE"><![CDATA[Senden]]> &#xf1d8;</value>
+			<value xml:lang="el-GR"><![CDATA[Υποβολή]]> &#xf1d8;</value>
+			<value xml:lang="en-US"><![CDATA[Submit]]> &#xf1d8;</value>
+			<value xml:lang="es-ES"><![CDATA[Enviar]]> &#xf1d8;</value>
+			<value xml:lang="fa-IR"><![CDATA[ارسال]]> &#xf1d8;</value>
+			<value xml:lang="fr-FR"><![CDATA[Soumettre]]> &#xf1d8;</value>
+			<value xml:lang="he-IL"><![CDATA[שלח]]> &#xf1d8;</value>
+			<value xml:lang="hi-IN"><![CDATA[सबमिट करें]]> &#xf1d8;</value>
+			<value xml:lang="hu-HU"><![CDATA[Elküldés]]> &#xf1d8;</value>
+			<value xml:lang="it-IT"><![CDATA[Invia]]> &#xf1d8;</value>
+			<value xml:lang="ja-JP"><![CDATA[送信]]> &#xf1d8;</value>
+			<value xml:lang="km-KH"><![CDATA[បញ្ជូន]]> &#xf1d8;</value>
+			<value xml:lang="ko-KR"><![CDATA[제출]]> &#xf1d8;</value>
+			<value xml:lang="martian"><![CDATA[aSubmit...b]]> &#xf1d8;</value>
+			<value xml:lang="mk-MK"><![CDATA[Поднеси]]> &#xf1d8;</value>
+			<value xml:lang="nb-NO"><![CDATA[Send]]> &#xf1d8;</value>
+			<value xml:lang="nl-NL"><![CDATA[Verzenden]]> &#xf1d8;</value>
+			<value xml:lang="pa-IN"><![CDATA[ਸਬਮਿਟ ਕਰੋ]]> &#xf1d8;</value>
+			<value xml:lang="pl-PL"><![CDATA[Wprowadź]]> &#xf1d8;</value>
+			<value xml:lang="pt-BR"><![CDATA[Enviar]]> &#xf1d8;</value>
+			<value xml:lang="pt-PT"><![CDATA[Enviar]]> &#xf1d8;</value>
+			<value xml:lang="ru-RU"><![CDATA[Отправить]]> &#xf1d8;</value>
+			<value xml:lang="si-LK"><![CDATA[ඉදිරිපත් කරන්න]]> &#xf1d8;</value>
+			<value xml:lang="sl-SI"><![CDATA[Pošlji]]> &#xf1d8;</value>
+			<value xml:lang="so-SO"><![CDATA[Soo dir]]> &#xf1d8;</value>
+			<value xml:lang="sv-SE"><![CDATA[Lämna in]]> &#xf1d8;</value>
+			<value xml:lang="tr-TR"><![CDATA[Gönder]]> &#xf1d8;</value>
+			<value xml:lang="ur-PK">&#xf1d8; <![CDATA[ارسال کریں]]></value>
+			<value xml:lang="xh-ZA"><![CDATA[Ngenisa]]> &#xf1d8;</value>
+			<value xml:lang="xx"><![CDATA[SUBMIT_TEXT]]> &#xf1d8;</value>
+			<value xml:lang="zh-HANT"><![CDATA[提交]]> &#xf1d8;</value>
+			<value xml:lang="zh-HANS"><![CDATA[提交]]> &#xf1d8;</value>
+			<value xml:lang="zu-ZA"><![CDATA[Yethula]]> &#xf1d8;</value>
+			<value xml:lang="th-TH"><![CDATA[ส่ง]]> &#xf1d8;</value>
+			<value xml:lang="cy-GB"><![CDATA[Cyflwyno]]> &#xf1d8;</value>
+		</entry>
+		<entry id="LINK_CLOSE_TEXT" type="text" translate="yes" category="delivery">
+			<description xml:lang="en-US"><![CDATA[Text for Close button]]></description>
+			<value xml:lang="af-ZA"><![CDATA[Sluit]]> &#xf057;</value>
+			<value xml:lang="ar-SA"><![CDATA[إغلاق]]> &#xf057;</value>
+			<value xml:lang="bg-BG"><![CDATA[Затваряне]]> &#xf057;</value>
+			<value xml:lang="bn-BD"><![CDATA[বন্ধ]]> &#xf057;</value>
+			<value xml:lang="cs-CZ"><![CDATA[Zavřít]]> &#xf057;</value>
+			<value xml:lang="de-DE"><![CDATA[Schließen]]> &#xf057;</value>
+			<value xml:lang="el-GR"><![CDATA[Κλείσιμο]]> &#xf057;</value>
+			<value xml:lang="en-US"><![CDATA[Close]]> &#xf057;</value>
+			<value xml:lang="es-ES"><![CDATA[Cerrar]]> &#xf057;</value>
+			<value xml:lang="fa-IR"><![CDATA[بستن]]> &#xf057;</value>
+			<value xml:lang="fr-FR"><![CDATA[Fermer]]> &#xf057;</value>
+			<value xml:lang="he-IL"><![CDATA[סגור]]> &#xf057;</value>
+			<value xml:lang="hi-IN"><![CDATA[बंद करें]]> &#xf057;</value>
+			<value xml:lang="hu-HU"><![CDATA[Bezárás]]> &#xf057;</value>
+			<value xml:lang="it-IT"><![CDATA[Chiudi]]> &#xf057;</value>
+			<value xml:lang="ja-JP"><![CDATA[閉じる]]> &#xf057;</value>
+			<value xml:lang="km-KH"><![CDATA[បិទ]]> &#xf057;</value>
+			<value xml:lang="ko-KR"><![CDATA[닫기]]> &#xf057;</value>
+			<value xml:lang="martian"><![CDATA[aClose.............b]]> &#xf057;</value>
+			<value xml:lang="mk-MK"><![CDATA[Затвори]]> &#xf057;</value>
+			<value xml:lang="nb-NO"><![CDATA[Lukk]]> &#xf057;</value>
+			<value xml:lang="nl-NL"><![CDATA[Sluiten]]> &#xf057;</value>
+			<value xml:lang="pa-IN"><![CDATA[ਬੰਦ ਕਰੋ]]> &#xf057;</value>
+			<value xml:lang="pl-PL"><![CDATA[Zamknij]]> &#xf057;</value>
+			<value xml:lang="pt-BR"><![CDATA[Fechar]]> &#xf057;</value>
+			<value xml:lang="pt-PT"><![CDATA[Fechar]]> &#xf057;</value>
+			<value xml:lang="ru-RU"><![CDATA[Закрыть]]> &#xf057;</value>
+			<value xml:lang="si-LK"><![CDATA[වසන්න]]> &#xf057;</value>
+			<value xml:lang="sl-SI"><![CDATA[Zapri]]> &#xf057;</value>
+			<value xml:lang="so-SO"><![CDATA[Xir]]> &#xf057;</value>
+			<value xml:lang="sv-SE"><![CDATA[Stäng]]> &#xf057;</value>
+			<value xml:lang="tr-TR"><![CDATA[Kapat]]> &#xf057;</value>
+			<value xml:lang="ur-PK"><![CDATA[بند کریں]]> &#xf057;</value>
+			<value xml:lang="xh-ZA"><![CDATA[Vala]]> &#xf057;</value>
+			<value xml:lang="xx"><![CDATA[LINK_CLOSE_TEXT]]> &#xf057;</value>
+			<value xml:lang="zh-HANT"><![CDATA[關閉]]> &#xf057;</value>
+			<value xml:lang="zh-HANS"><![CDATA[关闭]]> &#xf057;</value>
+			<value xml:lang="zu-ZA"><![CDATA[Vala]]> &#xf057;</value>
+			<value xml:lang="th-TH"><![CDATA[ปิด]]> &#xf057;</value>
+			<value xml:lang="cy-GB"><![CDATA[Cau]]> &#xf057;</value>
+		</entry>
+		<entry id="LOGGED_IN_TEXT" type="text" translate="yes" category="default">
+			<description xml:lang="en-US"><![CDATA[Logged in as]]></description>
+			<value xml:lang="af-ZA">&#xF007;</value>
+			<value xml:lang="ar-SA">&#xF007;</value>
+			<value xml:lang="bg-BG">&#xF007;</value>
+			<value xml:lang="bn-BD">&#xF007;</value>
+			<value xml:lang="cs-CZ">&#xF007;</value>
+			<value xml:lang="de-DE">&#xF007;</value>
+			<value xml:lang="el-GR">&#xF007;</value>
+			<value xml:lang="en-US">&#xF007;</value>
+			<value xml:lang="es-ES">&#xF007;</value>
+			<value xml:lang="fa-IR">&#xF007;</value>
+			<value xml:lang="fr-FR">&#xF007;</value>
+			<value xml:lang="he-IL">&#xF007;</value>
+			<value xml:lang="hi-IN">&#xF007;</value>
+			<value xml:lang="hu-HU">&#xF007;</value>
+			<value xml:lang="it-IT">&#xF007;</value>
+			<value xml:lang="ja-JP">&#xF007;</value>
+			<value xml:lang="km-KH">&#xF007;</value>
+			<value xml:lang="ko-KR">&#xF007;</value>
+			<value xml:lang="martian">&#xF007;</value>
+			<value xml:lang="mk-MK">&#xF007;</value>
+			<value xml:lang="nb-NO">&#xF007;</value>
+			<value xml:lang="nl-NL">&#xF007;</value>
+			<value xml:lang="pa-IN">&#xF007;</value>
+			<value xml:lang="pl-PL">&#xF007;</value>
+			<value xml:lang="pt-BR">&#xF007;</value>
+			<value xml:lang="pt-PT">&#xF007;</value>
+			<value xml:lang="ru-RU">&#xF007;</value>
+			<value xml:lang="si-LK">&#xF007;</value>
+			<value xml:lang="sl-SI">&#xF007;</value>
+			<value xml:lang="so-SO">&#xF007;</value>
+			<value xml:lang="sv-SE">&#xF007;</value>
+			<value xml:lang="tr-TR">&#xF007;</value>
+			<value xml:lang="ur-PK">&#xF007;</value>
+			<value xml:lang="xh-ZA">&#xF007;</value>
+			<value xml:lang="xx">&#xF007;</value>
+			<value xml:lang="zh-HANT">&#xF007;</value>
+			<value xml:lang="zh-HANS">&#xF007;</value>
+			<value xml:lang="zu-ZA">&#xF007;</value>
+			<value xml:lang="th-TH">&#xF007;</value>
+			<value xml:lang="cy-GB">&#xF007;</value>
+		</entry>
+		<entry id="TRYOUT_TEXT" type="text" translate="yes" category="default">
+		  <description xml:lang="en-US"><![CDATA[tryout]]></description>
+		  <value xml:lang="ar-SA"><![CDATA[قم بتجربة]]></value>
+		  <value xml:lang="en-US"><![CDATA[tryout]]></value>
+		</entry>
+		<entry id="SHORT_MONTH_01" type="text" translate="yes" category="default">
+			<description xml:lang="en-US"><![CDATA[Short name for month of January]]></description>
+			<value xml:lang="af-ZA">&#xF073; : <![CDATA[Jan.]]></value>
+			<value xml:lang="ar-SA">&#xF073; : <![CDATA[يناير]]></value>
+			<value xml:lang="bg-BG">&#xF073; : <![CDATA[Яну.]]></value>
+			<value xml:lang="bn-BD">&#xF073; : <![CDATA[জানুয়ারি]]></value>
+			<value xml:lang="cs-CZ">&#xF073; : <![CDATA[Led]]></value>
+			<value xml:lang="de-DE">&#xF073; : <![CDATA[Jan.]]></value>
+			<value xml:lang="el-GR">&#xF073; : <![CDATA[Ιαν]]></value>
+			<value xml:lang="en-US">&#xF073; : <![CDATA[Jan]]></value>
+			<value xml:lang="es-ES">&#xF073; : <![CDATA[Ene]]></value>
+			<value xml:lang="fa-IR">&#xF073; : <![CDATA[ژانویه]]></value>
+			<value xml:lang="fr-FR">&#xF073; : <![CDATA[Jan]]></value>
+			<value xml:lang="he-IL">&#xF073; : <![CDATA[ינו]]></value>
+			<value xml:lang="hi-IN">&#xF073; : <![CDATA[जनवरी]]></value>
+			<value xml:lang="hu-HU">&#xF073; : <![CDATA[Jan]]></value>
+			<value xml:lang="it-IT">&#xF073; : <![CDATA[Gen]]></value>
+			<value xml:lang="ja-JP">&#xF073; : <![CDATA[1 月]]></value>
+			<value xml:lang="km-KH">&#xF073; : <![CDATA[មករា]]></value>
+			<value xml:lang="ko-KR">&#xF073; : <![CDATA[1월]]></value>
+			<value xml:lang="martian">&#xF073; : <![CDATA[aJan........b]]></value>
+			<value xml:lang="mk-MK">&#xF073; : <![CDATA[Јан.]]></value>
+			<value xml:lang="nb-NO">&#xF073; : <![CDATA[Jan]]></value>
+			<value xml:lang="nl-NL">&#xF073; : <![CDATA[Jan]]></value>
+			<value xml:lang="pa-IN">&#xF073; : <![CDATA[ਜਨਵਰੀ]]></value>
+			<value xml:lang="pl-PL">&#xF073; : <![CDATA[Sty]]></value>
+			<value xml:lang="pt-BR">&#xF073; : <![CDATA[Janeiro]]></value>
+			<value xml:lang="pt-PT">&#xF073; : <![CDATA[Jan]]></value>
+			<value xml:lang="ru-RU">&#xF073; : <![CDATA[Янв.]]></value>
+			<value xml:lang="si-LK">&#xF073; : <![CDATA[ජන]]></value>
+			<value xml:lang="sl-SI">&#xF073; : <![CDATA[Jan]]></value>
+			<value xml:lang="so-SO">&#xF073; : <![CDATA[Janaayo]]></value>
+			<value xml:lang="sv-SE">&#xF073; : <![CDATA[Jan]]></value>
+			<value xml:lang="tr-TR">&#xF073; : <![CDATA[Oca]]></value>
+			<value xml:lang="ur-PK">&#xF073; : <![CDATA[جنوری]]></value>
+			<value xml:lang="xh-ZA">&#xF073; : <![CDATA[Janyuwari]]></value>
+			<value xml:lang="xx">&#xF073; : <![CDATA[SHORT_MONTH_01]]></value>
+			<value xml:lang="zh-HANT">&#xF073; : <![CDATA[一月]]></value>
+			<value xml:lang="zh-HANS">&#xF073; : <![CDATA[一月]]></value>
+			<value xml:lang="zu-ZA">&#xF073; : <![CDATA[Jan]]></value>
+			<value xml:lang="th-TH">&#xF073; : <![CDATA[ม.ค.]]></value>
+			<value xml:lang="cy-GB">&#xF073; : <![CDATA[Ion]]></value>
+		</entry>
+		<entry id="SHORT_MONTH_02" type="text" translate="yes" category="default">
+			<description xml:lang="en-US"><![CDATA[Short name for month of February]]></description>
+			<value xml:lang="af-ZA">&#xF073; : <![CDATA[Feb.]]></value>
+			<value xml:lang="ar-SA">&#xF073; : <![CDATA[فبراير]]></value>
+			<value xml:lang="bg-BG">&#xF073; : <![CDATA[Фев.]]></value>
+			<value xml:lang="bn-BD">&#xF073; : <![CDATA[ফেব্রুয়ারি]]></value>
+			<value xml:lang="cs-CZ">&#xF073; : <![CDATA[Úno]]></value>
+			<value xml:lang="de-DE">&#xF073; : <![CDATA[Feb.]]></value>
+			<value xml:lang="el-GR">&#xF073; : <![CDATA[Φεβ]]></value>
+			<value xml:lang="en-US">&#xF073; : <![CDATA[Feb]]></value>
+			<value xml:lang="es-ES">&#xF073; : <![CDATA[Feb]]></value>
+			<value xml:lang="fa-IR">&#xF073; : <![CDATA[فوریه]]></value>
+			<value xml:lang="fr-FR">&#xF073; : <![CDATA[Fév]]></value>
+			<value xml:lang="he-IL">&#xF073; : <![CDATA[פבר]]></value>
+			<value xml:lang="hi-IN">&#xF073; : <![CDATA[फ़रवरी]]></value>
+			<value xml:lang="hu-HU">&#xF073; : <![CDATA[Feb]]></value>
+			<value xml:lang="it-IT">&#xF073; : <![CDATA[Feb]]></value>
+			<value xml:lang="ja-JP">&#xF073; : <![CDATA[2 月]]></value>
+			<value xml:lang="km-KH">&#xF073; : <![CDATA[កុម្ភះ]]></value>
+			<value xml:lang="ko-KR">&#xF073; : <![CDATA[2월]]></value>
+			<value xml:lang="martian">&#xF073; : <![CDATA[aFeb........b]]></value>
+			<value xml:lang="mk-MK">&#xF073; : <![CDATA[Фев.]]></value>
+			<value xml:lang="nb-NO">&#xF073; : <![CDATA[Feb]]></value>
+			<value xml:lang="nl-NL">&#xF073; : <![CDATA[Feb]]></value>
+			<value xml:lang="pa-IN">&#xF073; : <![CDATA[ਫ਼ਰ.]]></value>
+			<value xml:lang="pl-PL">&#xF073; : <![CDATA[Lut]]></value>
+			<value xml:lang="pt-BR">&#xF073; : <![CDATA[Fevereiro]]></value>
+			<value xml:lang="pt-PT">&#xF073; : <![CDATA[Fev]]></value>
+			<value xml:lang="ru-RU">&#xF073; : <![CDATA[Фев.]]></value>
+			<value xml:lang="si-LK">&#xF073; : <![CDATA[පෙබ]]></value>
+			<value xml:lang="sl-SI">&#xF073; : <![CDATA[Feb]]></value>
+			<value xml:lang="so-SO">&#xF073; : <![CDATA[Febraayo]]></value>
+			<value xml:lang="sv-SE">&#xF073; : <![CDATA[Feb]]></value>
+			<value xml:lang="tr-TR">&#xF073; : <![CDATA[Şub]]></value>
+			<value xml:lang="ur-PK">&#xF073; : <![CDATA[فروری]]></value>
+			<value xml:lang="xh-ZA">&#xF073; : <![CDATA[Februwari]]></value>
+			<value xml:lang="xx">&#xF073; : <![CDATA[SHORT_MONTH_02]]></value>
+			<value xml:lang="zh-HANT">&#xF073; : <![CDATA[二月]]></value>
+			<value xml:lang="zh-HANS">&#xF073; : <![CDATA[二月]]></value>
+			<value xml:lang="zu-ZA">&#xF073; : <![CDATA[Feb]]></value>
+			<value xml:lang="th-TH">&#xF073; : <![CDATA[ก.พ.]]></value>
+			<value xml:lang="cy-GB">&#xF073; : <![CDATA[Chwef]]></value>
+		</entry>
+		<entry id="SHORT_MONTH_03" type="text" translate="yes" category="default">
+			<description xml:lang="en-US"><![CDATA[Short name for month of March]]></description>
+			<value xml:lang="af-ZA">&#xF073; : <![CDATA[Mrt.]]></value>
+			<value xml:lang="ar-SA">&#xF073; : <![CDATA[مارس]]></value>
+			<value xml:lang="bg-BG">&#xF073; : <![CDATA[Март]]></value>
+			<value xml:lang="bn-BD">&#xF073; : <![CDATA[মার্চ]]></value>
+			<value xml:lang="cs-CZ">&#xF073; : <![CDATA[Bře]]></value>
+			<value xml:lang="de-DE">&#xF073; : <![CDATA[März]]></value>
+			<value xml:lang="el-GR">&#xF073; : <![CDATA[Μαρ]]></value>
+			<value xml:lang="en-US">&#xF073; : <![CDATA[Mar]]></value>
+			<value xml:lang="es-ES">&#xF073; : <![CDATA[Mar]]></value>
+			<value xml:lang="fa-IR">&#xF073; : <![CDATA[مارس]]></value>
+			<value xml:lang="fr-FR">&#xF073; : <![CDATA[Mars]]></value>
+			<value xml:lang="he-IL">&#xF073; : <![CDATA[מרץ]]></value>
+			<value xml:lang="hi-IN">&#xF073; : <![CDATA[मार्च]]></value>
+			<value xml:lang="hu-HU">&#xF073; : <![CDATA[Márc]]></value>
+			<value xml:lang="it-IT">&#xF073; : <![CDATA[Mar]]></value>
+			<value xml:lang="ja-JP">&#xF073; : <![CDATA[3 月]]></value>
+			<value xml:lang="km-KH">&#xF073; : <![CDATA[មីនា]]></value>
+			<value xml:lang="ko-KR">&#xF073; : <![CDATA[3월]]></value>
+			<value xml:lang="martian">&#xF073; : <![CDATA[aMar........b]]></value>
+			<value xml:lang="mk-MK">&#xF073; : <![CDATA[Мар.]]></value>
+			<value xml:lang="nb-NO">&#xF073; : <![CDATA[Mar]]></value>
+			<value xml:lang="nl-NL">&#xF073; : <![CDATA[Maa]]></value>
+			<value xml:lang="pa-IN">&#xF073; : <![CDATA[ਮਾਰਚ]]></value>
+			<value xml:lang="pl-PL">&#xF073; : <![CDATA[Mar]]></value>
+			<value xml:lang="pt-BR">&#xF073; : <![CDATA[Fevereiro]]></value>
+			<value xml:lang="pt-PT">&#xF073; : <![CDATA[Mar]]></value>
+			<value xml:lang="ru-RU">&#xF073; : <![CDATA[Март]]></value>
+			<value xml:lang="si-LK">&#xF073; : <![CDATA[මාර්]]></value>
+			<value xml:lang="sl-SI">&#xF073; : <![CDATA[Mar]]></value>
+			<value xml:lang="so-SO">&#xF073; : <![CDATA[Maarso]]></value>
+			<value xml:lang="sv-SE">&#xF073; : <![CDATA[Mar]]></value>
+			<value xml:lang="tr-TR">&#xF073; : <![CDATA[Mar]]></value>
+			<value xml:lang="ur-PK">&#xF073; : <![CDATA[مارچ]]></value>
+			<value xml:lang="xh-ZA">&#xF073; : <![CDATA[Matshi]]></value>
+			<value xml:lang="xx">&#xF073; : <![CDATA[SHORT_MONTH_03]]></value>
+			<value xml:lang="zh-HANT">&#xF073; : <![CDATA[三月]]></value>
+			<value xml:lang="zh-HANS">&#xF073; : <![CDATA[三月]]></value>
+			<value xml:lang="zu-ZA">&#xF073; : <![CDATA[Mas]]></value>
+			<value xml:lang="th-TH">&#xF073; : <![CDATA[มี.ค.]]></value>
+			<value xml:lang="cy-GB">&#xF073; : <![CDATA[Maw]]></value>
+		</entry>
+		<entry id="SHORT_MONTH_04" type="text" translate="yes" category="default">
+			<description xml:lang="en-US"><![CDATA[Short name for month of April]]></description>
+			<value xml:lang="af-ZA">&#xF073; : <![CDATA[Apr.]]></value>
+			<value xml:lang="ar-SA">&#xF073; : <![CDATA[ابريل]]></value>
+			<value xml:lang="bg-BG">&#xF073; : <![CDATA[Апр.]]></value>
+			<value xml:lang="bn-BD">&#xF073; : <![CDATA[এপ্রিল]]></value>
+			<value xml:lang="cs-CZ">&#xF073; : <![CDATA[Dub]]></value>
+			<value xml:lang="de-DE">&#xF073; : <![CDATA[Apr.]]></value>
+			<value xml:lang="el-GR">&#xF073; : <![CDATA[Απρ]]></value>
+			<value xml:lang="en-US">&#xF073; : <![CDATA[Apr]]></value>
+			<value xml:lang="es-ES">&#xF073; : <![CDATA[Abr]]></value>
+			<value xml:lang="fa-IR">&#xF073; : <![CDATA[آوریل]]></value>
+			<value xml:lang="fr-FR">&#xF073; : <![CDATA[Avr]]></value>
+			<value xml:lang="he-IL">&#xF073; : <![CDATA[אפר]]></value>
+			<value xml:lang="hi-IN">&#xF073; : <![CDATA[अप्रैल]]></value>
+			<value xml:lang="hu-HU">&#xF073; : <![CDATA[Ápr]]></value>
+			<value xml:lang="it-IT">&#xF073; : <![CDATA[Apr]]></value>
+			<value xml:lang="ja-JP">&#xF073; : <![CDATA[4 月]]></value>
+			<value xml:lang="km-KH">&#xF073; : <![CDATA[មេសា]]></value>
+			<value xml:lang="ko-KR">&#xF073; : <![CDATA[4월]]></value>
+			<value xml:lang="martian">&#xF073; : <![CDATA[aApr........b]]></value>
+			<value xml:lang="mk-MK">&#xF073; : <![CDATA[Апр.]]></value>
+			<value xml:lang="nb-NO">&#xF073; : <![CDATA[Apr]]></value>
+			<value xml:lang="nl-NL">&#xF073; : <![CDATA[Apr]]></value>
+			<value xml:lang="pa-IN">&#xF073; : <![CDATA[ਅਪ੍ਰੈਲ]]></value>
+			<value xml:lang="pl-PL">&#xF073; : <![CDATA[Kwi]]></value>
+			<value xml:lang="pt-BR">&#xF073; : <![CDATA[Abril]]></value>
+			<value xml:lang="pt-PT">&#xF073; : <![CDATA[Abr]]></value>
+			<value xml:lang="ru-RU">&#xF073; : <![CDATA[Апр.]]></value>
+			<value xml:lang="si-LK">&#xF073; : <![CDATA[අප්රේ]]></value>
+			<value xml:lang="sl-SI">&#xF073; : <![CDATA[Apr]]></value>
+			<value xml:lang="so-SO">&#xF073; : <![CDATA[Abriil]]></value>
+			<value xml:lang="sv-SE">&#xF073; : <![CDATA[Apr]]></value>
+			<value xml:lang="tr-TR">&#xF073; : <![CDATA[Nis]]></value>
+			<value xml:lang="ur-PK">&#xF073; : <![CDATA[اپریل]]></value>
+			<value xml:lang="xh-ZA">&#xF073; : <![CDATA[Apreli]]></value>
+			<value xml:lang="xx">&#xF073; : <![CDATA[SHORT_MONTH_04]]></value>
+			<value xml:lang="zh-HANT">&#xF073; : <![CDATA[四月]]></value>
+			<value xml:lang="zh-HANS">&#xF073; : <![CDATA[四月]]></value>
+			<value xml:lang="zu-ZA">&#xF073; : <![CDATA[Apr]]></value>
+			<value xml:lang="th-TH">&#xF073; : <![CDATA[เม.ย.]]></value>
+			<value xml:lang="cy-GB">&#xF073; : <![CDATA[Ebr]]></value>
+		</entry>
+		<entry id="SHORT_MONTH_05" type="text" translate="yes" category="default">
+			<description xml:lang="en-US"><![CDATA[Short name for month of May]]></description>
+			<value xml:lang="af-ZA">&#xF073; : <![CDATA[Mei]]></value>
+			<value xml:lang="ar-SA">&#xF073; : <![CDATA[مايو]]></value>
+			<value xml:lang="bg-BG">&#xF073; : <![CDATA[Май]]></value>
+			<value xml:lang="bn-BD">&#xF073; : <![CDATA[মে]]></value>
+			<value xml:lang="cs-CZ">&#xF073; : <![CDATA[Kvě]]></value>
+			<value xml:lang="de-DE">&#xF073; : <![CDATA[Mai]]></value>
+			<value xml:lang="el-GR">&#xF073; : <![CDATA[Μάι]]></value>
+			<value xml:lang="en-US">&#xF073; : <![CDATA[May]]></value>
+			<value xml:lang="es-ES">&#xF073; : <![CDATA[May]]></value>
+			<value xml:lang="fa-IR">&#xF073; : <![CDATA[مه]]></value>
+			<value xml:lang="fr-FR">&#xF073; : <![CDATA[Mai]]></value>
+			<value xml:lang="he-IL">&#xF073; : <![CDATA[מאי]]></value>
+			<value xml:lang="hi-IN">&#xF073; : <![CDATA[मई]]></value>
+			<value xml:lang="hu-HU">&#xF073; : <![CDATA[Máj]]></value>
+			<value xml:lang="it-IT">&#xF073; : <![CDATA[Mag]]></value>
+			<value xml:lang="ja-JP">&#xF073; : <![CDATA[5 月]]></value>
+			<value xml:lang="km-KH">&#xF073; : <![CDATA[ឧសភា]]></value>
+			<value xml:lang="ko-KR">&#xF073; : <![CDATA[5월]]></value>
+			<value xml:lang="martian">&#xF073; : <![CDATA[aMay........b]]></value>
+			<value xml:lang="mk-MK">&#xF073; : <![CDATA[Мај]]></value>
+			<value xml:lang="nb-NO">&#xF073; : <![CDATA[Mai]]></value>
+			<value xml:lang="nl-NL">&#xF073; : <![CDATA[Mei]]></value>
+			<value xml:lang="pa-IN">&#xF073; : <![CDATA[ਮਈ]]></value>
+			<value xml:lang="pl-PL">&#xF073; : <![CDATA[Maj]]></value>
+			<value xml:lang="pt-BR">&#xF073; : <![CDATA[Maio]]></value>
+			<value xml:lang="pt-PT">&#xF073; : <![CDATA[Mai]]></value>
+			<value xml:lang="ru-RU">&#xF073; : <![CDATA[Май]]></value>
+			<value xml:lang="si-LK">&#xF073; : <![CDATA[මැයි]]></value>
+			<value xml:lang="sl-SI">&#xF073; : <![CDATA[Maj]]></value>
+			<value xml:lang="so-SO">&#xF073; : <![CDATA[Maajo]]></value>
+			<value xml:lang="sv-SE">&#xF073; : <![CDATA[Maj]]></value>
+			<value xml:lang="tr-TR">&#xF073; : <![CDATA[May]]></value>
+			<value xml:lang="ur-PK">&#xF073; : <![CDATA[مئی]]></value>
+			<value xml:lang="xh-ZA">&#xF073; : <![CDATA[Meyi]]></value>
+			<value xml:lang="xx">&#xF073; : <![CDATA[SHORT_MONTH_05]]></value>
+			<value xml:lang="zh-HANT">&#xF073; : <![CDATA[五月]]></value>
+			<value xml:lang="zh-HANS">&#xF073; : <![CDATA[五月]]></value>
+			<value xml:lang="zu-ZA">&#xF073; : <![CDATA[Mey]]></value>
+			<value xml:lang="th-TH">&#xF073; : <![CDATA[อาจ]]></value>
+			<value xml:lang="cy-GB">&#xF073; : <![CDATA[Mai]]></value>
+		</entry>
+		<entry id="SHORT_MONTH_06" type="text" translate="yes" category="default">
+			<description xml:lang="en-US"><![CDATA[Short name for month of Jun]]></description>
+			<value xml:lang="af-ZA">&#xF073; : <![CDATA[Jun.]]></value>
+			<value xml:lang="ar-SA">&#xF073; : <![CDATA[يونيو]]></value>
+			<value xml:lang="bg-BG">&#xF073; : <![CDATA[Юни]]></value>
+			<value xml:lang="bn-BD">&#xF073; : <![CDATA[জুন]]></value>
+			<value xml:lang="cs-CZ">&#xF073; : <![CDATA[Čen]]></value>
+			<value xml:lang="de-DE">&#xF073; : <![CDATA[Juni]]></value>
+			<value xml:lang="el-GR">&#xF073; : <![CDATA[Ιουν]]></value>
+			<value xml:lang="en-US">&#xF073; : <![CDATA[Jun]]></value>
+			<value xml:lang="es-ES">&#xF073; : <![CDATA[Jun]]></value>
+			<value xml:lang="fa-IR">&#xF073; : <![CDATA[ژوئن]]></value>
+			<value xml:lang="fr-FR">&#xF073; : <![CDATA[Juin]]></value>
+			<value xml:lang="he-IL">&#xF073; : <![CDATA[יונ]]></value>
+			<value xml:lang="hi-IN">&#xF073; : <![CDATA[जून]]></value>
+			<value xml:lang="hu-HU">&#xF073; : <![CDATA[Jún]]></value>
+			<value xml:lang="it-IT">&#xF073; : <![CDATA[Giu]]></value>
+			<value xml:lang="ja-JP">&#xF073; : <![CDATA[6 月]]></value>
+			<value xml:lang="km-KH">&#xF073; : <![CDATA[មិថុនា]]></value>
+			<value xml:lang="ko-KR">&#xF073; : <![CDATA[6월]]></value>
+			<value xml:lang="martian">&#xF073; : <![CDATA[aJun........b]]></value>
+			<value xml:lang="mk-MK">&#xF073; : <![CDATA[Јун.]]></value>
+			<value xml:lang="nb-NO">&#xF073; : <![CDATA[Jun]]></value>
+			<value xml:lang="nl-NL">&#xF073; : <![CDATA[Jun]]></value>
+			<value xml:lang="pa-IN">&#xF073; : <![CDATA[ਜੂਨ]]></value>
+			<value xml:lang="pl-PL">&#xF073; : <![CDATA[Cze]]></value>
+			<value xml:lang="pt-BR">&#xF073; : <![CDATA[Junho]]></value>
+			<value xml:lang="pt-PT">&#xF073; : <![CDATA[Jun]]></value>
+			<value xml:lang="ru-RU">&#xF073; : <![CDATA[Июнь]]></value>
+			<value xml:lang="si-LK">&#xF073; : <![CDATA[ජුනි]]></value>
+			<value xml:lang="sl-SI">&#xF073; : <![CDATA[Jun]]></value>
+			<value xml:lang="so-SO">&#xF073; : <![CDATA[Juunyo]]></value>
+			<value xml:lang="sv-SE">&#xF073; : <![CDATA[Jun]]></value>
+			<value xml:lang="tr-TR">&#xF073; : <![CDATA[Haz]]></value>
+			<value xml:lang="ur-PK">&#xF073; : <![CDATA[جون]]></value>
+			<value xml:lang="xh-ZA">&#xF073; : <![CDATA[Juni]]></value>
+			<value xml:lang="xx">&#xF073; : <![CDATA[SHORT_MONTH_06]]></value>
+			<value xml:lang="zh-HANT">&#xF073; : <![CDATA[六月]]></value>
+			<value xml:lang="zh-HANS">&#xF073; : <![CDATA[六月]]></value>
+			<value xml:lang="zu-ZA">&#xF073; : <![CDATA[Jun]]></value>
+			<value xml:lang="th-TH">&#xF073; : <![CDATA[มิ.ย.]]></value>
+			<value xml:lang="cy-GB">&#xF073; : <![CDATA[Meh]]></value>
+		</entry>
+		<entry id="SHORT_MONTH_07" type="text" translate="yes" category="default">
+			<description xml:lang="en-US"><![CDATA[Short name for month of July]]></description>
+			<value xml:lang="af-ZA">&#xF073; : <![CDATA[Jul.]]></value>
+			<value xml:lang="ar-SA">&#xF073; : <![CDATA[يوليو]]></value>
+			<value xml:lang="bg-BG">&#xF073; : <![CDATA[Юли]]></value>
+			<value xml:lang="bn-BD">&#xF073; : <![CDATA[জুলাই]]></value>
+			<value xml:lang="cs-CZ">&#xF073; : <![CDATA[Čec]]></value>
+			<value xml:lang="de-DE">&#xF073; : <![CDATA[Juli]]></value>
+			<value xml:lang="el-GR">&#xF073; : <![CDATA[Ιουλ]]></value>
+			<value xml:lang="en-US">&#xF073; : <![CDATA[Jul]]></value>
+			<value xml:lang="es-ES">&#xF073; : <![CDATA[Jul]]></value>
+			<value xml:lang="fa-IR">&#xF073; : <![CDATA[جولای]]></value>
+			<value xml:lang="fr-FR">&#xF073; : <![CDATA[Juil]]></value>
+			<value xml:lang="he-IL">&#xF073; : <![CDATA[יול]]></value>
+			<value xml:lang="hi-IN">&#xF073; : <![CDATA[जुलाई]]></value>
+			<value xml:lang="hu-HU">&#xF073; : <![CDATA[Júl]]></value>
+			<value xml:lang="it-IT">&#xF073; : <![CDATA[Lug]]></value>
+			<value xml:lang="ja-JP">&#xF073; : <![CDATA[7 月]]></value>
+			<value xml:lang="km-KH">&#xF073; : <![CDATA[កក្កដា]]></value>
+			<value xml:lang="ko-KR">&#xF073; : <![CDATA[7월]]></value>
+			<value xml:lang="martian">&#xF073; : <![CDATA[aJul........b]]></value>
+			<value xml:lang="mk-MK">&#xF073; : <![CDATA[Јул.]]></value>
+			<value xml:lang="nb-NO">&#xF073; : <![CDATA[Jul]]></value>
+			<value xml:lang="nl-NL">&#xF073; : <![CDATA[Jul]]></value>
+			<value xml:lang="pa-IN">&#xF073; : <![CDATA[ਜੁਲਾਈ]]></value>
+			<value xml:lang="pl-PL">&#xF073; : <![CDATA[Lip]]></value>
+			<value xml:lang="pt-BR">&#xF073; : <![CDATA[Julho]]></value>
+			<value xml:lang="pt-PT">&#xF073; : <![CDATA[Jul]]></value>
+			<value xml:lang="ru-RU">&#xF073; : <![CDATA[Июль]]></value>
+			<value xml:lang="si-LK">&#xF073; : <![CDATA[ජුලි]]></value>
+			<value xml:lang="sl-SI">&#xF073; : <![CDATA[Jul]]></value>
+			<value xml:lang="so-SO">&#xF073; : <![CDATA[Luulyo]]></value>
+			<value xml:lang="sv-SE">&#xF073; : <![CDATA[Jul]]></value>
+			<value xml:lang="tr-TR">&#xF073; : <![CDATA[Tem]]></value>
+			<value xml:lang="ur-PK">&#xF073; : <![CDATA[جولائی]]></value>
+			<value xml:lang="xh-ZA">&#xF073; : <![CDATA[Julayi]]></value>
+			<value xml:lang="xx">&#xF073; : <![CDATA[SHORT_MONTH_07]]></value>
+			<value xml:lang="zh-HANT">&#xF073; : <![CDATA[七月]]></value>
+			<value xml:lang="zh-HANS">&#xF073; : <![CDATA[七月]]></value>
+			<value xml:lang="zu-ZA">&#xF073; : <![CDATA[Jul]]></value>
+			<value xml:lang="th-TH">&#xF073; : <![CDATA[ก.ค.]]></value>
+			<value xml:lang="cy-GB">&#xF073; : <![CDATA[Gorff]]></value>
+		</entry>
+		<entry id="SHORT_MONTH_08" type="text" translate="yes" category="default">
+			<description xml:lang="en-US"><![CDATA[Short name for month of August]]></description>
+			<value xml:lang="af-ZA">&#xF073; : <![CDATA[Aug.]]></value>
+			<value xml:lang="ar-SA">&#xF073; : <![CDATA[أغسطس]]></value>
+			<value xml:lang="bg-BG">&#xF073; : <![CDATA[Авг.]]></value>
+			<value xml:lang="bn-BD">&#xF073; : <![CDATA[আগস্ট]]></value>
+			<value xml:lang="cs-CZ">&#xF073; : <![CDATA[Srp]]></value>
+			<value xml:lang="de-DE">&#xF073; : <![CDATA[Aug.]]></value>
+			<value xml:lang="el-GR">&#xF073; : <![CDATA[Αυγ]]></value>
+			<value xml:lang="en-US">&#xF073; : <![CDATA[Aug]]></value>
+			<value xml:lang="es-ES">&#xF073; : <![CDATA[Ago]]></value>
+			<value xml:lang="fa-IR">&#xF073; : <![CDATA[اوت]]></value>
+			<value xml:lang="fr-FR">&#xF073; : <![CDATA[Août]]></value>
+			<value xml:lang="he-IL">&#xF073; : <![CDATA[אוג]]></value>
+			<value xml:lang="hi-IN">&#xF073; : <![CDATA[अगस्त]]></value>
+			<value xml:lang="hu-HU">&#xF073; : <![CDATA[Aug]]></value>
+			<value xml:lang="it-IT">&#xF073; : <![CDATA[Ago]]></value>
+			<value xml:lang="ja-JP">&#xF073; : <![CDATA[8 月]]></value>
+			<value xml:lang="km-KH">&#xF073; : <![CDATA[សីហា]]></value>
+			<value xml:lang="ko-KR">&#xF073; : <![CDATA[8월]]></value>
+			<value xml:lang="martian">&#xF073; : <![CDATA[aAug........b]]></value>
+			<value xml:lang="mk-MK">&#xF073; : <![CDATA[Авг.]]></value>
+			<value xml:lang="nb-NO">&#xF073; : <![CDATA[Aug]]></value>
+			<value xml:lang="nl-NL">&#xF073; : <![CDATA[Aug]]></value>
+			<value xml:lang="pa-IN">&#xF073; : <![CDATA[ਅਗਸਤ]]></value>
+			<value xml:lang="pl-PL">&#xF073; : <![CDATA[Sie]]></value>
+			<value xml:lang="pt-BR">&#xF073; : <![CDATA[Agosto]]></value>
+			<value xml:lang="pt-PT">&#xF073; : <![CDATA[Ago]]></value>
+			<value xml:lang="ru-RU">&#xF073; : <![CDATA[Авг.]]></value>
+			<value xml:lang="si-LK">&#xF073; : <![CDATA[අගෝ]]></value>
+			<value xml:lang="sl-SI">&#xF073; : <![CDATA[Avg]]></value>
+			<value xml:lang="so-SO">&#xF073; : <![CDATA[Agoosto]]></value>
+			<value xml:lang="sv-SE">&#xF073; : <![CDATA[Aug]]></value>
+			<value xml:lang="tr-TR">&#xF073; : <![CDATA[Ağu]]></value>
+			<value xml:lang="ur-PK">&#xF073; : <![CDATA[اگست]]></value>
+			<value xml:lang="xh-ZA">&#xF073; : <![CDATA[Agasti]]></value>
+			<value xml:lang="xx">&#xF073; : <![CDATA[SHORT_MONTH_08]]></value>
+			<value xml:lang="zh-HANT">&#xF073; : <![CDATA[八月]]></value>
+			<value xml:lang="zh-HANS">&#xF073; : <![CDATA[八月]]></value>
+			<value xml:lang="zu-ZA">&#xF073; : <![CDATA[Aga]]></value>
+			<value xml:lang="th-TH">&#xF073; : <![CDATA[ส.ค.]]></value>
+			<value xml:lang="cy-GB">&#xF073; : <![CDATA[Awst]]></value>
+		</entry>
+		<entry id="SHORT_MONTH_09" type="text" translate="yes" category="default">
+			<description xml:lang="en-US"><![CDATA[Short name for month of September]]></description>
+			<value xml:lang="af-ZA">&#xF073; : <![CDATA[Sep.]]></value>
+			<value xml:lang="ar-SA">&#xF073; : <![CDATA[سبتمبر]]></value>
+			<value xml:lang="bg-BG">&#xF073; : <![CDATA[Септ.]]></value>
+			<value xml:lang="bn-BD">&#xF073; : <![CDATA[সেপ্টেম্বর]]></value>
+			<value xml:lang="cs-CZ">&#xF073; : <![CDATA[Zář]]></value>
+			<value xml:lang="de-DE">&#xF073; : <![CDATA[Sep.]]></value>
+			<value xml:lang="el-GR">&#xF073; : <![CDATA[Σεπ]]></value>
+			<value xml:lang="en-US">&#xF073; : <![CDATA[Sep]]></value>
+			<value xml:lang="es-ES">&#xF073; : <![CDATA[Sep]]></value>
+			<value xml:lang="fa-IR">&#xF073; : <![CDATA[سپتامبر]]></value>
+			<value xml:lang="fr-FR">&#xF073; : <![CDATA[Sep]]></value>
+			<value xml:lang="he-IL">&#xF073; : <![CDATA[ספט]]></value>
+			<value xml:lang="hi-IN">&#xF073; : <![CDATA[सितंबर]]></value>
+			<value xml:lang="hu-HU">&#xF073; : <![CDATA[Szept]]></value>
+			<value xml:lang="it-IT">&#xF073; : <![CDATA[Set]]></value>
+			<value xml:lang="ja-JP">&#xF073; : <![CDATA[9 月]]></value>
+			<value xml:lang="km-KH">&#xF073; : <![CDATA[កញ្ញា]]></value>
+			<value xml:lang="ko-KR">&#xF073; : <![CDATA[9월]]></value>
+			<value xml:lang="martian">&#xF073; : <![CDATA[aSep........b]]></value>
+			<value xml:lang="mk-MK">&#xF073; : <![CDATA[Сеп.]]></value>
+			<value xml:lang="nb-NO">&#xF073; : <![CDATA[Sep]]></value>
+			<value xml:lang="nl-NL">&#xF073; : <![CDATA[Sep]]></value>
+			<value xml:lang="pa-IN">&#xF073; : <![CDATA[ਸਤੰ.]]></value>
+			<value xml:lang="pl-PL">&#xF073; : <![CDATA[Wrz]]></value>
+			<value xml:lang="pt-BR">&#xF073; : <![CDATA[Setembro]]></value>
+			<value xml:lang="pt-PT">&#xF073; : <![CDATA[Set]]></value>
+			<value xml:lang="ru-RU">&#xF073; : <![CDATA[Сен.]]></value>
+			<value xml:lang="si-LK">&#xF073; : <![CDATA[සැප්]]></value>
+			<value xml:lang="sl-SI">&#xF073; : <![CDATA[Sep]]></value>
+			<value xml:lang="so-SO">&#xF073; : <![CDATA[Seteembar]]></value>
+			<value xml:lang="sv-SE">&#xF073; : <![CDATA[Sep]]></value>
+			<value xml:lang="tr-TR">&#xF073; : <![CDATA[Eyl]]></value>
+			<value xml:lang="ur-PK">&#xF073; : <![CDATA[ستمبر]]></value>
+			<value xml:lang="xh-ZA">&#xF073; : <![CDATA[Septemba]]></value>
+			<value xml:lang="xx">&#xF073; : <![CDATA[SHORT_MONTH_09]]></value>
+			<value xml:lang="zh-HANT">&#xF073; : <![CDATA[九月]]></value>
+			<value xml:lang="zh-HANS">&#xF073; : <![CDATA[九月]]></value>
+			<value xml:lang="zu-ZA">&#xF073; : <![CDATA[Sep]]></value>
+			<value xml:lang="th-TH">&#xF073; : <![CDATA[ก.ย.]]></value>
+			<value xml:lang="cy-GB">&#xF073; : <![CDATA[Medi]]></value>
+		</entry>
+		<entry id="SHORT_MONTH_10" type="text" translate="yes" category="default">
+			<description xml:lang="en-US"><![CDATA[Short name for month of October]]></description>
+			<value xml:lang="af-ZA">&#xF073; : <![CDATA[Okt.]]></value>
+			<value xml:lang="ar-SA">&#xF073; : <![CDATA[أكتوبر]]></value>
+			<value xml:lang="bg-BG">&#xF073; : <![CDATA[Окт.]]></value>
+			<value xml:lang="bn-BD">&#xF073; : <![CDATA[অক্টোবর]]></value>
+			<value xml:lang="cs-CZ">&#xF073; : <![CDATA[Říj]]></value>
+			<value xml:lang="de-DE">&#xF073; : <![CDATA[Okt.]]></value>
+			<value xml:lang="el-GR">&#xF073; : <![CDATA[Οκτ]]></value>
+			<value xml:lang="en-US">&#xF073; : <![CDATA[Oct]]></value>
+			<value xml:lang="es-ES">&#xF073; : <![CDATA[Oct]]></value>
+			<value xml:lang="fa-IR">&#xF073; : <![CDATA[اکتبر]]></value>
+			<value xml:lang="fr-FR">&#xF073; : <![CDATA[Oct]]></value>
+			<value xml:lang="he-IL">&#xF073; : <![CDATA[אוק]]></value>
+			<value xml:lang="hi-IN">&#xF073; : <![CDATA[अक्टूबर]]></value>
+			<value xml:lang="hu-HU">&#xF073; : <![CDATA[Okt]]></value>
+			<value xml:lang="it-IT">&#xF073; : <![CDATA[Ott]]></value>
+			<value xml:lang="ja-JP">&#xF073; : <![CDATA[10 月]]></value>
+			<value xml:lang="km-KH">&#xF073; : <![CDATA[តុលា]]></value>
+			<value xml:lang="ko-KR">&#xF073; : <![CDATA[10월]]></value>
+			<value xml:lang="martian">&#xF073; : <![CDATA[aOct........b]]></value>
+			<value xml:lang="mk-MK">&#xF073; : <![CDATA[Окт.]]></value>
+			<value xml:lang="nb-NO">&#xF073; : <![CDATA[Okt]]></value>
+			<value xml:lang="nl-NL">&#xF073; : <![CDATA[Okt]]></value>
+			<value xml:lang="pa-IN">&#xF073; : <![CDATA[ਅਕਤੂਬਰ]]></value>
+			<value xml:lang="pl-PL">&#xF073; : <![CDATA[Paz]]></value>
+			<value xml:lang="pt-BR">&#xF073; : <![CDATA[Outubro]]></value>
+			<value xml:lang="pt-PT">&#xF073; : <![CDATA[Out]]></value>
+			<value xml:lang="ru-RU">&#xF073; : <![CDATA[Окт.]]></value>
+			<value xml:lang="si-LK">&#xF073; : <![CDATA[ඔක්]]></value>
+			<value xml:lang="sl-SI">&#xF073; : <![CDATA[Okt]]></value>
+			<value xml:lang="so-SO">&#xF073; : <![CDATA[Oktoobar]]></value>
+			<value xml:lang="sv-SE">&#xF073; : <![CDATA[Okt]]></value>
+			<value xml:lang="tr-TR">&#xF073; : <![CDATA[Eki]]></value>
+			<value xml:lang="ur-PK">&#xF073; : <![CDATA[اکتوبر]]></value>
+			<value xml:lang="xh-ZA">&#xF073; : <![CDATA[Okhtobha]]></value>
+			<value xml:lang="xx">&#xF073; : <![CDATA[SHORT_MONTH_10]]></value>
+			<value xml:lang="zh-HANT">&#xF073; : <![CDATA[十月]]></value>
+			<value xml:lang="zh-HANS">&#xF073; : <![CDATA[十月]]></value>
+			<value xml:lang="zu-ZA">&#xF073; : <![CDATA[Okt]]></value>
+			<value xml:lang="th-TH">&#xF073; : <![CDATA[ต.ค.]]></value>
+			<value xml:lang="cy-GB">&#xF073; : <![CDATA[Hyd]]></value>
+		</entry>
+		<entry id="SHORT_MONTH_11" type="text" translate="yes" category="default">
+			<description xml:lang="en-US"><![CDATA[Short name for month of November]]></description>
+			<value xml:lang="af-ZA">&#xF073; : <![CDATA[Nov.]]></value>
+			<value xml:lang="ar-SA">&#xF073; : <![CDATA[نوفمبر]]></value>
+			<value xml:lang="bg-BG">&#xF073; : <![CDATA[Ноем.]]></value>
+			<value xml:lang="bn-BD">&#xF073; : <![CDATA[নভেম্বর]]></value>
+			<value xml:lang="cs-CZ">&#xF073; : <![CDATA[Lis]]></value>
+			<value xml:lang="de-DE">&#xF073; : <![CDATA[Nov.]]></value>
+			<value xml:lang="el-GR">&#xF073; : <![CDATA[Νοε]]></value>
+			<value xml:lang="en-US">&#xF073; : <![CDATA[Nov]]></value>
+			<value xml:lang="es-ES">&#xF073; : <![CDATA[Nov]]></value>
+			<value xml:lang="fa-IR">&#xF073; : <![CDATA[نوامبر]]></value>
+			<value xml:lang="fr-FR">&#xF073; : <![CDATA[Nov]]></value>
+			<value xml:lang="he-IL">&#xF073; : <![CDATA[נוב]]></value>
+			<value xml:lang="hi-IN">&#xF073; : <![CDATA[नवंबर]]></value>
+			<value xml:lang="hu-HU">&#xF073; : <![CDATA[Nov]]></value>
+			<value xml:lang="it-IT">&#xF073; : <![CDATA[Nov]]></value>
+			<value xml:lang="ja-JP">&#xF073; : <![CDATA[11 月]]></value>
+			<value xml:lang="km-KH">&#xF073; : <![CDATA[វិច្ឆិកា]]></value>
+			<value xml:lang="ko-KR">&#xF073; : <![CDATA[11월]]></value>
+			<value xml:lang="martian">&#xF073; : <![CDATA[aNov........b]]></value>
+			<value xml:lang="mk-MK">&#xF073; : <![CDATA[Ное.]]></value>
+			<value xml:lang="nb-NO">&#xF073; : <![CDATA[Nov]]></value>
+			<value xml:lang="nl-NL">&#xF073; : <![CDATA[Nov]]></value>
+			<value xml:lang="pa-IN">&#xF073; : <![CDATA[ਨਵੰਬਰ]]></value>
+			<value xml:lang="pl-PL">&#xF073; : <![CDATA[Lis]]></value>
+			<value xml:lang="pt-BR">&#xF073; : <![CDATA[Novembro]]></value>
+			<value xml:lang="pt-PT">&#xF073; : <![CDATA[Nov]]></value>
+			<value xml:lang="ru-RU">&#xF073; : <![CDATA[Ноя.]]></value>
+			<value xml:lang="si-LK">&#xF073; : <![CDATA[නොවැ]]></value>
+			<value xml:lang="sl-SI">&#xF073; : <![CDATA[Nov]]></value>
+			<value xml:lang="so-SO">&#xF073; : <![CDATA[Nofeembar]]></value>
+			<value xml:lang="sv-SE">&#xF073; : <![CDATA[Nov]]></value>
+			<value xml:lang="tr-TR">&#xF073; : <![CDATA[Kas]]></value>
+			<value xml:lang="ur-PK">&#xF073; : <![CDATA[نومبر]]></value>
+			<value xml:lang="xh-ZA">&#xF073; : <![CDATA[Novemba]]></value>
+			<value xml:lang="xx">&#xF073; : <![CDATA[SHORT_MONTH_11]]></value>
+			<value xml:lang="zh-HANT">&#xF073; : <![CDATA[十一月]]></value>
+			<value xml:lang="zh-HANS">&#xF073; : <![CDATA[十一月]]></value>
+			<value xml:lang="zu-ZA">&#xF073; : <![CDATA[Nov]]></value>
+			<value xml:lang="th-TH">&#xF073; : <![CDATA[พ.ย.]]></value>
+			<value xml:lang="cy-GB">&#xF073; : <![CDATA[Tach]]></value>
+		</entry>
+		<entry id="SHORT_MONTH_12" type="text" translate="yes" category="default">
+			<description xml:lang="en-US"><![CDATA[Short name for month of December]]></description>
+			<value xml:lang="af-ZA">&#xF073; : <![CDATA[Des.]]></value>
+			<value xml:lang="ar-SA">&#xF073; : <![CDATA[ديسمبر]]></value>
+			<value xml:lang="bg-BG">&#xF073; : <![CDATA[Дек.]]></value>
+			<value xml:lang="bn-BD">&#xF073; : <![CDATA[ডিসেম্বর]]></value>
+			<value xml:lang="cs-CZ">&#xF073; : <![CDATA[Pro]]></value>
+			<value xml:lang="de-DE">&#xF073; : <![CDATA[Dez.]]></value>
+			<value xml:lang="el-GR">&#xF073; : <![CDATA[Δεκ]]></value>
+			<value xml:lang="en-US">&#xF073; : <![CDATA[Dec]]></value>
+			<value xml:lang="es-ES">&#xF073; : <![CDATA[Dic]]></value>
+			<value xml:lang="fa-IR">&#xF073; : <![CDATA[دسامبر]]></value>
+			<value xml:lang="fr-FR">&#xF073; : <![CDATA[Déc]]></value>
+			<value xml:lang="he-IL">&#xF073; : <![CDATA[דצמ]]></value>
+			<value xml:lang="hi-IN">&#xF073; : <![CDATA[दिसंबर]]></value>
+			<value xml:lang="hu-HU">&#xF073; : <![CDATA[Dec]]></value>
+			<value xml:lang="it-IT">&#xF073; : <![CDATA[Dic]]></value>
+			<value xml:lang="ja-JP">&#xF073; : <![CDATA[12 月]]></value>
+			<value xml:lang="km-KH">&#xF073; : <![CDATA[ធ្នូ]]></value>
+			<value xml:lang="ko-KR">&#xF073; : <![CDATA[12월]]></value>
+			<value xml:lang="martian">&#xF073; : <![CDATA[aDec........b]]></value>
+			<value xml:lang="mk-MK">&#xF073; : <![CDATA[Дек.]]></value>
+			<value xml:lang="nb-NO">&#xF073; : <![CDATA[Des]]></value>
+			<value xml:lang="nl-NL">&#xF073; : <![CDATA[Dec]]></value>
+			<value xml:lang="pa-IN">&#xF073; : <![CDATA[ਦਸੰ.]]></value>
+			<value xml:lang="pl-PL">&#xF073; : <![CDATA[Gru]]></value>
+			<value xml:lang="pt-BR">&#xF073; : <![CDATA[Dezembro]]></value>
+			<value xml:lang="pt-PT">&#xF073; : <![CDATA[Dez]]></value>
+			<value xml:lang="ru-RU">&#xF073; : <![CDATA[Дек.]]></value>
+			<value xml:lang="si-LK">&#xF073; : <![CDATA[දෙසැ]]></value>
+			<value xml:lang="sl-SI">&#xF073; : <![CDATA[Dec]]></value>
+			<value xml:lang="so-SO">&#xF073; : <![CDATA[Diseembar]]></value>
+			<value xml:lang="sv-SE">&#xF073; : <![CDATA[Dec]]></value>
+			<value xml:lang="tr-TR">&#xF073; : <![CDATA[Ara]]></value>
+			<value xml:lang="ur-PK">&#xF073; : <![CDATA[دسمبر]]></value>
+			<value xml:lang="xh-ZA">&#xF073; : <![CDATA[Disemba]]></value>
+			<value xml:lang="xx">&#xF073; : <![CDATA[SHORT_MONTH_12]]></value>
+			<value xml:lang="zh-HANT">&#xF073; : <![CDATA[十二月]]></value>
+			<value xml:lang="zh-HANS">&#xF073; : <![CDATA[十二月]]></value>
+			<value xml:lang="zu-ZA">&#xF073; : <![CDATA[Dis]]></value>
+			<value xml:lang="th-TH">&#xF073; : <![CDATA[ธ.ค.]]></value>
+		</entry>
+	</text>
+	<tools>
+<!-- CALCULATOR removed -->
+	</tools>
+</xTemplate>
